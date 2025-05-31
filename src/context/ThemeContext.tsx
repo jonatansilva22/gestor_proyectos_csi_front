@@ -1,47 +1,38 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 
 interface ThemeContextType {
   darkMode: boolean;
-  toggleTheme: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType>({
-  darkMode: false,
-  toggleTheme: () => {},
+  darkMode: false
 });
 
 export const useTheme = () => useContext(ThemeContext);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Inicializa con preferencia del sistema o almacenada
-  const [darkMode, setDarkMode] = useState(() => {
-    // Verificar si hay una preferencia guardada
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      return savedTheme === 'dark';
-    }
-    // Si no hay preferencia guardada, usar la del sistema
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-  });
+  // Usar el hook useMediaQuery para detectar la preferencia del sistema
+  const systemPrefersDark = useMediaQuery('(prefers-color-scheme: dark)');
+  const [darkMode, setDarkMode] = useState(systemPrefersDark);
 
-  // Actualizar las clases en el HTML y guardar preferencia
+  // Actualizar darkMode cuando cambie la preferencia del sistema
+  useEffect(() => {
+    setDarkMode(systemPrefersDark);
+  }, [systemPrefersDark]);
+
+  // Actualizar las clases en el HTML
   useEffect(() => {
     const root = window.document.documentElement;
     if (darkMode) {
       root.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
     } else {
       root.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
     }
   }, [darkMode]);
 
-  const toggleTheme = () => {
-    setDarkMode(!darkMode);
-  };
-
   return (
-    <ThemeContext.Provider value={{ darkMode, toggleTheme }}>
+    <ThemeContext.Provider value={{ darkMode }}>
       {children}
     </ThemeContext.Provider>
   );

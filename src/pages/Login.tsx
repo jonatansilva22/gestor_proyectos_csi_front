@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import logo from '../assets/logo.png';
 
 const Login: React.FC = () => {
-  const { darkMode, toggleTheme } = useTheme();
+  const { darkMode } = useTheme();
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
@@ -16,44 +16,45 @@ const Login: React.FC = () => {
       navigate('/dashboard');
     }
   }, [isAuthenticated, navigate]);
-  
+
   return (
-    <div className={`min-h-screen flex items-center justify-center ${darkMode ? 'bg-[#25174A]' : 'bg-gray-50'}`}>
-      <div className="w-[786px] overflow-hidden rounded-md shadow-lg">
+    <div className={`min-h-screen flex items-center justify-center p-4 ${
+      darkMode ? 'bg-[#1A0F30]' : 'bg-slate-100' // Softer page backgrounds
+    }`}>
+      <div className={`w-[786px] max-w-full min-h-[600px] overflow-hidden rounded-xl border flex flex-col ${ // Increased rounding
+        darkMode
+          ? 'bg-[#3A2B5A] border-purple-700/40 shadow-2xl shadow-purple-900/30' // Dark theme container: refined shadow
+          : 'bg-white border-purple-300 shadow-2xl shadow-purple-200/40' // Light theme container: softer border, refined shadow
+      }`}>
         {/* Header */}
-        <div className="bg-[#6F43D6] w-[786px] h-[100px] flex items-center px-6">
-          {/* Logo del CSI y el texto a la izquierda wow */}
-          <div className="flex items-center text-white w-1/4">
-            <div className="flex items-center">
-              <img
-                src={logo}
-                alt="CSI PRO Logo"
-                className="h-20 w-20 mr-2"
-              />
-              <span className="font-bold text-2xl">CSI PRO</span>
-            </div>
+        <div className="bg-[#6F43D6] w-full h-[100px] flex items-center px-6 relative flex-shrink-0 rounded-t-xl"> {/* Added rounded-t-xl */}
+          {/* Logo del CSI y el texto a la izquierda */}
+          <div className="flex items-center text-white">
+            <img
+              src={logo}
+              alt="CSI PRO Logo"
+              className="h-16 w-16 sm:h-20 sm:w-20 mr-2 sm:mr-3" // Slightly smaller logo on very small screens
+            />
+            <span className="font-bold text-xl sm:text-2xl">CSI PRO</span> {/* Responsive text size */}
           </div>
-          
-          {/* Sistema de Gestión en el centro - TEXTO GRANDE */}
-          <div className="text-center text-white flex-1 w-2/4">
-            <div className="text-3xl font-medium">Sistema de</div>
-            <div className="text-3xl font-medium">Gestion de tareas</div>
+         
+          {/* Sistema de Gestión centrado y ligeramente a la derecha */}
+          <div className="absolute inset-0 flex items-center justify-center text-white pointer-events-none">
+            <span className="text-2xl sm:text-3xl font-medium transform sm:translate-x-8"> {/* Responsive text and transform */}
+              Sistema de Gestión de tareas
+            </span>
           </div>
-          
-          {/* Espacio vacío a la derecha para mantener el balance */}
-          <div className="w-1/4"></div>
         </div>
-        
-        <LoginForm />
-        
-        {/* Botón para cambiar tema */}
-        <div className={`px-6 py-2 text-center ${darkMode ? 'bg-[#3A2864]' : 'bg-gray-100'}`}>
-          <button
-            onClick={toggleTheme}
-            className="text-sm text-[#6F43D6] dark:text-gray-300 hover:underline"
-          >
-            Cambiar a tema {darkMode ? 'claro' : 'oscuro'}
-          </button>
+       
+        {/* Contenedor del LoginForm con espacio extra */}
+        <div className="flex-1 flex items-center justify-center py-8 sm:py-12 px-6">
+          <div className={`w-full max-w-md p-8 sm:p-10 rounded-xl border ${ // Increased padding and rounding
+            darkMode
+              ? 'bg-[#2A1B4A] border-purple-600/50 shadow-xl' // Dark theme form area: refined border, stronger shadow
+              : 'bg-slate-50 border-slate-300 shadow-xl' // Light theme form area: cooler gray, distinct border, stronger shadow
+          }`}>
+            <LoginForm />
+          </div>
         </div>
       </div>
     </div>

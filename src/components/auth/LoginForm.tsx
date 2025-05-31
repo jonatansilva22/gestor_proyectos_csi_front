@@ -6,6 +6,7 @@ import { useTheme } from '../../context/ThemeContext';
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const { login, isLoading } = useAuth();
@@ -32,8 +33,12 @@ const LoginForm: React.FC = () => {
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
-    <div className={`${darkMode ? 'bg-[#3A2864]' : 'bg-white'} p-6`}>
+    <div className={`${darkMode ? 'bg-[#3A2864]' : 'bg-white'} p-6 border-t ${darkMode ? 'border-[#6F43D6]/20' : 'border-gray-200'}`}>
       <h2
         className={`text-center text-2xl font-bold mb-6 ${
           darkMode ? 'text-white' : 'text-[#000000]'
@@ -43,7 +48,7 @@ const LoginForm: React.FC = () => {
       </h2>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md text-sm">
+        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md text-sm shadow-sm">
           {error}
         </div>
       )}
@@ -82,7 +87,7 @@ const LoginForm: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="user@email.com"
               required
-              className={`w-full py-2 pl-10 pr-3 border rounded-md focus:ring-[#6F43D6] focus:border-[#6F43D6] focus:outline-none
+              className={`w-full py-2 pl-10 pr-3 border rounded-md shadow-sm focus:ring-[#6F43D6] focus:border-[#6F43D6] focus:outline-none
                 ${
                   darkMode
                     ? 'bg-[#FFFFFF] border-gray-700 text-gray-900 placeholder-gray-400'
@@ -120,12 +125,12 @@ const LoginForm: React.FC = () => {
               </svg>
             </div>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="******************"
               required
-              className={`w-full py-2 pl-10 pr-3 border rounded-md focus:ring-[#6F43D6] focus:border-[#6F43D6] focus:outline-none
+              className={`w-full py-2 pl-10 pr-10 border rounded-md shadow-sm focus:ring-[#6F43D6] focus:border-[#6F43D6] focus:outline-none
                 ${
                   darkMode
                     ? 'bg-[#FFFFFF] border-gray-700 text-gray-900 placeholder-gray-400'
@@ -133,6 +138,49 @@ const LoginForm: React.FC = () => {
                 }`}
               disabled={isLoading}
             />
+            <button
+              type="button"
+              onClick={togglePasswordVisibility}
+              className="absolute inset-y-0 right-0 flex items-center pr-3"
+            >
+              {showPassword ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-[#6F43D6]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-[#6F43D6]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+              )}
+            </button>
           </div>
         </div>
 
@@ -182,7 +230,7 @@ const LoginForm: React.FC = () => {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full py-2 px-4 bg-[#6F43D6] hover:bg-[#5F36C4] text-white font-medium rounded-md 
+          className="w-full py-2 px-4 bg-[#6F43D6] hover:bg-[#5F36C4] text-white font-medium rounded-md shadow-md
             focus:outline-none transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
         >
           {isLoading ? 'Accediendo...' : 'Acceder'}
