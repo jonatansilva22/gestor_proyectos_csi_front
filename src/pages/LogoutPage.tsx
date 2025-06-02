@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
 export default function LogoutPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, logout, isAuthenticated } = useAuth();
   const { darkMode } = useTheme();
   const navigate = useNavigate();
 
@@ -13,7 +13,8 @@ export default function LogoutPage() {
     setIsLoading(true);
     try {
       await logout();
-      // El redirect se hace automáticamente por el AuthContext
+      // Redirigir manualmente después del logout
+      navigate('/');
     } catch (error) {
       console.error('Error:', error);
       setIsLoading(false);
