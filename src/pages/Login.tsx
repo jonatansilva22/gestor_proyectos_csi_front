@@ -18,41 +18,40 @@ const Login: React.FC = () => {
   }, [isAuthenticated, navigate]);
 
   return (
-    <div className={`min-h-screen flex items-center justify-center p-4 ${
+    <div className={`min-h-screen flex items-center justify-center p-6 ${
       darkMode ? 'bg-[#1A0F30]' : 'bg-slate-100' // Fondos de página más suaves
     }`}>
-      <div className={`w-[550px] max-w-full min-h-[750px] overflow-hidden rounded-xl border flex flex-col ${ // Ancho reducido y altura aumentada
+      <div className={`w-[850px] max-w-full min-h-[700px] overflow-hidden rounded-xl border flex flex-col ${ // Mayor redondeado y altura
         darkMode
-          ? 'bg-[#3A2B5A] border-purple-700/40 shadow-2xl shadow-purple-900/30' // Tema oscuro: sombra refinada
-          : 'bg-white border-purple-300 shadow-2xl shadow-purple-200/40' // Tema claro: borde más suave, sombra refinada
+          ? 'bg-[#3A2B5A] border-purple-700/40 shadow-2xl shadow-purple-900/30' // Contenedor tema oscuro: sombra refinada
+          : 'bg-white border-purple-300 shadow-2xl shadow-purple-200/40' // Contenedor tema claro: borde más suave, sombra refinada
       }`}>
         {/* Encabezado */}
-        <div className="bg-[#6F43D6] w-full h-[120px] flex items-center px-4 relative flex-shrink-0 rounded-t-xl"> {/* Removido justify-center */}
-          {/* Logo del CSI pegados a la izquierda */}
+        <div className="bg-[#6F43D6] w-full h-[120px] flex items-center px-8 relative flex-shrink-0 rounded-t-xl"> {/* Mayor altura y padding */}
+          {/* Logo del CSI y el texto a la izquierda */}
           <div className="flex items-center text-white">
             <img
               src={logo}
               alt="CSI PRO Logo"
-              className="h-14 w-14 sm:h-16 sm:w-16 mr-2" // Logo ligeramente más pequeño para el contenedor más estrecho
+              className="h-18 w-18 sm:h-22 sm:w-22 mr-3 sm:mr-4" // Logo ligeramente más grande
             />
-            <span className="font-bold text-xl sm:text-2xl">CSI PRO</span> {/* Sin margen derecho */}
+            <span className="font-bold text-2xl sm:text-3xl">CSI PRO</span> {/* Texto más grande */}
           </div>
-          
-          {/* Sistema de gestión centrado en el espacio restante */}
-          <div className="flex-1 flex justify-center -ml-12"> {/* Movido un poco hacia la izquierda */}
-            <div className="flex flex-col text-xl sm:text-2xl font-medium text-white text-center"> {/* Centrado */}
-              <span>Sistema de Gestión</span>
-              <span>de tareas</span>
-            </div>
+         
+          {/* Sistema de Gestión centrado y ligeramente a la derecha */}
+          <div className="absolute inset-0 flex items-center justify-center text-white pointer-events-none">
+            <span className="text-2xl sm:text-3xl font-medium transform sm:translate-x-10"> {/* Texto responsivo y transformación */}
+              Sistema de Gestión de tareas
+            </span>
           </div>
         </div>
-                
-        {/* Contenedor del LoginForm con más espacio vertical */}
-        <div className="flex-1 flex items-center justify-center py-12 sm:py-16 px-4"> {/* Padding horizontal reducido */}
-          <div className={`w-full max-w-sm p-6 sm:p-8 rounded-xl border ${ // Ancho máximo reducido y padding ajustado
+       
+        {/* Contenedor del LoginForm con espacio extra y mejor distribución */}
+        <div className="flex-1 flex items-center justify-center py-12 sm:py-16 px-8">
+          <div className={`w-full max-w-lg p-12 sm:p-14 rounded-xl border ${ // Mayor padding y ancho máximo
             darkMode
-              ? 'bg-[#2A1B4A] border-purple-600/50 shadow-xl' // Tema oscuro: borde refinado, sombra más fuerte
-              : 'bg-slate-50 border-slate-300 shadow-xl' // Tema claro: gris más frío, borde distinto, sombra más fuerte
+              ? 'bg-[#2A1B4A] border-purple-600/50 shadow-xl' // Área del formulario tema oscuro: borde refinado, sombra más fuerte
+              : 'bg-slate-50 border-slate-300 shadow-xl' // Área del formulario tema claro: gris más frío, borde distintivo, sombra más fuerte
           }`}>
             <LoginForm />
           </div>
