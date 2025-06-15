@@ -1,5 +1,6 @@
+// 🔐 SOLO tipos relacionados con AUTENTICACIÓN
 
-export interface User {
+export interface AuthUser {
   id: number;
   username: string;
   email: string;
@@ -11,6 +12,12 @@ export interface LoginCredentials {
 }
 
 export interface LoginResponse {
-  user: User;
+  user: AuthUser;
   token: string;
+}
+
+export interface AuthState {
+  user: AuthUser | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
 }

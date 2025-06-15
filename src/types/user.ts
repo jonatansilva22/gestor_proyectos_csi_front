@@ -1,0 +1,65 @@
+// src/types/user.ts
+// 👥 SOLO tipos relacionados con GESTIÓN DE USUARIOS
+
+export interface CreateUserRequest {
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  role: UserRole;
+  photo?: File;
+}
+
+export interface CreateUserResponse {
+  user: User;
+  message: string;
+}
+
+export interface User {
+  id: number;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: UserRole;
+  photoUrl?: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type UserRole = "user" | "admin";
+
+export const USER_ROLES: { value: UserRole; label: string }[] = [
+  { value: "user", label: "Usuario" },
+  { value: "admin", label: "Administrador" },
+];
+
+// Additional user-related interfaces
+export interface UserListItem {
+  id: number;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: UserRole;
+  photoUrl?: string;
+  isActive: boolean;
+  lastLogin?: string;
+}
+
+export interface UserFilters {
+  role?: UserRole;
+  searchTerm?: string;
+  isActive?: boolean;
+  sortBy?: 'username' | 'email' | 'createdAt' | 'lastLogin';
+  sortOrder?: 'asc' | 'desc';
+}
+
+export interface UserStats {
+  totalUsers: number;
+  activeUsers: number;
+  userCount: number;
+  adminCount: number;
+}
