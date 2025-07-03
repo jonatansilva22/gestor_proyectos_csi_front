@@ -1,19 +1,20 @@
 // src/components/index.ts
-// 📦 EXPORTS principales de componentes organizados por funcionalidad
+// 🧩 EXPORTS principales de componentes organizados por funcionalidad
 
 // Componentes de autenticación
-export * from './auth';
+export * from "./auth";
 
-// Componentes de gestión de usuarios  
-export * from './user';
+// Componentes de gestión de usuarios
+export * from "./user";
 
-// Componentes de UI reutilizables
-export * from './ui';
+// Componentes de permisos
+export * from "./permissions";
+
+// Componentes comunes reutilizables
+export * from "./common";
 
 // Componentes específicos
-export { CreateUserModal } from './CreateUserModal';
+export { CreateUserModal } from "./CreateUserModal";
 
-// Futuros exports:
-// export * from './project';
-// export * from './task';
-// export * from './dashboard';
+// Componente base
+export { default as Component } from "./Component";

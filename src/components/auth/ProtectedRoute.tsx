@@ -1,13 +1,13 @@
 // src/components/auth/ProtectedRoute.tsx
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { JSX } from 'react';
+import { JSX, FC } from 'react';
 
 interface ProtectedRouteProps {
   children: JSX.Element;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+const ProtectedRoute: FC<ProtectedRouteProps> = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
 

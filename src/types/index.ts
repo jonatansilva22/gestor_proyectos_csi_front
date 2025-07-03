@@ -6,17 +6,27 @@ export type {
   AuthUser,
   LoginCredentials,
   LoginResponse,
-  AuthState
-} from './auth';
+  AuthState,
+} from "./auth";
 
 // Tipos de gestión de usuarios
 export type {
   CreateUserRequest,
   CreateUserResponse,
   User,
-  UserRole
-} from './user';
+  UserRole,
+} from "./user";
 
-// Futuros exports de tipos:
-// export type { Project, Task, Comment } from './project';
-// export type { Notification, NotificationType } from './notification';
+// Tipos de permisos y estudiantes
+export type {
+  Student,
+  StudentStatus,
+  StudentPermissions,
+  StudentsListResponse,
+  UpdateStudentPermissionsRequest,
+  CreateStudentRequest,
+  StudentFilters,
+  StudentStats,
+} from "./permissions";
+
+

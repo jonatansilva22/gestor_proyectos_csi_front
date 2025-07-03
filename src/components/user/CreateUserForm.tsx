@@ -2,18 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useTheme } from "../../context";
-import { FormInput, FormSelect, FileUpload } from "../ui";
-import { CreateUserRequest, UserRole } from "../../types";
-
-interface FormErrors {
-  username?: string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  password?: string;
-  role?: string;
-  photo?: string;
-}
+import { FormInput, FormSelect, FileUpload } from "../common";
+import { CreateUserRequest } from "../../types";
+import { userService } from "../../services";
+import { validateUserForm } from "../../utils/validation";
+import { useValidationErrors } from "../../hooks/useValidationErrors";
 
 interface CreateUserFormProps {
   mode?: 'page' | 'modal';
@@ -33,18 +26,18 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
 }) => {
   const navigate = useNavigate();
   const { darkMode } = useTheme();
+  const { errors, clearErrors, clearFieldError, handleApiError, setBackendErrors } = useValidationErrors();
 
   const [formData, setFormData] = useState<CreateUserRequest>({
     username: "",
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     email: "",
     password: "",
-    role: "" as UserRole,
+    role: "user", // Default to user role
     photo: undefined,
   });
 
-  const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,66 +45,40 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
     setFormData((prev) => ({ ...prev, [name]: value }));
 
     // Clear error when user starts typing
-    if (errors[name as keyof FormErrors]) {
-      setErrors((prev) => ({ ...prev, [name]: undefined }));
-    }
+    clearFieldError(name);
   };
 
   const handleRoleChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, role: value as UserRole }));
-    if (errors.role) {
-      setErrors((prev) => ({ ...prev, role: undefined }));
-    }
+    setFormData((prev) => ({ ...prev, role: value as any }));
+    clearFieldError('role');
   };
 
   const handleFileSelect = (file: File | null) => {
     setFormData((prev) => ({ ...prev, photo: file || undefined }));
-    if (errors.photo) {
-      setErrors((prev) => ({ ...prev, photo: undefined }));
-    }
+    clearFieldError('photo');
   };
 
   const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
+    // Use comprehensive backend validation
+    const validationResult = validateUserForm({
+      username: formData.username,
+      first_name: formData.first_name,
+      last_name: formData.last_name,
+      email: formData.email,
+      password: formData.password,
+      role: formData.role,
+      photo: formData.photo
+    });
 
-    if (!formData.username.trim()) {
-      newErrors.username = "El nombre de usuario es requerido";
+    if (!validationResult.isValid) {
+      setBackendErrors(validationResult.errors);
     }
-
-    if (!formData.firstName.trim()) {
-      newErrors.firstName = "El nombre es requerido";
-    }
-
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = "El apellido es requerido";
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = "El correo es requerido";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "El correo no tiene un formato válido";
-    }
-
-    if (!formData.password.trim()) {
-      newErrors.password = "La contraseña es requerida";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "La contraseña debe tener al menos 6 caracteres";
-    }
-
-    if (!formData.role) {
-      newErrors.role = "El rol es requerido";
-    }
-
-    if (!formData.photo) {
-      newErrors.photo = "La foto del usuario es requerida";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return validationResult.isValid;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    clearErrors();
 
     if (!validateForm()) {
       return;
@@ -120,17 +87,31 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
     setIsLoading(true);
 
     try {
-      // Aquí iría la llamada al userService
-      console.log("Creating user:", formData);
+      // Llamada real al userService
+      const createdUser = await userService.createUser(formData);
+      console.log("User created:", createdUser);
       toast.success("Usuario creado exitosamente");
       
       // Call the success callback with the user data
       if (onSuccess) {
         onSuccess(formData);
       }
-    } catch (error) {
+      
+      // Reset form
+      setFormData({
+        username: "",
+        first_name: "",
+        last_name: "",
+        email: "",
+        password: "",
+        role: "user",
+        photo: undefined,
+      });
+    } catch (error: any) {
       console.error("Error creating user:", error);
-      toast.error("Error al crear el usuario. Por favor intente nuevamente.");
+      
+      // Enhanced error handling with backend validation support
+      handleApiError(error);
     } finally {
       setIsLoading(false);
     }
@@ -162,24 +143,24 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
       <FormInput
         label="Nombre"
         type="text"
-        value={formData.firstName}
+        value={formData.first_name}
         onChange={handleInputChange}
         placeholder="Ingrese el nombre"
         required
-        name="firstName"
-        error={errors.firstName}
+        name="first_name"
+        error={errors.first_name}
       />
 
       {/* Last Name Field */}
       <FormInput
         label="Apellido"
         type="text"
-        value={formData.lastName}
+        value={formData.last_name}
         onChange={handleInputChange}
         placeholder="Ingrese el apellido"
         required
-        name="lastName"
-        error={errors.lastName}
+        name="last_name"
+        error={errors.last_name}
       />
 
       {/* Email Field */}
@@ -209,7 +190,7 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
       {/* Role Select */}
       <FormSelect
         label="Rol"
-        value={formData.role}
+        value={formData.role.toString()}
         onChange={handleRoleChange}
         placeholder="Seleccione el rol del usuario"
         options={USER_ROLES}
@@ -220,9 +201,9 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
 
       {/* Photo Upload */}
       <FileUpload
-        label="Foto del Usuario"
+        label="Foto del Usuario (Opcional)"
         onFileSelect={handleFileSelect}
-        required
+        required={false}
         error={errors.photo}
       />
 

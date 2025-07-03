@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import LoginForm from '../components/auth/LoginForm';
-import { useTheme } from '../context/ThemeContext';
-import { useAuth } from '../context/AuthContext';
-import logo from '../assets/logo.png';
+import LoginForm from '../../components/auth/LoginForm';
+import { useTheme } from '../../context/ThemeContext';
+import { useAuth } from '../../context/AuthContext';
+import logo from '../../assets/logo.png';
 
 const Login: React.FC = () => {
   const { darkMode } = useTheme();

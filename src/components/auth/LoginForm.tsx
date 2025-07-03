@@ -2,34 +2,38 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import { validateLoginForm } from '../../utils/validation';
+import { useValidationErrors } from '../../hooks/useValidationErrors';
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [error, setError] = useState('');
+  const { errors, clearErrors, clearFieldError, handleApiError, setBackendErrors } = useValidationErrors();
   const { login, isLoading } = useAuth();
   const { darkMode } = useTheme();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    clearErrors();
 
-    if (!email || !password) {
-      setError('Por favor, complete todos los campos');
+    // Frontend validation using backend rules
+    const validationResult = validateLoginForm({ email, password });
+    
+    if (!validationResult.isValid) {
+      // Use the validation errors handler for frontend validation
+      setBackendErrors(validationResult.errors);
       return;
     }
 
     try {
       await login(email, password, rememberMe);
-      navigate('/dashboard');
+      navigate('/create-user'); // Fixed redirect as per CLAUDE.md
     } catch (error: any) {
-      console.error('Error en login:', error);
-      setError(
-        'Credenciales incorrectas. Por favor, verifique su email y contraseña.'
-      );
+      // Enhanced error handling with backend validation support
+      handleApiError(error);
     }
   };
 
@@ -47,9 +51,9 @@ const LoginForm: React.FC = () => {
         Iniciar Sesión
       </h2>
 
-      {error && (
+      {(errors.general || errors.email || errors.password) && (
         <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md text-sm shadow-sm">
-          {error}
+          {errors.general || 'Por favor corrige los errores en el formulario'}
         </div>
       )}
 
@@ -84,10 +88,15 @@ const LoginForm: React.FC = () => {
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                // Clear email error when user starts typing
+                clearFieldError('email');
+              }}
               placeholder="user@email.com"
               required
               className={`w-full py-2 pl-10 pr-3 border rounded-md shadow-sm focus:ring-[#6F43D6] focus:border-[#6F43D6] focus:outline-none
+                ${errors.email ? 'border-red-500' : ''}
                 ${
                   darkMode
                     ? 'bg-[#FFFFFF] border-gray-700 text-gray-900 placeholder-gray-400'
@@ -96,6 +105,9 @@ const LoginForm: React.FC = () => {
               disabled={isLoading}
             />
           </div>
+          {errors.email && (
+            <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+          )}
         </div>
 
         {/* --- Password --- */}
@@ -127,10 +139,15 @@ const LoginForm: React.FC = () => {
             <input
               type={showPassword ? "text" : "password"}
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                // Clear password error when user starts typing
+                clearFieldError('password');
+              }}
               placeholder="******************"
               required
               className={`w-full py-2 pl-10 pr-10 border rounded-md shadow-sm focus:ring-[#6F43D6] focus:border-[#6F43D6] focus:outline-none
+                ${errors.password ? 'border-red-500' : ''}
                 ${
                   darkMode
                     ? 'bg-[#FFFFFF] border-gray-700 text-gray-900 placeholder-gray-400'
@@ -182,6 +199,9 @@ const LoginForm: React.FC = () => {
               )}
             </button>
           </div>
+          {errors.password && (
+            <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+          )}
         </div>
 
         {/* --- Remember me --- */}

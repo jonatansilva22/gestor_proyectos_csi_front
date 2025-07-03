@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "../context";
-import { CreateUserForm } from "../components/user";
-import { CreateUserRequest } from "../types";
+import { useTheme } from "../../context";
+import { CreateUserForm } from "../../components/user";
+import { CreateUserRequest } from "../../types";
 
 export const CreateUser: React.FC = () => {
   const navigate = useNavigate();

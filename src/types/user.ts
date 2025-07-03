@@ -3,12 +3,12 @@
 
 export interface CreateUserRequest {
   username: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   email: string;
   password: string;
-  role: UserRole;
-  photo?: File;
+  role: UserRole; // Matches backend field name
+  photo?: File;   // Matches backend field name
 }
 
 export interface CreateUserResponse {
@@ -20,13 +20,17 @@ export interface User {
   id: number;
   username: string;
   email: string;
-  firstName: string;
-  lastName: string;
-  role: UserRole;
-  photoUrl?: string;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
+  first_name: string;
+  last_name: string;
+  role: UserRole; // Matches backend field name
+  photo?: string; // Matches backend field name
+  created_at: string;
+  updated_at: string;
+}
+
+export interface RoleType {
+  id: number;
+  name: string;
 }
 
 export type UserRole = "user" | "admin";

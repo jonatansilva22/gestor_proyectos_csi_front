@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 
 export default function LogoutPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user, logout } = useAuth();
   const { darkMode } = useTheme();
   const navigate = useNavigate();
 

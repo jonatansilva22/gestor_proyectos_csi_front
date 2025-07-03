@@ -2,51 +2,65 @@
 import axios from 'axios';
 import { storage } from '../utils/storage';
 
-// Obtener la URL base desde las variables de entorno o usar un valor por defecto
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+// URLs para diferentes servicios del backend
+const AUTH_API_URL = import.meta.env.VITE_AUTH_API_URL || 'http://localhost:8000/api';
+const USERS_API_URL = import.meta.env.VITE_USERS_API_URL || 'http://localhost:8001/api';
 
+// API principal (para auth)
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: AUTH_API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
   timeout: 10000, // 10 segundos timeout
 });
 
-// Interceptor para agregar el token de autenticación a las solicitudes
-api.interceptors.request.use(
-  (config) => {
-    const token = storage.getToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
+// API específica para usuarios
+const usersApi = axios.create({
+  baseURL: USERS_API_URL,
+  headers: {
+    'Content-Type': 'application/json',
   },
-  (error) => {
-    console.error('Error en request interceptor:', error);
-    return Promise.reject(error);
-  }
-);
+  timeout: 10000, // 10 segundos timeout
+});
 
-// Interceptor para manejar errores de respuesta (como tokens expirados)
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    console.error('Error en response:', error);
-    
-    // Si el error es 401 (Unauthorized), podría ser token expirado
-    if (error.response && error.response.status === 401) {
-      storage.clearAll();
-      window.location.href = '/';
+
+// Aplicar interceptors a ambas APIs
+[api, usersApi].forEach(apiInstance => {
+  // Interceptor de solicitudes
+  apiInstance.interceptors.request.use(
+    (config) => {
+      const token = storage.getToken();
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => {
+      console.error('Error en request interceptor:', error);
+      return Promise.reject(error);
     }
-    
-    // Manejar otros errores comunes
-    if (error.response && error.response.status >= 500) {
-      console.error('Error del servidor:', error.response.data);
+  );
+
+  // Interceptor de respuestas
+  apiInstance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      console.error('Error en response:', error);
+      
+      if (error.response && error.response.status === 401) {
+        storage.clearAll();
+        window.location.href = '/';
+      }
+      
+      if (error.response && error.response.status >= 500) {
+        console.error('Error del servidor:', error.response.data);
+      }
+      
+      return Promise.reject(error);
     }
-    
-    return Promise.reject(error);
-  }
-);
+  );
+});
 
 export default api;
+export { usersApi };
