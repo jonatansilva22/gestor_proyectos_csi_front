@@ -1,5 +1,5 @@
 // src/components/index.ts
-// 🧩 EXPORTS principales de componentes organizados por funcionalidad
+// 📦 EXPORTS principales de componentes organizados por funcionalidad
 
 // Componentes de autenticación
 export * from "./auth";
@@ -16,5 +16,7 @@ export * from "./common";
 // Componentes específicos
 export { CreateUserModal } from "./CreateUserModal";
 
-// Componente base
-export { default as Component } from "./Component";
+// Futuros exports:
+// export * from './project';
+// export * from './task';
+// export * from './dashboard';
