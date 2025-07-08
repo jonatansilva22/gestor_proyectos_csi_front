@@ -7,7 +7,7 @@ export interface CreateUserRequest {
   last_name: string;
   email: string;
   password: string;
-  role: UserRole; // Matches backend field name
+  role: UserRole | number; // Supports both string and int for backend compatibility
   photo?: File;   // Matches backend field name
 }
 

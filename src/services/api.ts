@@ -2,31 +2,24 @@
 import axios from 'axios';
 import { storage } from '../utils/storage';
 
-// URLs para diferentes servicios del backend
-const AUTH_API_URL = import.meta.env.VITE_AUTH_API_URL || 'http://localhost:8000/api';
-const USERS_API_URL = import.meta.env.VITE_USERS_API_URL || 'http://localhost:8001/api';
+// URL unificada para el backend
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
-// API principal (para auth)
+// API unificada para todos los servicios
 const api = axios.create({
-  baseURL: AUTH_API_URL,
+  baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
   timeout: 10000, // 10 segundos timeout
 });
 
-// API específica para usuarios
-const usersApi = axios.create({
-  baseURL: USERS_API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  timeout: 10000, // 10 segundos timeout
-});
+// Alias para usuarios (mismo endpoint)
+const usersApi = api;
 
 
-// Aplicar interceptors a ambas APIs
-[api, usersApi].forEach(apiInstance => {
+// Aplicar interceptors a la API unificada
+[api].forEach(apiInstance => {
   // Interceptor de solicitudes
   apiInstance.interceptors.request.use(
     (config) => {

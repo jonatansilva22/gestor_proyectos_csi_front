@@ -3,8 +3,4 @@
 
 export { CreateUserForm } from './CreateUserForm';
 
-// Futuros exports de componentes de usuario:
-// export { EditUserForm } from './EditUserForm';
-// export { UserProfile } from './UserProfile';
-// export { UserCard } from './UserCard';
-// export { UserList } from './UserList';
+;

@@ -2,22 +2,36 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useTheme } from "../../context";
-import { FormInput, FormSelect, FileUpload } from "../common";
-import { CreateUserRequest } from "../../types";
+import { FormSelect, FileUpload } from "../common";
+import { FormInput } from "../common/user/FormInput";
+import { CreateUserRequest, UserRole } from "../../types";
 import { userService } from "../../services";
 import { validateUserForm } from "../../utils/validation";
 import { useValidationErrors } from "../../hooks/useValidationErrors";
 
 interface CreateUserFormProps {
   mode?: 'page' | 'modal';
-  onSuccess?: (userData: CreateUserRequest) => void; // userData es requerido
+  onSuccess?: (userData: CreateUserRequest) => void;
   onCancel?: () => void;
 }
 
-const USER_ROLES = [
-  { value: "user", label: "Usuario" },
-  { value: "admin", label: "Administrador" },
-];
+// Interfaz de datos del formulario interno con rol string para componentes de UI
+interface CreateUserFormData {
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+  role: UserRole; // Mantener como string para la UI
+  photo?: File;
+}
+
+
+// Mapeo de roles para compatibilidad con backend
+const ROLE_MAPPING = {
+  "user": 2,
+  "admin": 1
+} as const;
 
 export const CreateUserForm: React.FC<CreateUserFormProps> = ({
   mode = 'page',
@@ -28,13 +42,13 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
   const { darkMode } = useTheme();
   const { errors, clearErrors, clearFieldError, handleApiError, setBackendErrors } = useValidationErrors();
 
-  const [formData, setFormData] = useState<CreateUserRequest>({
+  const [formData, setFormData] = useState<CreateUserFormData>({
     username: "",
     first_name: "",
     last_name: "",
     email: "",
     password: "",
-    role: "user", // Default to user role
+    role: "user", // Rol por defecto: usuario
     photo: undefined,
   });
 
@@ -44,12 +58,12 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Clear error when user starts typing
+    // Limpiar error cuando el usuario comienza a escribir
     clearFieldError(name);
   };
 
   const handleRoleChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, role: value as any }));
+    setFormData((prev) => ({ ...prev, role: value as UserRole }));
     clearFieldError('role');
   };
 
@@ -59,7 +73,7 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
   };
 
   const validateForm = (): boolean => {
-    // Use comprehensive backend validation
+    // Usar validación completa del backend
     const validationResult = validateUserForm({
       username: formData.username,
       first_name: formData.first_name,
@@ -87,30 +101,39 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
     setIsLoading(true);
 
     try {
+      // Convertir rol string a entero para compatibilidad con backend
+      const roleAsNumber = ROLE_MAPPING[formData.role];
+      const formDataWithIntRole: CreateUserRequest = {
+        ...formData,
+        role: roleAsNumber
+      };
+      
       // Llamada real al userService
-      const createdUser = await userService.createUser(formData);
+      const createdUser = await userService.createUser(formDataWithIntRole);
       console.log("User created:", createdUser);
       toast.success("Usuario creado exitosamente");
       
-      // Call the success callback with the user data
+      // Llamar callback de éxito con los datos del usuario
       if (onSuccess) {
-        onSuccess(formData);
+        onSuccess(formDataWithIntRole);
       }
       
-      // Reset form
-      setFormData({
-        username: "",
-        first_name: "",
-        last_name: "",
-        email: "",
-        password: "",
-        role: "user",
-        photo: undefined,
-      });
-    } catch (error: any) {
+      // Resetear formulario solo si no está en modo modal o si no hay callback onSuccess
+      if (mode !== 'modal' || !onSuccess) {
+        setFormData({
+          username: "",
+          first_name: "",
+          last_name: "",
+          email: "",
+          password: "",
+          role: "user",
+          photo: undefined,
+        });
+      }
+    } catch (error: unknown) {
       console.error("Error creating user:", error);
       
-      // Enhanced error handling with backend validation support
+      // Manejo mejorado de errores con soporte para validación del backend
       handleApiError(error);
     } finally {
       setIsLoading(false);
@@ -127,7 +150,7 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Username Field */}
+      {/* Campo Nombre de Usuario */}
       <FormInput
         label="Nombre de usuario"
         type="text"
@@ -139,7 +162,7 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
         error={errors.username}
       />
 
-      {/* First Name Field */}
+      {/* Campo Nombre */}
       <FormInput
         label="Nombre"
         type="text"
@@ -151,7 +174,7 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
         error={errors.first_name}
       />
 
-      {/* Last Name Field */}
+      {/* Campo Apellido */}
       <FormInput
         label="Apellido"
         type="text"
@@ -163,7 +186,7 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
         error={errors.last_name}
       />
 
-      {/* Email Field */}
+      {/* Campo Email */}
       <FormInput
         label="Correo"
         type="email"
@@ -175,7 +198,7 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
         error={errors.email}
       />
 
-      {/* Password Field */}
+      {/* Campo Contraseña */}
       <FormInput
         label="Contraseña"
         type="password"
@@ -187,19 +210,22 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
         error={errors.password}
       />
 
-      {/* Role Select */}
+      {/* Selector de Rol */}
       <FormSelect
         label="Rol"
-        value={formData.role.toString()}
+        value={formData.role}
         onChange={handleRoleChange}
         placeholder="Seleccione el rol del usuario"
-        options={USER_ROLES}
+        options={[
+          { value: "user", label: "Usuario" },
+          { value: "admin", label: "Administrador" },
+        ]}
         required
         name="role"
         error={errors.role}
       />
 
-      {/* Photo Upload */}
+      {/* Subida de Foto */}
       <FileUpload
         label="Foto del Usuario (Opcional)"
         onFileSelect={handleFileSelect}
@@ -207,9 +233,9 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
         error={errors.photo}
       />
 
-      {/* Action Buttons */}
+      {/* Botones de Acción */}
       <div className={`flex ${mode === 'modal' ? 'justify-end gap-3' : 'flex-col-reverse sm:flex-row items-center justify-between gap-4'} pt-8`}>
-        {/* Cancel Button */}
+        {/* Botón Cancelar */}
         <button
           type="button"
           onClick={handleCancelClick}
@@ -225,7 +251,7 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
           Cancelar
         </button>
 
-        {/* Create Button */}
+        {/* Botón Crear */}
         <button
           type="submit"
           disabled={isLoading}

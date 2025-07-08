@@ -2,17 +2,17 @@
 import { usersApi } from '../api';
 import { CreateUserRequest, User } from '../../types';
 
-// Transform backend validation errors to frontend format
-// Since field names now match, we only need to handle array/string conversion
+// Transformar errores de validación del backend al formato frontend
+// Como los nombres de campos ya coinciden, solo necesitamos manejar conversión array/string
 const transformBackendErrors = (backendErrors: any) => {
   const transformedErrors: { [key: string]: string } = {};
 
   Object.keys(backendErrors).forEach(field => {
     const errorMessages = backendErrors[field];
     
-    // Handle both array and string error formats
+    // Manejar formatos de error tanto array como string
     if (Array.isArray(errorMessages)) {
-      transformedErrors[field] = errorMessages[0]; // Take first error
+      transformedErrors[field] = errorMessages[0]; // Tomar primer error
     } else if (typeof errorMessages === 'string') {
       transformedErrors[field] = errorMessages;
     }
@@ -24,7 +24,7 @@ const transformBackendErrors = (backendErrors: any) => {
 export const userService = {
   createUser: async (userData: CreateUserRequest): Promise<User> => {
     try {
-      // Use FormData if there's a file, otherwise JSON
+      // Usar FormData si hay archivo, de lo contrario JSON
       if (userData.photo) {
         const formData = new FormData();
         formData.append('username', userData.username);
@@ -32,7 +32,7 @@ export const userService = {
         formData.append('last_name', userData.last_name);
         formData.append('email', userData.email);
         formData.append('password', userData.password);
-        formData.append('role', userData.role);
+        formData.append('role', userData.role.toString());
         formData.append('photo', userData.photo);
         
         const response = await usersApi.post('/create-user/', formData, {
@@ -43,7 +43,7 @@ export const userService = {
         
         return response.data;
       } else {
-        // JSON payload for users without photos
+        // Payload JSON para usuarios sin fotos
         const payload = {
           username: userData.username,
           first_name: userData.first_name,
@@ -57,11 +57,11 @@ export const userService = {
         return response.data;
       }
     } catch (error: any) {
-      console.error('Error creating user:', error);
-      console.error('Error details:', error.response?.data);
-      console.error('Error status:', error.response?.status);
+      console.error('Error creando usuario:', error);
+      console.error('Detalles del error:', error.response?.data);
+      console.error('Estado del error:', error.response?.status);
       
-      // Transform backend validation errors to frontend format
+      // Transformar errores de validación del backend al formato frontend
       if (error.response?.status === 400 && error.response?.data) {
         const backendErrors = error.response.data;
         const transformedError = {
@@ -77,22 +77,22 @@ export const userService = {
 
   getUsers: async (): Promise<User[]> => {
     try {
-      // Backend RamaAlanBack branch endpoint for listing users
+      // Endpoint de rama RamaAlanBack del backend para listar usuarios
       const response = await usersApi.get('/create-user/');
       return response.data;
     } catch (error) {
-      console.error('Error fetching users:', error);
+      console.error('Error obteniendo usuarios:', error);
       throw error;
     }
   },
 
   getUserById: async (id: number): Promise<User> => {
     try {
-      // Backend RamaAlanBack branch endpoint for getting specific user
+      // Endpoint de rama RamaAlanBack del backend para obtener usuario específico
       const response = await usersApi.get(`/create-user/${id}/`);
       return response.data;
     } catch (error) {
-      console.error('Error fetching user:', error);
+      console.error('Error obteniendo usuario:', error);
       throw error;
     }
   },
@@ -118,7 +118,7 @@ export const userService = {
         formData.append('password', userData.password);
       }
       if (userData.role !== undefined) {
-        formData.append('role', userData.role);
+        formData.append('role', userData.role.toString());
       }
       
       // Agregar archivo si existe
@@ -126,7 +126,7 @@ export const userService = {
         formData.append('photo', userData.photo);
       }
       
-      // Backend RamaAlanBack branch endpoint for updating user
+      // Endpoint de rama RamaAlanBack del backend para actualizar usuario
       const response = await usersApi.patch(`/create-user/${id}/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -135,9 +135,9 @@ export const userService = {
       
       return response.data;
     } catch (error: any) {
-      console.error('Error updating user:', error);
+      console.error('Error actualizando usuario:', error);
       
-      // Transform backend validation errors to frontend format
+      // Transformar errores de validación del backend al formato frontend
       if (error.response?.status === 400 && error.response?.data) {
         const backendErrors = error.response.data;
         const transformedError = {
@@ -153,10 +153,10 @@ export const userService = {
 
   deleteUser: async (id: number): Promise<void> => {
     try {
-      // Backend RamaAlanBack branch endpoint for deleting user
+      // Endpoint de rama RamaAlanBack del backend para eliminar usuario
       await usersApi.delete(`/create-user/${id}/`);
     } catch (error) {
-      console.error('Error deleting user:', error);
+      console.error('Error eliminando usuario:', error);
       throw error;
     }
   },

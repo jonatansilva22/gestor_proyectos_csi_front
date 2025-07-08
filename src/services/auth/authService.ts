@@ -2,17 +2,17 @@
 import api from '../api';
 import { LoginCredentials, LoginResponse } from '../../types';
 
-// Transform backend login validation errors
-// Since field names match, we only need to handle array/string conversion
+// Transformar errores de validación de login del backend
+// Como los nombres de campos coinciden, solo necesitamos manejar conversión array/string
 const transformLoginErrors = (backendErrors: any) => {
   const transformedErrors: { [key: string]: string } = {};
 
   Object.keys(backendErrors).forEach(field => {
     const errorMessages = backendErrors[field];
     
-    // Handle both array and string error formats
+    // Manejar formatos de error tanto array como string
     if (Array.isArray(errorMessages)) {
-      transformedErrors[field] = errorMessages[0]; // Take first error
+      transformedErrors[field] = errorMessages[0]; // Tomar primer error
     } else if (typeof errorMessages === 'string') {
       transformedErrors[field] = errorMessages;
     }
@@ -24,18 +24,18 @@ const transformLoginErrors = (backendErrors: any) => {
 export const authService = {
   login: async (credentials: LoginCredentials): Promise<LoginResponse> => {
     try {
-      // Backend LogIn branch endpoint
+      // Endpoint de la rama LogIn del backend
       const response = await api.post('/login/', credentials);
       
-      // Backend returns { message, token }, but frontend expects { user, token }
-      // Parse JWT to extract user info
+      // Backend retorna { message, token }, pero frontend espera { user, token }
+      // Parsear JWT para extraer información del usuario
       const token = response.data.token;
       const payload = JSON.parse(atob(token.split('.')[1]));
       
       const loginResponse: LoginResponse = {
         user: {
           id: payload.user_id,
-          username: payload.email.split('@')[0], // Extract username from email
+          username: payload.email.split('@')[0], // Extraer username del email
           email: payload.email
         },
         token: token
@@ -45,7 +45,7 @@ export const authService = {
     } catch (error: any) {
       console.error('Error en servicio de autenticación:', error);
       
-      // Transform backend validation errors for login
+      // Transformar errores de validación del backend para login
       if (error.response?.status === 400 && error.response?.data) {
         const backendErrors = error.response.data;
         const transformedError = {
@@ -55,7 +55,7 @@ export const authService = {
         throw transformedError;
       }
       
-      // Handle 401 unauthorized with specific error message
+      // Manejar 401 no autorizado con mensaje de error específico
       if (error.response?.status === 401) {
         const unauthorizedError = {
           ...error,
@@ -70,7 +70,7 @@ export const authService = {
   
   logout: async (): Promise<void> => {
     try {
-      // TODO: Backend LogIn branch endpoint not implemented yet
+      // TODO: Endpoint de rama LogIn del backend aún no implementado
       // await api.post('/logout/');
       console.log('Logout realizado localmente - endpoint backend no implementado');
     } catch (error) {
@@ -79,9 +79,9 @@ export const authService = {
   },
   
   refreshToken: async (): Promise<LoginResponse> => {
-    // TODO: Backend LogIn branch endpoint for token refresh not implemented yet
+    // TODO: Endpoint de rama LogIn del backend para refresh token aún no implementado
     // const response = await api.post('/token/refresh/');
     // return response.data;
-    throw new Error('Refresh token endpoint not implemented in backend yet');
+    throw new Error('Endpoint de refresh token aún no implementado en backend');
   }
 };

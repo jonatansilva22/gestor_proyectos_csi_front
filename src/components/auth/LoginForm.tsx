@@ -19,20 +19,20 @@ const LoginForm: React.FC = () => {
     e.preventDefault();
     clearErrors();
 
-    // Frontend validation using backend rules
+    // Validación del frontend usando reglas del backend
     const validationResult = validateLoginForm({ email, password });
     
     if (!validationResult.isValid) {
-      // Use the validation errors handler for frontend validation
+      // Usar el manejador de errores de validación para validación del frontend
       setBackendErrors(validationResult.errors);
       return;
     }
 
     try {
       await login(email, password, rememberMe);
-      navigate('/create-user'); // Fixed redirect as per CLAUDE.md
+      navigate('/create-user'); // Redirección corregida según CLAUDE.md
     } catch (error: any) {
-      // Enhanced error handling with backend validation support
+      // Manejo mejorado de errores con soporte para validación del backend
       handleApiError(error);
     }
   };
@@ -58,7 +58,7 @@ const LoginForm: React.FC = () => {
       )}
 
       <form onSubmit={handleSubmit}>
-        {/* --- Email --- */}
+        {/* --- Campo Email --- */}
         <div className="mb-4">
           <label
             className={`block text-sm font-medium mb-2 ${
@@ -69,7 +69,7 @@ const LoginForm: React.FC = () => {
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-              {/* ícono */}
+              {/* Icono email */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5 text-[#6F43D6]"
@@ -90,7 +90,7 @@ const LoginForm: React.FC = () => {
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
-                // Clear email error when user starts typing
+                // Limpiar error de email cuando el usuario comienza a escribir
                 clearFieldError('email');
               }}
               placeholder="user@email.com"
@@ -110,7 +110,7 @@ const LoginForm: React.FC = () => {
           )}
         </div>
 
-        {/* --- Password --- */}
+        {/* --- Campo Contraseña --- */}
         <div className="mb-4">
           <label
             className={`block text-sm font-medium mb-2 ${
@@ -141,7 +141,7 @@ const LoginForm: React.FC = () => {
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
-                // Clear password error when user starts typing
+                // Limpiar error de contraseña cuando el usuario comienza a escribir
                 clearFieldError('password');
               }}
               placeholder="******************"
@@ -204,7 +204,7 @@ const LoginForm: React.FC = () => {
           )}
         </div>
 
-        {/* --- Remember me --- */}
+        {/* --- Recordarme --- */}
         <div className="mb-6">
           <label className="flex items-center cursor-pointer">
             <div className="relative flex items-center">
@@ -246,7 +246,7 @@ const LoginForm: React.FC = () => {
           </label>
         </div>
 
-        {/* --- Submit --- */}
+        {/* --- Botón Enviar --- */}
         <button
           type="submit"
           disabled={isLoading}
