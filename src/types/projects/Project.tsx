@@ -14,3 +14,23 @@ export interface Project {
   start_date: string;
   end_date: string;
 }
+
+export interface Area {
+  id: number;
+  name: string;
+}
+
+export interface Tool {
+  id: number;
+  name: string;
+}
+
+export interface Group {
+  id: number;
+  name: string;
+}
+
+export interface Repository {
+  id: number;
+  name: string;
+}

@@ -1,11 +1,32 @@
 import { useState } from "react";
 
-export const useProjectForm = (initialOwner = 1, initialGroup = 1, initialStatus = 1) => {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [image, setImage] = useState<File | null>(null);
+export const useProjectForm = (
+  initialOwner = 1,
+  initialGroup = 1,
+  initialStatus = 1,
+  initialData?: Partial<{
+    name: string;
+    description: string;
+    startDate: string;
+    endDate: string;
+    image: File | null;
+    groupId: number;
+    statusId: number;
+    areaIds: number[];
+    toolIds: number[];
+    repositoryIds: number[];
+  }>
+) => {
+  const [name, setName] = useState(initialData?.name || "");
+  const [description, setDescription] = useState(initialData?.description || "");
+  const [startDate, setStartDate] = useState(initialData?.startDate || "");
+  const [endDate, setEndDate] = useState(initialData?.endDate || "");
+  const [image, setImage] = useState<File | null>(initialData?.image || null);
+  const [groupId, setGroupId] = useState(initialData?.groupId || initialGroup);
+  const [statusId, setStatusId] = useState(initialData?.statusId || initialStatus);
+  const [areaIds, setAreaIds] = useState<number[]>(initialData?.areaIds || []);
+  const [toolIds, setToolIds] = useState<number[]>(initialData?.toolIds || []);
+  const [repositoryIds, setRepositoryIds] = useState<number[]>(initialData?.repositoryIds || []);
   const [error, setError] = useState<string | null>(null);
 
   const reset = () => {
@@ -14,6 +35,11 @@ export const useProjectForm = (initialOwner = 1, initialGroup = 1, initialStatus
     setStartDate("");
     setEndDate("");
     setImage(null);
+    setGroupId(initialGroup);
+    setStatusId(initialStatus);
+    setAreaIds([]);
+    setToolIds([]);
+    setRepositoryIds([]);
     setError(null);
   };
 
@@ -23,10 +49,12 @@ export const useProjectForm = (initialOwner = 1, initialGroup = 1, initialStatus
     startDate, setStartDate,
     endDate, setEndDate,
     image, setImage,
+    groupId, setGroupId,
+    statusId, setStatusId,
+    areaIds, setAreaIds,
+    toolIds, setToolIds,
+    repositoryIds, setRepositoryIds,
     error, setError,
     reset,
-    initialOwner,
-    initialGroup,
-    initialStatus,
   };
 };

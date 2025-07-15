@@ -2,14 +2,14 @@ import {  ProjectLabel } from '../../const/projectIcons';
 import { InlineEdit } from '../common/InlineEdit';
 
 interface DataRowProps {
-  label: ProjectLabel;
-  value: string;
-  icon: string;
+  label: string;
+  value: string | string[]; // ← puede ser array para multiselect
+  icon?: string;
   editable?: boolean;
-  inputType?: "text" | "date" | "select";
+  inputType?: "text" | "textarea" | "select" | "date" | "multiselect"; // ← agrega multiselect
+  onSave?: (newValue: string | string[]) => Promise<void>; // ← soporte para arrays
+  renderDisplay?: (value: string | string[]) => React.ReactNode;
   options?: { value: string; label: string }[];
-  onSave?: (newValue: string) => Promise<void> | void;
-  renderDisplay?: (value: string) => React.ReactNode;
   colorDot?: string;
 }
 
@@ -29,16 +29,18 @@ export const DataRow = ({
     <span className="w-56 font-semibold">{label}</span>
     {colorDot && <span className={`w-4 h-4 rounded-full inline-block ${colorDot} mr-2`} />}
     {editable && onSave ? (
-      <InlineEdit
-        value={value}
-        inputType={inputType}
-        options={options}
-        onSave={onSave}
-        renderDisplay={renderDisplay}
-        className="text-sm"
-      />
-    ) : (
-      <span className="text-sm">{renderDisplay ? renderDisplay(value) : value}</span>
+  <InlineEdit
+    value={value}
+    inputType={inputType}
+    onSave={onSave}
+    renderDisplay={renderDisplay}
+    options={options}
+    className="flex-1"
+  />
+) : (
+  <div className="flex-1">
+  {renderDisplay ? renderDisplay(value) : <span>{String(value)}</span>}
+</div>
     )}
   </div>
 );

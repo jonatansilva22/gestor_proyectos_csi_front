@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Project } from '../../types/projects/Project';
+import { Project, Area, Tool, Repository, Group } from '../../types/projects/Project';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -24,14 +24,40 @@ export const deleteProject = async (id: number) => {
   await axios.delete(`${API_URL}/projects/${id}/`);
 };
 
-export async function updateProject(id: number, data: Partial<Project>) {
-  const response = await axios.patch(`${API_URL}/projects/${id}/`, data, {
-    headers: { "Content-Type": "application/json" },
+export const updateProject = async (id: number, data: any) => {
+  // Detectar si es FormData para setear headers correcto
+  const isFormData = data instanceof FormData;
+  const headers = isFormData
+    ? { "Content-Type": "multipart/form-data" }
+    : { "Content-Type": "application/json" };
+
+  const { data: response } = await axios.patch(`${API_URL}/projects/${id}/`, data, {
+    headers,
   });
-  return response.data;
+  return response;
 };
 
 export const getStatusTypes = async (): Promise<{ id: number; name: string }[]> => {
   const { data } = await axios.get<{ id: number; name: string }[]>(`${API_URL}/status-types/`);
+  return data;
+};
+
+export const getAreas = async (): Promise<Area[]> => {
+  const { data } = await axios.get<Area[]>(`${API_URL}/areas/`);
+  return data;
+};
+
+export const getTools = async (): Promise<Tool[]> => {
+  const { data } = await axios.get<Tool[]>(`${API_URL}/tools/`);
+  return data;
+};
+
+export const getGroups = async (): Promise<Group[]> => {
+  const { data } = await axios.get<Group[]>(`${API_URL}/groups/`);
+  return data;
+};
+
+export const getRepositories = async (): Promise<Repository[]> => {
+  const { data } = await axios.get<Repository[]>(`${API_URL}/repositories/`);
   return data;
 };

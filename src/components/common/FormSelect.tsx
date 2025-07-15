@@ -1,4 +1,3 @@
-// src/components/ui/FormSelect.tsx
 import React, { useState } from "react";
 
 interface Option {
@@ -40,10 +39,10 @@ export const FormSelect: React.FC<FormSelectProps> = ({
     <div className="flex flex-col gap-2 w-full">
       <label
         htmlFor={name}
-        className="font-inter text-base font-normal leading-[140%] text-gray-900 dark:text-white"
+        className="font-semibold mb-1 text-base leading-[140%] text-gray-900 "
       >
         {label}
-        {required && "*"}
+        {required && <span className="text-red-500">*</span>}
       </label>
       <div className="relative">
         <button
@@ -56,7 +55,7 @@ export const FormSelect: React.FC<FormSelectProps> = ({
             ${
               error
                 ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200"
-                : "border-gray-300 focus:border-[#6F43D6] focus:ring-2 focus:ring-purple-200"
+                : "border-gray-900 focus:border-[#6F43D6] focus:ring-2 focus:ring-purple-200"
             }
             focus:outline-none
           `}

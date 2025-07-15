@@ -12,6 +12,7 @@ import { ProjectsTablePage } from "./pages/projects/ProjectsTablePage";
 import { AreasTablePage } from "./pages/areas/AreasTablePage";
 import { RepositoriesTablePage } from "./pages/repositories/RepositoriesTablePage";
 import { ToolsTablePage } from "./pages/tools/ToolsTablePage";
+import { GroupsTablePage } from "./pages/groups/GroupsTablePage";
 import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -37,6 +38,7 @@ function App() {
             <Route path="/areas-table" element={<AreasTablePage />} />
             <Route path="/repositories-table" element={<RepositoriesTablePage />} />
             <Route path="/tools-table" element={<ToolsTablePage />} />
+            <Route path="/groups-table" element={<GroupsTablePage />} />
 
             {/* Redirección de cualquier errorcillo */}
             <Route path="*" element={<Login />} />
