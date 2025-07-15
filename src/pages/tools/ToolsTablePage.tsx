@@ -1,8 +1,7 @@
-// src/pages/tools/ToolsTablePage.tsx
 import { useNavigate } from "react-router-dom";
 import { useTools } from "../../hooks/tools/useTools";
 import { useEntityModals } from "../../hooks/projects/useEntityModal";
-import { Header } from "../../components/common/Header";
+import HeaderSidebarLayout from "../../components/common/HeaderSidebarLayout"; // <-- Importa tu layout
 import { Modal } from "../../components/common/Modal";
 import { NewItemButton } from "../../components/common/NewItemButton";
 import { DeleteToolModal } from "../../components/tools/DeleteToolModal";
@@ -33,9 +32,9 @@ export const ToolsTablePage = () => {
   } = useEntityModals<Tool>();
 
   interface ToolFormData {
-  name: string;
-  image: File | null;
-}
+    name: string;
+    image: File | null;
+  }
 
   const handleCreateSubmit = async (data: ToolFormData) => {
     try {
@@ -74,8 +73,7 @@ export const ToolsTablePage = () => {
   };
 
   return (
-    <>
-      <Header title="CSI PRO" />
+    <HeaderSidebarLayout headerTitle="CSI PRO - Herramientas">
       <div className="p-4 w-full h-full min-h-screen flex justify-center bg-white">
         <div className="w-full max-w-7xl">
           <button
@@ -120,6 +118,6 @@ export const ToolsTablePage = () => {
         onCancel={closeDeleteModal}
         onConfirm={handleConfirmDelete}
       />
-    </>
+    </HeaderSidebarLayout>
   );
 };

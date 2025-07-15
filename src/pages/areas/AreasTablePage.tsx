@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAreas } from "../../hooks/areas/useAreas";
 import { useEntityModals } from "../../hooks/projects/useEntityModal";
-import { Header } from "../../components/common/Header";
+import HeaderSidebarLayout from "../../components/common/HeaderSidebarLayout";
 import { Modal } from "../../components/common/Modal";
 import { NewItemButton } from "../../components/common/NewItemButton";
 import { DeleteAreaModal } from "../../components/areas/DeleteAreaModal";
@@ -31,7 +31,6 @@ export const AreasTablePage = () => {
     entityToDelete: areaToDelete,
   } = useEntityModals<Area>();
 
-
   const handleCreateSubmit = async (data: { name: string }) => {
     try {
       await createArea(data);
@@ -42,7 +41,6 @@ export const AreasTablePage = () => {
       notifyError(getBackendErrorMsg(error));
     }
   };
-
 
   const handleEditSubmit = async (updatedData: { name: string }) => {
     if (!entityToEdit) return;
@@ -55,7 +53,6 @@ export const AreasTablePage = () => {
       notifyError(getBackendErrorMsg(error));
     }
   };
-
 
   const handleConfirmDelete = async () => {
     if (!areaToDelete) return;
@@ -71,8 +68,7 @@ export const AreasTablePage = () => {
   };
 
   return (
-    <>
-      <Header title="CSI PRO" />
+    <HeaderSidebarLayout headerTitle="CSI PRO - Áreas">
       <div className="p-4 w-full h-full min-h-screen flex justify-center bg-white">
         <div className="w-full max-w-7xl">
           <button
@@ -97,24 +93,11 @@ export const AreasTablePage = () => {
         </div>
       </div>
 
-    
-      <Modal
-        open={showModal}
-        onClose={closeCreateModal}
-        title="Nueva Área"
-      >
-        <AreaForm
-          onSubmit={handleCreateSubmit}
-          onCancel={closeCreateModal}
-        />
+      <Modal open={showModal} onClose={closeCreateModal} title="Nueva Área">
+        <AreaForm onSubmit={handleCreateSubmit} onCancel={closeCreateModal} />
       </Modal>
 
-    
-      <Modal
-        open={editModalOpen}
-        onClose={closeEditModal}
-        title="Editar Área"
-      >
+      <Modal open={editModalOpen} onClose={closeEditModal} title="Editar Área">
         {entityToEdit && (
           <AreaForm
             initialData={entityToEdit}
@@ -124,13 +107,12 @@ export const AreasTablePage = () => {
         )}
       </Modal>
 
-   
       <DeleteAreaModal
         open={deleteModalOpen}
         area={areaToDelete}
         onCancel={closeDeleteModal}
         onConfirm={handleConfirmDelete}
       />
-    </>
+    </HeaderSidebarLayout>
   );
 };

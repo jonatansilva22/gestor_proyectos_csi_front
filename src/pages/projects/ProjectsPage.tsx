@@ -1,15 +1,13 @@
+import React from "react";
 import { ProjectCard } from "../../components/projects/ProjectCard";
-import { Header } from "../../components/common/Header";
 import { useProjects } from "../../hooks/projects/useProjects";
+import HeaderSidebarLayout from "../../components/common/HeaderSidebarLayout";
 
 export const ProjectsPage = () => {
   const { projects } = useProjects();
 
   return (
-    <>
-      <div className="pb-14">
-        <Header title="CSI PRO" />
-      </div>
+    <HeaderSidebarLayout headerTitle="CSI PRO - Proyectos">
       <div className="container mx-auto">
         <div className="flex flex-wrap gap-4 px-10">
           {projects.map((project) => (
@@ -17,6 +15,6 @@ export const ProjectsPage = () => {
           ))}
         </div>
       </div>
-    </>
+    </HeaderSidebarLayout>
   );
 };

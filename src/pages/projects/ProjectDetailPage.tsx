@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { ProjectImageAndDescription } from "../../components/projects/ProjectDetailHeader";
 import { ProjectDataTable } from "../../components/projects/ProjectDetailDataTable";
-import { Header } from "../../components/common/Header";
+import HeaderSidebarLayout from "../../components/common/HeaderSidebarLayout";
 import volver from "../../assets/volver.png";
 import { useProjectDetail } from "../../hooks/projects/useProjectDetail";
 
@@ -15,8 +15,7 @@ export const ProjectDetailPage = () => {
   }
 
   return (
-    <>
-      <Header title="CSI PRO" />
+    <HeaderSidebarLayout headerTitle="CSI PRO - Detalle del Proyecto">
       <div className="p-8 max-w-5xl mx-auto">
         <button
           onClick={() => navigate(-1)}
@@ -30,6 +29,6 @@ export const ProjectDetailPage = () => {
         />
         <ProjectDataTable project={project} onProjectUpdate={setProject} />
       </div>
-    </>
+    </HeaderSidebarLayout>
   );
 };

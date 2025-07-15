@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useRepositories } from "../../hooks/repositories/useRepositories";
 import { useEntityModals } from "../../hooks/projects/useEntityModal";
-import { Header } from "../../components/common/Header";
+import HeaderSidebarLayout from "../../components/common/HeaderSidebarLayout"; // <-- importar el layout
 import { Modal } from "../../components/common/Modal";
 import { NewItemButton } from "../../components/common/NewItemButton";
 import { DeleteRepositoryModal } from "../../components/repositories/DeleteRepositoryModal";
@@ -68,8 +68,7 @@ export const RepositoriesTablePage = () => {
   };
 
   return (
-    <>
-      <Header title="CSI PRO" />
+    <HeaderSidebarLayout headerTitle="CSI PRO - Repositorios">
       <div className="p-4 w-full h-full min-h-screen flex justify-center bg-white">
         <div className="w-full max-w-7xl">
           <button
@@ -114,6 +113,6 @@ export const RepositoriesTablePage = () => {
         onCancel={closeDeleteModal}
         onConfirm={handleConfirmDelete}
       />
-    </>
+    </HeaderSidebarLayout>
   );
 };

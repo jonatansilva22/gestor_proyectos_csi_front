@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Group } from "../../types/groups/Group";
 import { getGroups, createGroup, updateGroup, deleteGroup, getUsers } from "../../services/groups/groupsServices";
 
-import { Header } from "../../components/common/Header";
+import HeaderSidebarLayout from "../../components/common/HeaderSidebarLayout"; // Importa tu layout
 import { Modal } from "../../components/common/Modal";
 import { NewItemButton } from "../../components/common/NewItemButton";
 import { GroupsTable } from "../../components/groups/GroupsTable";
@@ -103,8 +103,7 @@ export const GroupsTablePage = () => {
   };
 
   return (
-    <>
-      <Header title="CSI PRO" />
+    <HeaderSidebarLayout headerTitle="CSI PRO - Grupos">
       <div className="p-4 w-full h-full min-h-screen flex justify-center bg-white">
         <div className="w-full max-w-7xl">
           <button
@@ -168,6 +167,6 @@ export const GroupsTablePage = () => {
         onCancel={() => setShowDeleteModal(false)}
         onConfirm={handleConfirmDelete}
       />
-    </>
+    </HeaderSidebarLayout>
   );
 };
