@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
 interface EntityActionsProps {
-  id: number;
   onDelete: () => void;
   detailsPath?: string;
   detailsLabel?: string;
@@ -10,7 +9,6 @@ interface EntityActionsProps {
 }
 
 export const EntityActions = ({
-  id,
   onDelete,
   detailsPath,
   detailsLabel = "Ver Detalles",

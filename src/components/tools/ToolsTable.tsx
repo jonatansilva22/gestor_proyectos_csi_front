@@ -40,7 +40,6 @@ export const ToolsTable = ({ tools, onDeleteClick, onEditClick }: ToolsTableProp
 <td className="px-4 py-2 text-sm text-gray-700">{new Date(tool.updated_at).toLocaleString()}</td>
         <td className="text-center w-32 py-4">
           <EntityActions
-            id={tool.id}
             onDelete={() => onDeleteClick(tool)}
             detailsLabel="Editar"
             deleteIcon={borrar}

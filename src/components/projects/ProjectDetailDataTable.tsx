@@ -18,9 +18,11 @@ export const ProjectDataTable = ({ project, onProjectUpdate }: ProjectDataTableP
   const statusOptions = useStatusOptions();
 
   return (
-    <div>
-      <div className="font-semibold text-center mb-2 pb-3">Datos del proyecto</div>
-      <div className="border-t border-b divide-y">
+    <div className="bg-white rounded-lg shadow-sm">
+      <div className="px-4 sm:px-6 py-4 border-b">
+        <h2 className="font-semibold text-lg sm:text-xl text-gray-900">Datos del proyecto</h2>
+      </div>
+      <div className="divide-y divide-gray-200">
         <DataRow label="Encargado" value={project.project_owner ? String(project.project_owner) : 'No disponible'} icon={PROJECT_ICONS["Encargado"]} />
         <DataRow label="Grupo" value={project.group ? String(project.group) : 'No disponible'} icon={PROJECT_ICONS["Grupo"]} />
         <DataRow label="Colaboradores" value="No disponible" icon={PROJECT_ICONS["Colaboradores"]} />

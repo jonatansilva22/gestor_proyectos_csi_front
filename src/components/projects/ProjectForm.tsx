@@ -27,7 +27,6 @@ export const ProjectForm = ({
     endDate, setEndDate,
     image, setImage,
     error, setError,
-    reset,
   } = useProjectForm(projectOwnerId, groupId, statusId);
 
   const handleSubmit = (e: React.FormEvent) => {

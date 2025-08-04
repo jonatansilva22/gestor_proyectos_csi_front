@@ -1,9 +1,14 @@
 // src/services/auth/authService.ts
+// Servicio de autenticación para manejo de login y logout
+// Transforma las respuestas del backend y maneja errores de validación
+
 import api from '../api';
 import { LoginCredentials, LoginResponse } from '../../types';
 
-// Transformar errores de validación de login del backend
-// Como los nombres de campos coinciden, solo necesitamos manejar conversión array/string
+/**
+ * Transforma errores de validación del backend a formato esperado por el frontend
+ * Convierte arrays de errores a strings y normaliza el formato
+ */
 const transformLoginErrors = (backendErrors: any) => {
   const transformedErrors: { [key: string]: string } = {};
 
@@ -21,14 +26,22 @@ const transformLoginErrors = (backendErrors: any) => {
   return transformedErrors;
 };
 
+/**
+ * Servicio de autenticación que maneja el login y logout de usuarios
+ */
 export const authService = {
+  /**
+   * Realiza el login del usuario y transforma la respuesta del backend
+   * @param credentials - Credenciales de login (email y password)
+   * @returns Respuesta de login con información del usuario y token
+   */
   login: async (credentials: LoginCredentials): Promise<LoginResponse> => {
     try {
-      // Endpoint de la rama LogIn del backend
+      // Llamada al endpoint de login del backend
       const response = await api.post('/login/', credentials);
       
-      // Backend retorna { message, token }, pero frontend espera { user, token }
-      // Parsear JWT para extraer información del usuario
+      // El backend retorna { message, token }, pero el frontend espera { user, token }
+      // Decodificar JWT para extraer información del usuario
       const token = response.data.token;
       const payload = JSON.parse(atob(token.split('.')[1]));
       

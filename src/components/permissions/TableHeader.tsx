@@ -47,48 +47,48 @@ export const TableHeader: React.FC = () => {
         <div className="w-10 h-10"></div>
       </div>
 
-      {/* Header de la tabla */}
+      {/* Header de la tabla - Grid Structure */}
       <div
-        className={`flex items-center py-4 px-6 border-b ${
+        className={`grid grid-cols-12 gap-6 items-center py-4 px-8 border-b ${
           darkMode 
             ? "bg-[#3A2B5A] border-purple-700/40 text-white" 
             : "bg-white border-purple-300 text-black"
         }`}
       >
-      {/* Nombre */}
-      <div className="flex-1">
-        <span className="font-inter text-lg font-semibold">
-          Nombre
-        </span>
-      </div>
+        {/* Selección */}
+        <div className="col-span-1 flex justify-center">
+          <span className="font-inter text-sm font-semibold">
+            Sel.
+          </span>
+        </div>
 
-      {/* Estatus */}
-      <div className="flex-1 flex justify-center">
-        <span className="font-inter text-lg font-semibold">
-          Estatus
-        </span>
-      </div>
+        {/* Nombre */}
+        <div className="col-span-4">
+          <span className="font-inter text-sm font-semibold">
+            Nombre y Permisos
+          </span>
+        </div>
 
-      {/* Correo */}
-      <div className="flex-1 flex justify-center">
-        <span className="font-inter text-lg font-semibold">
-          Correo
-        </span>
-      </div>
+        {/* Estado */}
+        <div className="col-span-2 flex justify-center">
+          <span className="font-inter text-sm font-semibold">
+            Estado
+          </span>
+        </div>
 
-      {/* Permisos */}
-      <div className="flex-1 flex justify-center">
-        <span className="font-inter text-lg font-semibold">
-          Permisos
-        </span>
-      </div>
+        {/* Correo */}
+        <div className="col-span-2">
+          <span className="font-inter text-sm font-semibold">
+            Correo Electrónico
+          </span>
+        </div>
 
-      {/* Acciones */}
-      <div className="flex justify-center w-16">
-        <span className="font-inter text-lg font-semibold">
-          Acciones
-        </span>
-      </div>
+        {/* Acciones */}
+        <div className="col-span-3 flex justify-end pr-4">
+          <span className="font-inter text-sm font-semibold">
+            Acciones
+          </span>
+        </div>
       </div>
     </div>
   );

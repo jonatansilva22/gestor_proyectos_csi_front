@@ -1,199 +1,160 @@
 // src/components/permissions/PermissionsModal.tsx
 import React, { useState, useEffect } from "react";
-import {
-  Student,
-  StudentPermissions,
-  PERMISSION_TEMPLATES,
-} from "../../types/permissions";
-import { useTheme } from "../../context/ThemeContext";
+import { Modal } from "../common/Modal";
+import { User } from "../../types/permissions";
+import { UserPermissions } from "../../types/auth";
 
 interface PermissionsModalProps {
-  student: Student | null;
-  isOpen: boolean;
+  open: boolean;
   onClose: () => void;
-  onSave: (studentId: number, permissions: StudentPermissions) => Promise<void>;
+  onSave: (permissions: UserPermissions) => void;
+  user: User | null;
 }
 
 export const PermissionsModal: React.FC<PermissionsModalProps> = ({
-  student,
-  isOpen,
+  open,
   onClose,
   onSave,
+  user,
 }) => {
-  const { darkMode } = useTheme();
-  const [permissions, setPermissions] = useState<StudentPermissions>({
+  const [permissions, setPermissions] = useState<UserPermissions>({
+    modelPermissions: [],
+    objectPermissions: [],
     canRead: false,
     canWrite: false,
     canDelete: false,
     canManageProjects: false,
+    canManageUsers: false,
     canViewReports: false,
     canExport: false,
+    canManagePermissions: false
   });
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (student) {
-      setPermissions(student.permissions);
+    if (user) {
+      // This component might need to be refactored to work with backend permissions
+      // For now, use default permissions
+      setPermissions({
+        modelPermissions: [],
+        objectPermissions: [],
+        canRead: true,
+        canWrite: false,
+        canDelete: false,
+        canManageProjects: false,
+        canManageUsers: false,
+        canViewReports: false,
+        canExport: false,
+        canManagePermissions: false
+      });
     }
-  }, [student]);
+  }, [user]);
 
-  const handlePermissionChange = (permission: keyof StudentPermissions) => {
-    setPermissions((prev) => ({
-      ...prev,
-      [permission]: !prev[permission],
-    }));
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setPermissions((prev) => ({ ...prev, [name]: checked }));
   };
 
-  const applyTemplate = (templateName: keyof typeof PERMISSION_TEMPLATES) => {
-    setPermissions(PERMISSION_TEMPLATES[templateName]);
-  };
-
-  const handleSave = async () => {
-    if (!student) return;
-
-    setLoading(true);
-    try {
-      await onSave(student.id, permissions);
-      onClose();
-    } catch (error) {
-      console.error("Error saving permissions:", error);
-    } finally {
-      setLoading(false);
+  const handleTemplateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const templateName = e.target.value;
+    if (templateName === 'readonly') {
+      setPermissions({
+        modelPermissions: [],
+        objectPermissions: [],
+        canRead: true,
+        canWrite: false,
+        canDelete: false,
+        canManageProjects: false,
+        canManageUsers: false,
+        canViewReports: false,
+        canExport: false,
+        canManagePermissions: false
+      });
+    } else if (templateName === 'editor') {
+      setPermissions({
+        modelPermissions: [],
+        objectPermissions: [],
+        canRead: true,
+        canWrite: true,
+        canDelete: false,
+        canManageProjects: false,
+        canManageUsers: false,
+        canViewReports: true,
+        canExport: true,
+        canManagePermissions: false
+      });
+    } else if (templateName === 'admin') {
+      setPermissions({
+        modelPermissions: [],
+        objectPermissions: [],
+        canRead: true,
+        canWrite: true,
+        canDelete: true,
+        canManageProjects: true,
+        canManageUsers: true,
+        canViewReports: true,
+        canExport: true,
+        canManagePermissions: true
+      });
     }
   };
 
-  if (!isOpen || !student) return null;
+  const handleSave = () => {
+    onSave(permissions);
+    onClose();
+  };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div
-        className={`w-full max-w-md mx-4 rounded-lg shadow-xl ${darkMode ? "bg-gray-800" : "bg-white"}`}
-      >
-        {/* Header */}
-        <div
-          className={`px-6 py-4 border-b ${darkMode ? "border-gray-700" : "border-gray-200"}`}
-        >
-          <div className="flex items-center justify-between">
-            <h3
-              className={`text-lg font-semibold ${darkMode ? "text-white" : "text-gray-900"}`}
-            >
-              Permisos para {student.name}
-            </h3>
-            <button
-              onClick={onClose}
-              className={`text-gray-400 hover:text-gray-600 ${darkMode ? "hover:text-gray-300" : ""}`}
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
+    <Modal
+      title={`Editando permisos de ${user?.name}`}
+      open={open}
+      onClose={onClose}
+    >
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Plantilla de permisos
+          </label>
+          <select
+            onChange={handleTemplateChange}
+            className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="">Seleccionar plantilla</option>
+            <option value="readonly">Solo Lectura</option>
+            <option value="editor">Editor</option>
+            <option value="admin">Administrador</option>
+          </select>
         </div>
 
-        {/* Content */}
-        <div className="px-6 py-4">
-          {/* Template Buttons */}
-          <div className="mb-6">
-            <label
-              className={`block text-sm font-medium mb-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
-            >
-              Plantillas rápidas:
+        <div className="grid grid-cols-2 gap-4">
+          {['canRead', 'canWrite', 'canDelete', 'canManageProjects', 'canManageUsers', 'canViewReports', 'canExport', 'canManagePermissions'].map((key) => (
+            <label key={key} className="flex items-center space-x-3">
+              <input
+                type="checkbox"
+                name={key}
+                checked={permissions[key as keyof UserPermissions] as boolean}
+                onChange={handleCheckboxChange}
+                className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <span className="text-gray-700">{key}</span>
             </label>
-            <div className="flex space-x-2">
-              <button
-                onClick={() => applyTemplate("readonly")}
-                className="px-3 py-1 text-xs bg-blue-100 text-blue-800 rounded hover:bg-blue-200 transition-colors"
-              >
-                Solo lectura
-              </button>
-              <button
-                onClick={() => applyTemplate("editor")}
-                className="px-3 py-1 text-xs bg-green-100 text-green-800 rounded hover:bg-green-200 transition-colors"
-              >
-                Editor
-              </button>
-              <button
-                onClick={() => applyTemplate("admin")}
-                className="px-3 py-1 text-xs bg-purple-100 text-purple-800 rounded hover:bg-purple-200 transition-colors"
-              >
-                Administrador
-              </button>
-            </div>
-          </div>
-
-          {/* Permission Checkboxes */}
-          <div className="space-y-3">
-            {Object.entries(permissions).map(([key, value]) => (
-              <label
-                key={key}
-                className="flex items-center space-x-3 cursor-pointer"
-              >
-                <input
-                  type="checkbox"
-                  checked={value}
-                  onChange={() =>
-                    handlePermissionChange(key as keyof StudentPermissions)
-                  }
-                  className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
-                />
-                <span
-                  className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-700"}`}
-                >
-                  {getPermissionLabel(key)}
-                </span>
-              </label>
-            ))}
-          </div>
+          ))}
         </div>
 
-        {/* Footer */}
-        <div
-          className={`px-6 py-4 border-t ${darkMode ? "border-gray-700" : "border-gray-200"} flex justify-end space-x-3`}
-        >
+        <div className="flex justify-end pt-4 space-x-2">
           <button
             onClick={onClose}
-            disabled={loading}
-            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-              darkMode
-                ? "text-gray-300 hover:text-white"
-                : "text-gray-700 hover:text-gray-900"
-            }`}
+            className="px-4 py-2 font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
           >
             Cancelar
           </button>
           <button
             onClick={handleSave}
-            disabled={loading}
-            className={`px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700 transition-colors ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            className="px-4 py-2 font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
           >
-            {loading ? "Guardando..." : "Guardar"}
+            Guardar Cambios
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
-};
-
-const getPermissionLabel = (key: string): string => {
-  const labels: Record<string, string> = {
-    canRead: "Puede leer",
-    canWrite: "Puede escribir",
-    canDelete: "Puede eliminar",
-    canManageProjects: "Puede gestionar proyectos",
-    canViewReports: "Puede ver reportes",
-    canExport: "Puede exportar",
-  };
-  return labels[key] || key;
 };

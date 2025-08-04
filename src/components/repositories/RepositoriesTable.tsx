@@ -51,7 +51,6 @@ export const RepositoriesTable = ({
         </td>
         <td className="text-left w-60">
           <EntityActions
-            id={repo.id}
             onDelete={() => onDeleteClick(repo)}
             detailsLabel="Editar"
             deleteIcon={borrar}

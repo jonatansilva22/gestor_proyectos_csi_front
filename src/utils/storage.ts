@@ -22,8 +22,13 @@ export const storage = {
   
   // User
   getUser: (): any | null => {
-    const user = localStorage.getItem(USER_KEY) || sessionStorage.getItem(USER_KEY);
-    return user ? JSON.parse(user) : null;
+    try {
+      const user = localStorage.getItem(USER_KEY) || sessionStorage.getItem(USER_KEY);
+      return user ? JSON.parse(user) : null;
+    } catch (error) {
+      console.error('Error parsing user from storage:', error);
+      return null;
+    }
   },
   
   setUser: (user: any, remember: boolean): void => {

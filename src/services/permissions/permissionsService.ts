@@ -1,154 +1,105 @@
 // src/services/permissions/permissionsService.ts
 import {
-  Student,
-  StudentsListResponse,
-  UpdateStudentPermissionsRequest,
-  CreateStudentRequest,
-  StudentFilters,
-  StudentStats,
+  User,
+  UsersListResponse,
+  CreateUserRequest,
+  UserFilters,
+  UserStats,
 } from "../../types/permissions";
 
 // Mock data for development
-const mockStudents: Student[] = [
+const mockUsers: User[] = [
   {
     id: 1,
-    name: "Alumno 1",
-    email: "alumno@unison.mx",
+    name: "Usuario 1",
+    email: "usuario@unison.mx",
     status: "active",
     isActive: true,
-    permissions: {
-      canRead: true,
-      canWrite: false,
-      canDelete: false,
-      canManageProjects: false,
-      canViewReports: true,
-      canExport: false,
-    },
     createdAt: "2024-01-15T10:30:00Z",
     updatedAt: "2024-01-15T10:30:00Z",
   },
   {
     id: 2,
-    name: "Alumno 2",
-    email: "alumno@unison.mx",
+    name: "Usuario 2",
+    email: "usuario@unison.mx",
     status: "no_project",
     isActive: true,
-    permissions: {
-      canRead: true,
-      canWrite: false,
-      canDelete: false,
-      canManageProjects: false,
-      canViewReports: false,
-      canExport: false,
-    },
     createdAt: "2024-01-14T09:15:00Z",
     updatedAt: "2024-01-14T09:15:00Z",
   },
   {
     id: 3,
-    name: "Alumno 3",
-    email: "alumno@unison.mx",
+    name: "Usuario 3",
+    email: "usuario@unison.mx",
     status: "active",
     isActive: true,
-    permissions: {
-      canRead: true,
-      canWrite: true,
-      canDelete: false,
-      canManageProjects: false,
-      canViewReports: true,
-      canExport: true,
-    },
     createdAt: "2024-01-13T14:20:00Z",
     updatedAt: "2024-01-13T14:20:00Z",
   },
   {
     id: 4,
-    name: "Alumno 4",
-    email: "alumno@unison.mx",
+    name: "Usuario 4",
+    email: "usuario@unison.mx",
     status: "active",
     isActive: true,
-    permissions: {
-      canRead: true,
-      canWrite: false,
-      canDelete: false,
-      canManageProjects: false,
-      canViewReports: true,
-      canExport: false,
-    },
     createdAt: "2024-01-12T11:45:00Z",
     updatedAt: "2024-01-12T11:45:00Z",
   },
   {
     id: 5,
-    name: "Alumno 5",
-    email: "alumno@unison.mx",
+    name: "Usuario 5",
+    email: "usuario@unison.mx",
     status: "inactive",
     isActive: false,
-    permissions: {
-      canRead: false,
-      canWrite: false,
-      canDelete: false,
-      canManageProjects: false,
-      canViewReports: false,
-      canExport: false,
-    },
     createdAt: "2024-01-11T16:10:00Z",
     updatedAt: "2024-01-11T16:10:00Z",
   },
   {
     id: 6,
-    name: "Alumno 6",
-    email: "alumno@unison.mx",
+    name: "Usuario 6",
+    email: "usuario@unison.mx",
     status: "active",
     isActive: true,
-    permissions: {
-      canRead: true,
-      canWrite: true,
-      canDelete: true,
-      canManageProjects: true,
-      canViewReports: true,
-      canExport: true,
-    },
     createdAt: "2024-01-10T08:30:00Z",
     updatedAt: "2024-01-10T08:30:00Z",
   },
 ];
 
 class PermissionsService {
-  private students: Student[] = [...mockStudents];
+  private users: User[] = [...mockUsers];
 
-  async getStudents(filters?: StudentFilters): Promise<StudentsListResponse> {
+  async getUsers(filters?: UserFilters): Promise<UsersListResponse> {
     try {
       // Simulate API delay
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      let filteredStudents = [...this.students];
+      let filteredUsers = [...this.users];
 
       // Apply filters
       if (filters?.status) {
-        filteredStudents = filteredStudents.filter(
-          (s) => s.status === filters.status,
+        filteredUsers = filteredUsers.filter(
+          (u) => u.status === filters.status,
         );
       }
 
       if (filters?.searchTerm) {
         const term = filters.searchTerm.toLowerCase();
-        filteredStudents = filteredStudents.filter(
-          (s) =>
-            s.name.toLowerCase().includes(term) ||
-            s.email.toLowerCase().includes(term),
+        filteredUsers = filteredUsers.filter(
+          (u) =>
+            u.name.toLowerCase().includes(term) ||
+            u.email.toLowerCase().includes(term),
         );
       }
 
       if (filters?.isActive !== undefined) {
-        filteredStudents = filteredStudents.filter(
-          (s) => s.isActive === filters.isActive,
+        filteredUsers = filteredUsers.filter(
+          (u) => u.isActive === filters.isActive,
         );
       }
 
       // Apply sorting
       if (filters?.sortBy) {
-        filteredStudents.sort((a, b) => {
+        filteredUsers.sort((a, b) => {
           const order = filters.sortOrder === "desc" ? -1 : 1;
           const aValue = a[filters.sortBy!];
           const bValue = b[filters.sortBy!];
@@ -162,111 +113,83 @@ class PermissionsService {
       }
 
       return {
-        students: filteredStudents,
-        total: filteredStudents.length,
+        users: filteredUsers,
+        total: filteredUsers.length,
         page: 1,
         limit: 50,
       };
     } catch (error) {
-      console.error("Error fetching students:", error);
-      throw new Error("Failed to fetch students");
+      console.error("Error fetching users:", error);
+      throw new Error("Failed to fetch users");
     }
   }
 
-  async getStudentById(id: number): Promise<Student> {
+  async getUserById(id: number): Promise<User> {
     try {
       await new Promise((resolve) => setTimeout(resolve, 300));
 
-      const student = this.students.find((s) => s.id === id);
-      if (!student) {
-        throw new Error("Student not found");
+      const user = this.users.find((u) => u.id === id);
+      if (!user) {
+        throw new Error("User not found");
       }
 
-      return student;
+      return user;
     } catch (error) {
-      console.error("Error fetching student:", error);
+      console.error("Error fetching user:", error);
       throw error;
     }
   }
 
-  async updateStudentPermissions(
-    request: UpdateStudentPermissionsRequest,
-  ): Promise<Student> {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
-      const studentIndex = this.students.findIndex(
-        (s) => s.id === request.studentId,
-      );
-      if (studentIndex === -1) {
-        throw new Error("Student not found");
-      }
-
-      this.students[studentIndex] = {
-        ...this.students[studentIndex],
-        permissions: request.permissions,
-        updatedAt: new Date().toISOString(),
-      };
-
-      return this.students[studentIndex];
-    } catch (error) {
-      console.error("Error updating student permissions:", error);
-      throw error;
-    }
-  }
-
-  async deleteStudent(id: number): Promise<void> {
+  async deleteUser(id: number): Promise<void> {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      const studentIndex = this.students.findIndex((s) => s.id === id);
-      if (studentIndex === -1) {
-        throw new Error("Student not found");
+      const userIndex = this.users.findIndex((u) => u.id === id);
+      if (userIndex === -1) {
+        throw new Error("User not found");
       }
 
-      this.students.splice(studentIndex, 1);
+      this.users.splice(userIndex, 1);
     } catch (error) {
-      console.error("Error deleting student:", error);
+      console.error("Error deleting user:", error);
       throw error;
     }
   }
 
-  async createStudent(request: CreateStudentRequest): Promise<Student> {
+  async createUser(request: CreateUserRequest): Promise<User> {
     try {
       await new Promise((resolve) => setTimeout(resolve, 800));
 
-      const newStudent: Student = {
-        id: Math.max(...this.students.map((s) => s.id)) + 1,
+      const newUser: User = {
+        id: Math.max(...this.users.map((u) => u.id)) + 1,
         ...request,
         isActive: request.status !== "inactive",
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
 
-      this.students.push(newStudent);
-      return newStudent;
+      this.users.push(newUser);
+      return newUser;
     } catch (error) {
-      console.error("Error creating student:", error);
+      console.error("Error creating user:", error);
       throw error;
     }
   }
 
-  async getStudentStats(): Promise<StudentStats> {
+  async getUserStats(): Promise<UserStats> {
     try {
       await new Promise((resolve) => setTimeout(resolve, 300));
 
       return {
-        totalStudents: this.students.length,
-        activeStudents: this.students.filter((s) => s.status === "active")
+        totalUsers: this.users.length,
+        activeUsers: this.users.filter((u) => u.status === "active")
           .length,
-        inactiveStudents: this.students.filter((s) => s.status === "inactive")
+        inactiveUsers: this.users.filter((u) => u.status === "inactive")
           .length,
-        studentsWithoutProject: this.students.filter(
-          (s) => s.status === "no_project",
-        ).length,
+        usersWithFullPermissions: 0, // This is now deprecated
       };
     } catch (error) {
-      console.error("Error fetching student stats:", error);
+      console.error("Error fetching user stats:", error);
       throw error;
     }
   }

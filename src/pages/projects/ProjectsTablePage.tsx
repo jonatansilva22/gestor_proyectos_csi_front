@@ -41,33 +41,69 @@ const {
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-50">
       <Header title="CSI PRO" />
-      <div className="p-4 w-full h-full min-h-screen flex justify-center bg-white">
-        <div className="w-full max-w-7xl">
-          <button
-            onClick={() => navigate(-1)}
-            className="mb-4 rounded-full p-1 hover:bg-gray-200 cursor-pointer transition"
-          >
-            <img src={volver} alt="Volver" className="w-7 h-7" />
-          </button>
-          <h2 className="text-2xl font-bold text-center text-purple-600 mb-6">
-            Proyectos
-          </h2>
-          <div className="overflow-y-auto max-h-[750px]">
-            <ProjectsTable
-              projects={projects}
-              onDeleteClick={openDeleteModal}
-            />
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 max-w-7xl">
+        {/* Header section */}
+        <div className="mb-6">
+          {/* Back button */}
+          <div className="mb-4">
+            <button
+              onClick={() => navigate(-1)}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-white transition-colors shadow-sm"
+            >
+              <img src={volver} alt="Volver" className="w-5 h-5 sm:w-6 sm:h-6" />
+              <span className="text-sm sm:text-base font-medium">Volver</span>
+            </button>
           </div>
-          <div className="mt-6">
+          
+          {/* Page title and new button */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+              Tabla de Proyectos
+            </h1>
             <NewItemButton
               label="Nuevo Proyecto"
               onClick={openCreateModal}
             />
           </div>
         </div>
+        
+        {/* Projects count */}
+        <div className="mb-4">
+          <p className="text-sm text-gray-600">
+            {projects.length} proyecto{projects.length !== 1 ? 's' : ''} encontrado{projects.length !== 1 ? 's' : ''}
+          </p>
+        </div>
+        
+        {/* Table container */}
+        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+          <div className="overflow-y-auto max-h-[70vh]">
+            <ProjectsTable
+              projects={projects}
+              onDeleteClick={openDeleteModal}
+            />
+          </div>
+        </div>
+        
+        {/* Empty state */}
+        {projects.length === 0 && (
+          <div className="text-center py-12">
+            <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+              <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No hay proyectos</h3>
+            <p className="text-gray-500 mb-4">Comienza creando tu primer proyecto</p>
+            <NewItemButton
+              label="Crear Primer Proyecto"
+              onClick={openCreateModal}
+            />
+          </div>
+        )}
       </div>
+      
       <Modal
         open={showModal}
         onClose={closeCreateModal}
@@ -87,12 +123,13 @@ const {
           }}
         />
       </Modal>
+      
       <DeleteProjectModal
         open={deleteModalOpen}
         project={projectToDelete}
         onCancel={closeDeleteModal}
         onConfirm={handleConfirmDelete}
       />
-    </>
+    </div>
   );
 };

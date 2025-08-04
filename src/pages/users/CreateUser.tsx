@@ -20,41 +20,65 @@ export const CreateUser: React.FC = () => {
   return (
     <div
       className={`
-        min-h-screen w-full flex flex-col
-        ${darkMode ? "bg-[#3A2864]" : "bg-white"}
+        min-h-screen w-full
+        ${darkMode ? "bg-gray-900" : "bg-gray-50"}
       `}
     >
       {/* Header */}
-      <header className="w-full h-[100px] bg-[#6F43D6] relative flex items-center justify-between px-4 md:px-[77px]">
-        <h1 className="text-white font-roboto text-2xl md:text-4xl font-normal leading-[44px]">
-          Crear Usuario
-        </h1>
+      <header className="w-full bg-[#6F43D6] shadow-sm">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+          <div className="flex items-center justify-between h-16 sm:h-20">
+            <div className="flex items-center gap-4">
+              {/* Back button */}
+              <button
+                onClick={handleClose}
+                className="p-2 text-white hover:bg-purple-600 rounded-lg transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <h1 className="text-white font-roboto text-lg sm:text-xl lg:text-2xl font-medium">
+                Crear Usuario
+              </h1>
+            </div>
 
-        {/* Close button */}
-        <button
-          onClick={handleClose}
-          className="w-6 h-6 cursor-pointer flex items-center justify-center hover:opacity-80 transition-opacity"
-          aria-label="Cerrar"
-        >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 14 14"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M1.4 14L0 12.6L5.6 7L0 1.4L1.4 0L7 5.6L12.6 0L14 1.4L8.4 7L14 12.6L12.6 14L7 8.4L1.4 14Z"
-              fill="#FEF7FF"
-            />
-          </svg>
-        </button>
+            {/* Close button */}
+            <button
+              onClick={handleClose}
+              className="p-2 text-white hover:bg-purple-600 rounded-lg transition-colors"
+              aria-label="Cerrar"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 px-4 py-6 md:px-[53px] md:py-8">
-        <div className="max-w-[480px] mx-auto md:mx-0">
-          <CreateUserForm mode="page" onSuccess={handleSuccess} />
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12 max-w-7xl">
+        <div className="max-w-2xl mx-auto">
+          {/* Form container */}
+          <div className={`rounded-lg shadow-sm border p-6 sm:p-8 ${
+            darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+          }`}>
+            <div className="mb-6">
+              <h2 className={`text-xl sm:text-2xl font-semibold mb-2 ${
+                darkMode ? "text-white" : "text-gray-900"
+              }`}>
+                Información del Usuario
+              </h2>
+              <p className={`text-sm ${
+                darkMode ? "text-gray-400" : "text-gray-600"
+              }`}>
+                Complete los siguientes campos para crear un nuevo usuario en el sistema
+              </p>
+            </div>
+            
+            <CreateUserForm mode="page" onSuccess={handleSuccess} />
+          </div>
         </div>
       </main>
     </div>

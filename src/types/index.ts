@@ -17,16 +17,16 @@ export type {
   UserRole,
 } from "./user";
 
-// Tipos de permisos y estudiantes
+// Tipos de permisos y backend
 export type {
-  Student,
-  StudentStatus,
-  StudentPermissions,
-  StudentsListResponse,
-  UpdateStudentPermissionsRequest,
-  CreateStudentRequest,
-  StudentFilters,
-  StudentStats,
-} from "./permissions";
+  UserPermissionResponse,
+  PermissionRequest,
+  BulkPermissionRequest,
+  PermissionCheckResponse,
+} from "./permissions/backend";
+
+// Constantes y utilidades de permisos
+export { PERMISSIONS, CONTENT_TYPES } from "../utils/permissions/constants";
+export { hasPermission } from "../utils/permissions/hasPermission";
 
 
