@@ -3,7 +3,6 @@
 
 export { authService } from "./auth";
 export { userService } from "./users";
-export { permissionsService } from "./permissions";
 export { default as api } from "./api";
 
 

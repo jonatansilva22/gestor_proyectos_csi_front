@@ -1,0 +1,149 @@
+## develop...origin/develop
+ M .gitignore
+ M README.md
+ M backend-setup.md
+ M builder.config.json
+MM eslint.config.js
+ M index.html
+MM package-lock.json
+MM package.json
+UU src/App.tsx
+MM src/components/Component.tsx
+AA src/components/CreateUserModal.tsx
+AM src/components/ErrorBoundary.tsx
+AA src/components/areas/AreasTable.tsx
+AA src/components/auth/LoginForm.tsx
+AA src/components/auth/ProtectedRoute.tsx
+AM src/components/auth/RoleProtectedRoute.tsx
+AA src/components/auth/index.ts
+AA src/components/common/AuthInput.tsx
+AM src/components/common/ChangePassword.tsx
+AM src/components/common/DeleteButton.tsx
+AM src/components/common/EditProfile.tsx
+AA src/components/common/EntityActions.tsx
+AA src/components/common/FileUpload.tsx
+AA src/components/common/FormImageUpload.tsx
+AA src/components/common/FormInput.tsx
+AA src/components/common/FormLayout.tsx
+AA src/components/common/FormSelect.tsx
+AA src/components/common/FormSelectMultiple.tsx
+AA src/components/common/FormTextarea.tsx
+AA src/components/common/Header.tsx
+AA src/components/common/HeaderSidebarLayout.tsx
+AA src/components/common/InlineEdit.tsx
+AA src/components/common/Modal.tsx
+AA src/components/common/NewItemButton.tsx
+AM src/components/common/NotificationSettings.tsx
+AM src/components/common/ResponsiveTable.tsx
+AA src/components/common/SidebarMenu.tsx
+AM src/components/common/ThemeSelector.tsx
+AA src/components/common/ToastNotify.tsx
+AM src/components/common/UserMenu.tsx
+AM src/components/common/UserPreferences.tsx
+AA src/components/common/index.ts
+AA src/components/common/user/EntityActions.tsx
+AA src/components/common/user/FormInput.tsx
+AA src/components/groups/GroupsTable.tsx
+AA src/components/index.ts
+AM src/components/navigation/MobileBreadcrumbs.tsx
+AM src/components/navigation/MobileNavigationShortcuts.tsx
+AM src/components/navigation/index.ts
+ M src/components/permissions/PermissionsHeader.tsx
+ M src/components/permissions/PermissionsModal.tsx
+ M src/components/permissions/StudentRow.tsx
+ M src/components/permissions/TableHeader.tsx
+ M src/components/permissions/index.ts
+AA src/components/projects/DataRow.tsx
+AA src/components/projects/DeleteModal.tsx
+AA src/components/projects/ProjectActions.tsx
+AA src/components/projects/ProjectCard.tsx
+AA src/components/projects/ProjectDetailDataTable.tsx
+AA src/components/projects/ProjectDetailHeader.tsx
+AA src/components/projects/ProjectForm.tsx
+AA src/components/projects/ProjectsTable.tsx
+AA src/components/repositories/RepositoriesTable.tsx
+AA src/components/tools/ToolForm.tsx
+AA src/components/tools/ToolsTable.tsx
+AA src/components/user/CreateUserForm.tsx
+AA src/components/user/index.ts
+AA src/const/index.ts
+AA src/const/projectsStatusColors.tsx
+AA src/context/AuthContext.tsx
+AM src/context/MobileNavigationContext.tsx
+AA src/context/ThemeContext.tsx
+AM src/features/admin/components/DeleteUserModal.tsx
+AM src/features/admin/components/EditUserModal.tsx
+AM src/features/admin/components/UserActions.tsx
+AM src/features/admin/components/UserFilters.tsx
+AM src/features/admin/components/UsersTable.tsx
+AM src/features/admin/hooks/useUsers.tsx
+AM src/features/admin/pages/UsersManagementPage.tsx
+AM src/features/profile/pages/NotificationsPage.tsx
+AM src/features/profile/pages/PasswordPage.tsx
+AM src/features/profile/pages/ProfilePage.tsx
+AM src/features/profile/pages/ThemePage.tsx
+AA src/hooks/projects/useAreasOptions.tsx
+AA src/hooks/projects/useGroupsOptions.tsx
+AA src/hooks/projects/useProjectForm.tsx
+AA src/hooks/projects/useRepositoriesOptions.tsx
+AA src/hooks/projects/useToolsOptions.tsx
+AA src/hooks/tools/useTools.tsx
+AM src/hooks/useMobileNavigation.ts
+AM src/hooks/useSidebarSwipe.ts
+AM src/hooks/useSwipeGestures.ts
+AM src/hooks/useThemePreference.ts
+AM src/hooks/useTouchInteractions.ts
+AA src/hooks/useValidationErrors.ts
+UU src/index.css
+UU src/pages/Dashboard.tsx
+AM src/pages/NotFound.tsx
+AA src/pages/areas/AreasTablePage.tsx
+AA src/pages/auth/Login.tsx
+AA src/pages/auth/index.ts
+AA src/pages/groups/GroupsTablePage.tsx
+AA src/pages/index.ts
+ M src/pages/permissions/Permissions.tsx
+ M src/pages/permissions/index.ts
+AA src/pages/projects/ProjectDetailPage.tsx
+AA src/pages/projects/ProjectsPage.tsx
+AA src/pages/projects/ProjectsTablePage.tsx
+AA src/pages/repositories/RepositoriesTablePage.tsx
+AM src/pages/settings/index.ts
+AA src/pages/tools/ToolsTablePage.tsx
+AA src/pages/users/CreateUser.tsx
+AA src/pages/users/index.ts
+AA src/services/api.ts
+AA src/services/areas/areasServices.tsx
+AA src/services/auth/authService.ts
+AA src/services/groups/groupsServices.tsx
+AA src/services/index.ts
+ M src/services/permissions/index.ts
+ M src/services/permissions/permissionsService.ts
+AA src/services/projects/projectService.tsx
+AA src/services/repositories/repositoriesServices.tsx
+AA src/services/tools/toolsServices.tsx
+AA src/services/users/userService.ts
+AM src/styles/colors.ts
+AA src/types/areas/Area.tsx
+AA src/types/auth.ts
+AA src/types/groups/Group.tsx
+AA src/types/index.ts
+ M src/types/permissions.ts
+AA src/types/projects/Project.tsx
+AA src/types/repositories/Repository.tsx
+AA src/types/tools/Tool.tsx
+AA src/types/user.ts
+AM src/utils/hapticFeedback.ts
+AM src/utils/media.ts
+AA src/utils/storage.ts
+AM src/utils/theme.ts
+AA src/utils/validation.ts
+AA tailwind.config.js
+ M tsconfig.app.json
+ M tsconfig.json
+ M tsconfig.node.json
+MM vite.config.ts
+?? CLAUDE.md
+?? auth_system_backup_20250813_230243.tar.gz
+?? conflict_files_20250814-133452.txt
+?? git_status_20250814-133452.txt

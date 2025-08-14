@@ -3,4 +3,5 @@ export interface Area {
   name: string;
   created_at: string;
   updated_at: string;
+  index?: number;
 }

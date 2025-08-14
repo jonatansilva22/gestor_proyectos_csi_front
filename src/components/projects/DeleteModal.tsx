@@ -18,7 +18,7 @@ export const DeleteProjectModal = ({
     <div className="p-4">
       <p className="mb-8 text-center">
         ¿Estás seguro de que deseas borrar el proyecto{" "}
-        <span className="font-bold">"{project?.name}"</span>?
+        <span className="font-bold">&quot;{project?.name}&quot;</span>?
       </p>
       <div className="flex justify-end gap-4">
         <button

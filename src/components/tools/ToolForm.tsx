@@ -15,6 +15,13 @@ export const ToolForm = ({ onSubmit, onCancel, initialData }: ToolFormProps) => 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validar que se haya seleccionado una imagen (solo para creación)
+    if (!initialData?.id && !image) {
+      alert('Por favor selecciona una imagen para la herramienta');
+      return;
+    }
+    
     onSubmit({ name, image });
   };
 
@@ -27,7 +34,12 @@ export const ToolForm = ({ onSubmit, onCancel, initialData }: ToolFormProps) => 
         required
         placeholder="Nombre de la herramienta"
       />
-      <FormImageUpload image={image} onChange={setImage} />
+      <FormImageUpload 
+        image={image} 
+        onChange={setImage} 
+        required={!initialData?.id}
+        label={!initialData?.id ? "Imagen (obligatoria)" : "Imagen"}
+      />
       <div className="flex gap-2 justify-end">
         <button type="button" onClick={onCancel} className="text-gray-600 hover:underline cursor-pointer">
           Cancelar

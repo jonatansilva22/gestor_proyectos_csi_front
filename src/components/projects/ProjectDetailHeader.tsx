@@ -16,13 +16,11 @@ export const ProjectImageAndDescription = ({
   onProjectUpdate,
 }: ProjectImageAndDescriptionProps) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
 
   const handleImageChange = async (file: File | null) => {
     setSelectedImage(file);
     if (!file) return;
 
-    setUploading(true);
     try {
       const formData = new FormData();
       formData.append("image", file);
@@ -32,8 +30,6 @@ export const ProjectImageAndDescription = ({
       notifySuccess("Imagen actualizada");
     } catch (e: any) {
       notifyError(getBackendErrorMsg(e));
-    } finally {
-      setUploading(false);
     }
   };
 

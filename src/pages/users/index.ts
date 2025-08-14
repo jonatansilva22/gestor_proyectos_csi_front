@@ -1,5 +1,5 @@
 // src/pages/users/index.ts
-export { default as CreateUser } from './CreateUser';
+export { default as CreateUser } from '../../pages/users/CreateUser';
 
 // Import corrections for user components
 export { FormInput } from '../../components/common/user/FormInput';

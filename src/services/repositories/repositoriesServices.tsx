@@ -1,15 +1,13 @@
-import axios from 'axios';
+import api from '../api';
 import { Repository } from '../../types/repositories/Repository';
 
-const API_URL = import.meta.env.VITE_API_URL;
-
 export const getRepositories = async (): Promise<Repository[]> => {
-  const { data } = await axios.get<Repository[]>(`${API_URL}/repositories/`);
+  const { data } = await api.get<Repository[]>('/repositories/');
   return data;
 };
 
 export const getRepositoryById = async (id: number): Promise<Repository> => {
-  const { data } = await axios.get<Repository>(`${API_URL}/repositories/${id}/`);
+  const { data } = await api.get<Repository>(`/repositories/${id}/`);
   return data;
 };
 
@@ -18,7 +16,7 @@ export const createRepository = async (repository: {
   repository_url: string;
   project: number;
 }) => {
-  const { data } = await axios.post(`${API_URL}/repositories/`, repository, {
+  const { data } = await api.post('/repositories/', repository, {
     headers: { 'Content-Type': 'application/json' },
   });
   return data;
@@ -28,12 +26,12 @@ export const updateRepository = async (
   id: number,
   repository: Partial<Repository>
 ) => {
-  const { data } = await axios.patch(`${API_URL}/repositories/${id}/`, repository, {
+  const { data } = await api.patch(`/repositories/${id}/`, repository, {
     headers: { 'Content-Type': 'application/json' },
   });
   return data;
 };
 
 export const deleteRepository = async (id: number) => {
-  await axios.delete(`${API_URL}/repositories/${id}/`);
+  await api.delete(`/repositories/${id}/`);
 };

@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import DeleteButton from '../DeleteButton';
 
 interface EntityActionsProps {
   id?: string | number;
@@ -6,18 +7,17 @@ interface EntityActionsProps {
   onDelete?: () => void;
   detailsPath?: string;
   detailsLabel?: string;
-  deleteIcon?: string;
   showDetails?: boolean;
   showEdit?: boolean;
   showDelete?: boolean;
 }
 
 export const EntityActions = ({
+  id,
   onEdit,
   onDelete,
   detailsPath,
   detailsLabel = "Ver Detalles",
-  deleteIcon = "🗑️",
   showDetails = false,
   showEdit = true,
   showDelete = true,
@@ -31,11 +31,11 @@ export const EntityActions = ({
   };
 
   return (
-    <div className="flex space-x-2">
+    <div className="flex flex-col sm:flex-row gap-2 items-center justify-center">
       {showDetails && (
         <button
           onClick={handleDetailsClick}
-          className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded-md text-sm transition-colors"
+          className="w-full sm:w-auto px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-1 active:scale-95"
         >
           {detailsLabel}
         </button>
@@ -44,19 +44,20 @@ export const EntityActions = ({
       {showEdit && onEdit && (
         <button
           onClick={onEdit}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-sm transition-colors"
+          className="w-full sm:w-auto px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-1 active:scale-95"
         >
           Editar
         </button>
       )}
       
       {showDelete && onDelete && (
-        <button
-          onClick={onDelete}
-          className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm transition-colors"
-        >
-          {deleteIcon}
-        </button>
+        <div className="w-full sm:w-auto flex justify-center">
+          <DeleteButton
+            onDelete={onDelete}
+            ariaLabel={`Eliminar elemento ${id || ''}`}
+            size="md"
+          />
+        </div>
       )}
     </div>
   );

@@ -7,7 +7,12 @@ export function useGroupsOptions() {
 
   useEffect(() => {
     getGroups().then(data => {
-      setOptions(data.map((g: any) => ({ value: g.id.toString(), label: g.name })));
+      if (data && Array.isArray(data)) {
+        setOptions(data.map((g: any) => ({ value: g.id.toString(), label: g.name })));
+      }
+    }).catch(() => {
+      // Si falla, mantener array vacío
+      setOptions([]);
     });
   }, []);
 

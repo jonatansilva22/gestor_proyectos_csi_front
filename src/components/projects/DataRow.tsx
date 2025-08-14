@@ -1,5 +1,5 @@
-import {  ProjectLabel } from '../../const/projectIcons';
 import { InlineEdit } from '../common/InlineEdit';
+import { useTheme } from '../../context/ThemeContext';
 
 interface DataRowProps {
   label: string;
@@ -23,10 +23,17 @@ export const DataRow = ({
   onSave,
   renderDisplay,
   colorDot,
-}: DataRowProps) => (
-  <div className="flex items-center gap-x-12 py-2">
+}: DataRowProps) => {
+  const { darkMode } = useTheme();
+  
+  return (
+  <div className={`flex items-center gap-x-12 py-2 ${
+    darkMode ? 'text-purple-300' : 'text-gray-900'
+  }`}>
     <img src={icon} alt={label} className="w-6 h-6 mr-2" />
-    <span className="w-56 font-semibold">{label}</span>
+    <span className={`w-56 font-semibold ${
+      darkMode ? 'text-purple-300' : 'text-gray-900'
+    }`}>{label}</span>
     {colorDot && <span className={`w-4 h-4 rounded-full inline-block ${colorDot} mr-2`} />}
     {editable && onSave ? (
   <InlineEdit
@@ -39,8 +46,9 @@ export const DataRow = ({
   />
 ) : (
   <div className="flex-1">
-  {renderDisplay ? renderDisplay(value) : <span>{String(value)}</span>}
+  {renderDisplay ? renderDisplay(value) : <span className={darkMode ? 'text-purple-200' : 'text-gray-700'}>{String(value)}</span>}
 </div>
     )}
   </div>
-);
+  );
+};

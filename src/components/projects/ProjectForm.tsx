@@ -18,6 +18,7 @@ import { useProjectForm } from "../../hooks/projects/useProjectForm";
 import { FormLayout } from "../common/FormLayout";
 import { FormTextarea } from "../common/FormTextarea";
 import { FormSelectMultiple } from "../common/FormSelectMultiple"; // Asegúrate de que este componente exista
+import { notifyError } from "../common/ToastNotify";
 
 interface ProjectFormProps {
   project?: any; // o tipo Project si quieres
@@ -30,7 +31,6 @@ export const ProjectForm = ({ project, onSubmit, onCancel }: ProjectFormProps) =
   const [optionsError, setOptionsError] = useState<string | null>(null);
 
   // Opciones para selects
-  const [owners, setOwners] = useState<{ id: number; name: string }[]>([]);
   const [statuses, setStatuses] = useState<{ id: number; name: string }[]>([]);
   const [groups, setGroups] = useState<{ id: number; name: string }[]>([]);
   const [areas, setAreas] = useState<{ id: number; name: string }[]>([]);
@@ -44,7 +44,7 @@ export const ProjectForm = ({ project, onSubmit, onCancel }: ProjectFormProps) =
         setLoadingOptions(true);
         // Si tienes endpoint para dueños, añádelo aquí también
         // Ejemplo hardcodeado para owner 1 si no hay endpoint:
-        const ownersData = [{ id: 1, name: "Owner 1" }]; 
+ 
 
         const [
           statusesData,
@@ -60,7 +60,6 @@ export const ProjectForm = ({ project, onSubmit, onCancel }: ProjectFormProps) =
           getRepositories(),
         ]);
 
-        setOwners(ownersData);
         setStatuses(statusesData);
         setGroups(groupsData);
         setAreas(areasData);
@@ -85,7 +84,7 @@ export const ProjectForm = ({ project, onSubmit, onCancel }: ProjectFormProps) =
         endDate: project.end_date ? project.end_date.split("T")[0] : "",
         image: null, // para imagen no cargamos archivo, solo cambia si suben uno nuevo
         projectOwner: project.project_owner_id,
-        groupId: project.group?.id,
+        groupId: typeof project.group === 'object' ? project.group?.id : project.group,
         statusId: project.status?.id,
         areaIds: project.areas?.map((a: any) => a.id) || [],
         toolIds: project.tools?.map((t: any) => t.id) || [],
@@ -117,7 +116,7 @@ export const ProjectForm = ({ project, onSubmit, onCancel }: ProjectFormProps) =
     setRepositoryIds,
     error,
     setError,
-  } = useProjectForm(owners[0]?.id || 1, groups[0]?.id || 1, statuses[0]?.id || 1, initialFormData);
+  } = useProjectForm(groups[0]?.id || 1, statuses[0]?.id || 1, initialFormData);
 
   // Convierte arrays y valores a formato FormData para enviar
   const buildFormData = () => {
@@ -127,7 +126,7 @@ export const ProjectForm = ({ project, onSubmit, onCancel }: ProjectFormProps) =
     if (image) {
       formData.append("image", image);
     }
-    formData.append("project_owner_id", "1"); // aquí deberías tener un select para elegir dueño real si aplica
+    formData.append("project_owner_id", "1"); // TODO: usar usuario autenticado
     formData.append("status_id", statusId.toString());
     if (groupId) formData.append("group_id", groupId.toString());
     formData.append("start_date", startDate);
@@ -143,19 +142,27 @@ export const ProjectForm = ({ project, onSubmit, onCancel }: ProjectFormProps) =
 
     // Validaciones básicas aquí: fechas, nombre, imagen tipo...
     if (name.trim().length < 3) {
-      setError("El nombre debe tener al menos 3 caracteres");
+      const msg = "El nombre debe tener al menos 3 caracteres";
+      notifyError(msg);
+      setError(null);
       return;
     }
     if (description.length > 500) {
-      setError("La descripción debe tener máximo 500 caracteres");
+      const msg = "La descripción debe tener máximo 500 caracteres";
+      notifyError(msg);
+      setError(null);
       return;
     }
     if (startDate && endDate && startDate > endDate) {
-      setError("La fecha final no puede ser anterior a la fecha inicial");
+      const msg = "La fecha final no puede ser anterior a la fecha inicial";
+      notifyError(msg);
+      setError(null);
       return;
     }
     if (image && !["image/jpeg", "image/png"].includes(image.type)) {
-      setError("La imagen debe ser JPG o PNG");
+      const msg = "La imagen debe ser JPG o PNG";
+      notifyError(msg);
+      setError(null);
       return;
     }
 
@@ -172,7 +179,7 @@ export const ProjectForm = ({ project, onSubmit, onCancel }: ProjectFormProps) =
     arr.map((o) => ({ value: o.id.toString(), label: o.name }));
 
   return (
-    <div className="max-h-[80vh] overflow-y-auto p-4">
+    <div className="max-h-[70vh] sm:max-h-[75vh] lg:max-h-[80vh] overflow-y-auto p-3 sm:p-4 lg:p-6">
     <FormLayout 
   onSubmit={handleSubmit}
   onCancel={onCancel}

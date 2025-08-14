@@ -13,6 +13,7 @@ export interface ValidationResult {
  * Rules:
  * - 3-30 characters
  * - Only letters, numbers, hyphens, dots and underscores
+ * - Cannot start or end with special characters
  * - Pattern: ^[a-zA-Z0-9_.-]{3,30}$
  */
 export const validateUsername = (username: string): ValidationResult => {
@@ -20,11 +21,37 @@ export const validateUsername = (username: string): ValidationResult => {
     return { isValid: false, message: 'El nombre de usuario es requerido' };
   }
 
+  // Basic length and character validation
   const usernameRegex = /^[a-zA-Z0-9_.-]{3,30}$/;
   if (!usernameRegex.test(username)) {
     return { 
       isValid: false, 
       message: 'El nombre de usuario debe tener entre 3 y 30 caracteres y solo puede contener letras, números, guiones, puntos y guiones bajos.' 
+    };
+  }
+
+  // Cannot start or end with special characters (must start/end with alphanumeric)
+  if (!/^[a-zA-Z0-9].*[a-zA-Z0-9]$/.test(username) && username.length > 1) {
+    return {
+      isValid: false,
+      message: 'El nombre de usuario debe comenzar y terminar con una letra o número.'
+    };
+  }
+
+  // Prevent consecutive special characters
+  if (/[_.-]{2,}/.test(username)) {
+    return {
+      isValid: false,
+      message: 'El nombre de usuario no puede contener caracteres especiales consecutivos.'
+    };
+  }
+
+  // Common reserved usernames
+  const reservedUsernames = ['admin', 'administrator', 'root', 'superuser', 'test', 'guest', 'null', 'undefined'];
+  if (reservedUsernames.includes(username.toLowerCase())) {
+    return {
+      isValid: false,
+      message: 'Este nombre de usuario está reservado. Por favor elige otro.'
     };
   }
 
@@ -36,14 +63,15 @@ export const validateUsername = (username: string): ValidationResult => {
  * Rules:
  * - Valid email format
  * - Maximum 50 characters (backend constraint)
+ * - Institutional email domain validation (optional but recommended)
  */
 export const validateEmail = (email: string): ValidationResult => {
   if (!email.trim()) {
     return { isValid: false, message: 'El correo electrónico es requerido' };
   }
 
-  // Email format validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // Email format validation (more strict)
+  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
   if (!emailRegex.test(email)) {
     return { isValid: false, message: 'Por favor, ingrese un correo electrónico válido' };
   }
@@ -51,6 +79,17 @@ export const validateEmail = (email: string): ValidationResult => {
   // Length validation (backend constraint)
   if (email.length > 50) {
     return { isValid: false, message: 'El correo electrónico no debe exceder los 50 caracteres.' };
+  }
+
+  // Check for common email format issues
+  if (email.includes('..') || email.startsWith('.') || email.endsWith('.')) {
+    return { isValid: false, message: 'El formato del correo electrónico no es válido.' };
+  }
+
+  // Optional: institutional email validation
+  const domain = email.split('@')[1];
+  if (domain && domain.length < 2) {
+    return { isValid: false, message: 'El dominio del correo electrónico no es válido.' };
   }
 
   return { isValid: true };
@@ -124,31 +163,37 @@ export const validateName = (name: string, fieldName: string = 'campo'): Validat
 /**
  * Role validation - mirrors Django UserSerializer.validate_role
  * Rules:
- * - Must be 'user' or 'admin'
- * - Supports legacy format (1, 2) for backward compatibility
+ * - Must be 1: SuperAdmin, 2: Admin, 3: Colaborador
+ * - Supports string format for backward compatibility
  */
 export const validateRole = (role: string | number): ValidationResult => {
   if (!role) {
     return { isValid: false, message: 'El rol es requerido' };
   }
 
-  // Handle legacy format (ID numbers)
+  // Handle numeric format (current backend)
   if (typeof role === 'number' || (typeof role === 'string' && /^\d+$/.test(role))) {
     const roleId = typeof role === 'string' ? parseInt(role) : role;
-    if (roleId === 1 || roleId === 2) {
+    if (roleId >= 1 && roleId <= 3) {
       return { isValid: true };
     }
   }
 
-  // Handle new string format
-  const validRoles = ['user', 'admin'];
-  if (typeof role === 'string' && validRoles.includes(role)) {
+  // Handle current string format (frontend role selection)
+  const currentRoles = ['colaborador', 'admin', 'superadmin'];
+  if (typeof role === 'string' && currentRoles.includes(role)) {
+    return { isValid: true };
+  }
+
+  // Handle legacy string format for backward compatibility
+  const legacyRoles = ['user'];
+  if (typeof role === 'string' && legacyRoles.includes(role)) {
     return { isValid: true };
   }
 
   return { 
     isValid: false, 
-    message: `Rol inválido. Debe ser uno de: ${validRoles.join(', ')}` 
+    message: 'Rol inválido. Debe ser: colaborador, admin o superadmin' 
   };
 };
 

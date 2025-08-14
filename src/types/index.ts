@@ -17,16 +17,5 @@ export type {
   UserRole,
 } from "./user";
 
-// Tipos de permisos y estudiantes
-export type {
-  Student,
-  StudentStatus,
-  StudentPermissions,
-  StudentsListResponse,
-  UpdateStudentPermissionsRequest,
-  CreateStudentRequest,
-  StudentFilters,
-  StudentStats,
-} from "./permissions";
 
 

@@ -7,8 +7,13 @@ export const useAreasOptions = () => {
 
   useEffect(() => {
     getAreas().then((data) => {
-      const mapped = data.map((a: any) => ({ value: a.id.toString(), label: a.name }));
-      setOptions(mapped);
+      if (data && Array.isArray(data)) {
+        const mapped = data.map((a: any) => ({ value: a.id.toString(), label: a.name }));
+        setOptions(mapped);
+      }
+    }).catch(() => {
+      // Si falla, mantener array vacío
+      setOptions([]);
     });
   }, []);
 

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTheme } from "../../context/ThemeContext";
 
 interface InlineEditProps {
   value: string | string[];
@@ -17,6 +18,7 @@ export const InlineEdit = ({
   options = [],
   className = "",
 }: InlineEditProps) => {
+  const { darkMode } = useTheme();
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState<string | string[]>(value);
   const [loading, setLoading] = useState(false);
@@ -33,7 +35,9 @@ export const InlineEdit = ({
       {inputType === "multiselect" ? (
         <div className="flex flex-col gap-1">
           {options.map((opt) => (
-            <label key={opt.value} className="flex items-center gap-2">
+            <label key={opt.value} className={`flex items-center gap-2 ${
+              darkMode ? 'text-purple-300' : 'text-gray-700'
+            }`}>
               <input
                 type="checkbox"
                 value={opt.value}
@@ -56,7 +60,11 @@ export const InlineEdit = ({
         </div>
       ) : inputType === "select" ? (
         <select
-          className="border rounded px-2 py-1 w-full"
+          className={`border rounded px-2 py-1 w-full ${
+            darkMode 
+              ? 'bg-gray-800 border-purple-600 text-purple-100' 
+              : 'bg-white border-gray-300 text-gray-900'
+          }`}
           value={draft as string}
           onChange={(e) => setDraft(e.target.value)}
         >
@@ -68,34 +76,54 @@ export const InlineEdit = ({
         </select>
       ) : inputType === "textarea" ? (
         <textarea
-          className="border rounded px-2 py-1 w-full"
+          className={`border rounded px-2 py-1 w-full ${
+            darkMode 
+              ? 'bg-gray-800 border-purple-600 text-purple-100' 
+              : 'bg-white border-gray-300 text-gray-900'
+          }`}
           value={draft as string}
           onChange={(e) => setDraft(e.target.value)}
         />
       ) : inputType === "date" ? (
         <input
           type="date"
-          className="border rounded px-2 py-1 w-full"
+          className={`border rounded px-2 py-1 w-full ${
+            darkMode 
+              ? 'bg-gray-800 border-purple-600 text-purple-100' 
+              : 'bg-white border-gray-300 text-gray-900'
+          }`}
           value={draft as string}
           onChange={(e) => setDraft(e.target.value)}
         />
       ) : (
         <input
-          className="border rounded px-2 py-1 w-full"
+          className={`border rounded px-2 py-1 w-full ${
+            darkMode 
+              ? 'bg-gray-800 border-purple-600 text-purple-100' 
+              : 'bg-white border-gray-300 text-gray-900'
+          }`}
           value={draft as string}
           onChange={(e) => setDraft(e.target.value)}
         />
       )}
       <div className="mt-1 flex gap-2">
         <button
-          className="bg-purple-600 text-white px-3 py-1 rounded"
+          className={`px-3 py-1 rounded ${
+            darkMode 
+              ? 'bg-purple-600 hover:bg-purple-700 text-white' 
+              : 'bg-purple-600 hover:bg-purple-700 text-white'
+          }`}
           onClick={handleSave}
           disabled={loading}
         >
           Guardar
         </button>
         <button
-          className="text-gray-600 hover:underline"
+          className={`hover:underline ${
+            darkMode 
+              ? 'text-purple-400 hover:text-purple-300' 
+              : 'text-gray-600 hover:text-gray-800'
+          }`}
           onClick={() => setEditing(false)}
           disabled={loading}
         >
@@ -107,7 +135,11 @@ export const InlineEdit = ({
     <div className={className}>
       <span>{renderDisplay ? renderDisplay(value) : String(value)}</span>
       <button
-        className="ml-2 text-xs text-purple-600 underline"
+        className={`ml-2 text-xs underline ${
+          darkMode 
+            ? 'text-purple-400 hover:text-purple-300' 
+            : 'text-purple-600 hover:text-purple-800'
+        }`}
         onClick={() => setEditing(true)}
       >
         Editar

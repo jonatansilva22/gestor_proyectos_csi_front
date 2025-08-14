@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAreas } from "../../hooks/areas/useAreas";
 import { useEntityModals } from "../../hooks/projects/useEntityModal";
+import { useTheme } from "../../context/ThemeContext";
 import HeaderSidebarLayout from "../../components/common/HeaderSidebarLayout";
 import { Modal } from "../../components/common/Modal";
 import { NewItemButton } from "../../components/common/NewItemButton";
@@ -15,6 +16,7 @@ import { Area } from "../../types/areas/Area";
 
 export const AreasTablePage = () => {
   const navigate = useNavigate();
+  const { darkMode } = useTheme();
   const { areas, refreshAreas } = useAreas();
 
   const {
@@ -69,15 +71,23 @@ export const AreasTablePage = () => {
 
   return (
     <HeaderSidebarLayout headerTitle="CSI PRO - Áreas">
-      <div className="p-4 w-full h-full min-h-screen flex justify-center bg-white">
+      <div className={`p-4 w-full h-full min-h-screen flex justify-center ${
+        darkMode ? 'bg-[#1A0F30]' : 'bg-white'
+      }`}>
         <div className="w-full max-w-7xl">
           <button
             onClick={() => navigate(-1)}
-            className="mb-4 rounded-full p-1 hover:bg-gray-200 cursor-pointer transition"
+            className={`mb-4 rounded-full p-1 cursor-pointer transition ${
+              darkMode 
+                ? 'hover:bg-purple-700/20' 
+                : 'hover:bg-gray-200'
+            }`}
           >
             <img src={volver} alt="Volver" className="w-7 h-7" />
           </button>
-          <h2 className="text-2xl font-bold text-center text-purple-600 mb-6">
+          <h2 className={`text-2xl font-bold text-center mb-6 ${
+            darkMode ? 'text-purple-300' : 'text-purple-600'
+          }`}>
             Áreas
           </h2>
           <div className="overflow-y-auto max-h-[750px]">

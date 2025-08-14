@@ -1,15 +1,13 @@
-import axios from 'axios';
+import api from '../api';
 import { Tool } from '../../types/tools/Tool';
 
-const API_URL = import.meta.env.VITE_API_URL;
-
 export const getTools = async (): Promise<Tool[]> => {
-  const { data } = await axios.get<Tool[]>(`${API_URL}/tools/`);
+  const { data } = await api.get<Tool[]>('/tools/');
   return data;
 };
 
 export const getToolById = async (id: number): Promise<Tool> => {
-  const { data } = await axios.get<Tool>(`${API_URL}/tools/${id}/`);
+  const { data } = await api.get<Tool>(`/tools/${id}/`);
   return data;
 };
 
@@ -20,12 +18,16 @@ export const createTool = async (tool: { name: string; image: File | null }) => 
     formData.append("image", tool.image);
   }
 
-  const { data } = await axios.post(`${API_URL}/tools/`, formData);
+  const { data } = await api.post('/tools/', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
   return data;
 };
 
 export const deleteTool = async (id: number) => {
-  await axios.delete(`${API_URL}/tools/${id}/`);
+  await api.delete(`/tools/${id}/`);
 };
 
 export async function updateTool(id: number, data: { name?: string; image?: File | null }) {
@@ -33,6 +35,10 @@ export async function updateTool(id: number, data: { name?: string; image?: File
   if (data.name !== undefined) formData.append("name", data.name);
   if (data.image) formData.append("image", data.image);
 
-  const response = await axios.patch(`${API_URL}/tools/${id}/`, formData);
+  const response = await api.patch(`/tools/${id}/`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
   return response.data;
 }

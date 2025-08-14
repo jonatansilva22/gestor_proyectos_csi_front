@@ -1,7 +1,6 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useProjects } from "../../hooks/projects/useProjects";
 import { useEntityModals } from "../../hooks/projects/useEntityModal";
+import { useTheme } from "../../context/ThemeContext";
 import { ProjectsTable } from "../../components/projects/ProjectsTable";
 import { ProjectForm } from "../../components/projects/ProjectForm";
 import { Modal } from "../../components/common/Modal";
@@ -10,12 +9,11 @@ import { DeleteProjectModal } from "../../components/projects/DeleteModal";
 import { createProject, deleteProject } from "../../services/projects/projectService";
 import { notifySuccess, notifyError } from "../../components/common/ToastNotify";
 import { getBackendErrorMsg } from "../../utils/projects/getBackendErrorMsg";
-import volver from "../../assets/volver.png";
 import { Project } from "../../types/projects/Project";
 import HeaderSidebarLayout from "../../components/common/HeaderSidebarLayout";
 
 export const ProjectsTablePage = () => {
-  const navigate = useNavigate();
+  const { darkMode } = useTheme();
   const { projects, refreshProjects } = useProjects();
   const {
     showModal,
@@ -43,7 +41,9 @@ export const ProjectsTablePage = () => {
     return (
     <HeaderSidebarLayout headerTitle="CSI PRO - Proyectos">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-2xl font-bold text-purple-600 mb-6 text-center">Proyectos</h2>
+        <h2 className={`text-2xl font-bold mb-6 text-center ${
+          darkMode ? 'text-purple-300' : 'text-purple-600'
+        }`}>Proyectos</h2>
         <ProjectsTable projects={projects} onDeleteClick={openDeleteModal} />
         <div className="mt-6">
           <NewItemButton label="Nuevo Proyecto" onClick={openCreateModal} />

@@ -34,6 +34,21 @@ export const storage = {
       sessionStorage.setItem(USER_KEY, userStr);
     }
   },
+
+  // Actualiza el usuario preservando dónde estaba guardado (local o session)
+  setUserAuto: (user: any): void => {
+    const userStr = JSON.stringify(user);
+    const inLocal = localStorage.getItem(USER_KEY) !== null;
+    const inSession = sessionStorage.getItem(USER_KEY) !== null;
+    if (inLocal) {
+      localStorage.setItem(USER_KEY, userStr);
+    } else if (inSession) {
+      sessionStorage.setItem(USER_KEY, userStr);
+    } else {
+      // Por defecto, guardar en local
+      localStorage.setItem(USER_KEY, userStr);
+    }
+  },
   
   removeUser: (): void => {
     localStorage.removeItem(USER_KEY);

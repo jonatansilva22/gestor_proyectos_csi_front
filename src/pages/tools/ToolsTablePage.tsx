@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useTools } from "../../hooks/tools/useTools";
 import { useEntityModals } from "../../hooks/projects/useEntityModal";
-import HeaderSidebarLayout from "../../components/common/HeaderSidebarLayout"; // <-- Importa tu layout
+import { useTheme } from "../../context/ThemeContext";
+import HeaderSidebarLayout from "../../components/common/HeaderSidebarLayout";
 import { Modal } from "../../components/common/Modal";
 import { NewItemButton } from "../../components/common/NewItemButton";
 import { DeleteToolModal } from "../../components/tools/DeleteToolModal";
@@ -15,6 +16,7 @@ import { Tool } from "../../types/tools/Tool";
 
 export const ToolsTablePage = () => {
   const navigate = useNavigate();
+  const { darkMode } = useTheme();
   const { tools, refreshTools } = useTools();
 
   const {
@@ -74,15 +76,23 @@ export const ToolsTablePage = () => {
 
   return (
     <HeaderSidebarLayout headerTitle="CSI PRO - Herramientas">
-      <div className="p-4 w-full h-full min-h-screen flex justify-center bg-white">
+      <div className={`p-4 w-full h-full min-h-screen flex justify-center ${
+        darkMode ? 'bg-[#1A0F30]' : 'bg-white'
+      }`}>
         <div className="w-full max-w-7xl">
           <button
             onClick={() => navigate(-1)}
-            className="mb-4 rounded-full p-1 hover:bg-gray-200 cursor-pointer transition"
+            className={`mb-4 rounded-full p-1 cursor-pointer transition ${
+              darkMode 
+                ? 'hover:bg-purple-700/20' 
+                : 'hover:bg-gray-200'
+            }`}
           >
             <img src={volver} alt="Volver" className="w-7 h-7" />
           </button>
-          <h2 className="text-2xl font-bold text-center text-purple-600 mb-6">
+          <h2 className={`text-2xl font-bold text-center mb-6 ${
+            darkMode ? 'text-purple-300' : 'text-purple-600'
+          }`}>
             Herramientas
           </h2>
           <div className="overflow-y-auto max-h-[750px]">

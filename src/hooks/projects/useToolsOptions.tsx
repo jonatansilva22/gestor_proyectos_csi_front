@@ -6,11 +6,16 @@ export const useToolsOptions = () => {
 
   useEffect(() => {
     getTools().then(data => {
-      const mapped = data.map((t: any) => ({
-        value: t.id.toString(),
-        label: t.name,
-      }));
-      setOptions(mapped);
+      if (data && Array.isArray(data)) {
+        const mapped = data.map((t: any) => ({
+          value: t.id.toString(),
+          label: t.name,
+        }));
+        setOptions(mapped);
+      }
+    }).catch(() => {
+      // Si falla, mantener array vacío
+      setOptions([]);
     });
   }, []);
 

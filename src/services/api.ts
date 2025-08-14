@@ -10,8 +10,10 @@ const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
+    'Accept': 'application/json',
   },
-  timeout: 10000, // 10 segundos timeout
+  timeout: 30000, // 30 segundos timeout para operaciones que incluyen email
+  withCredentials: false, // Evitar envío de cookies en CORS
 });
 
 // Alias para usuarios (mismo endpoint)
@@ -40,6 +42,15 @@ const usersApi = api;
     (response) => response,
     (error) => {
       console.error('Error en response:', error);
+      
+      // Manejo específico de errores CORS/Preflight
+      if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
+        console.error('Error de conexión con el backend. Verifica que el servidor esté ejecutándose.');
+        return Promise.reject({
+          ...error,
+          message: 'No se puede conectar con el servidor. Verifica que el backend esté ejecutándose.'
+        });
+      }
       
       if (error.response && error.response.status === 401) {
         storage.clearAll();

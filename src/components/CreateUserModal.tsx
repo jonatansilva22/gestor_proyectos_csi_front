@@ -27,7 +27,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className={`rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto ${
         darkMode 
-          ? 'bg-[#3A2B5A] border border-purple-700/40' 
+          ? 'bg-gray-800 border border-gray-700' 
           : 'bg-white'
       }`}>
         <div className="p-6"> 

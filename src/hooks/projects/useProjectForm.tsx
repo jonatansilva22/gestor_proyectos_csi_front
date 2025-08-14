@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 export const useProjectForm = (
-  initialOwner = 1,
   initialGroup = 1,
   initialStatus = 1,
   initialData?: Partial<{

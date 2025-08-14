@@ -7,8 +7,6 @@ export * from "./auth";
 // Componentes de gestión de usuarios
 export * from "./user";
 
-// Componentes de permisos
-export * from "./permissions";
 
 // Componentes comunes reutilizables
 export * from "./common";

@@ -1,4 +1,4 @@
-export const PROJECT_STATUS_COLORS_BG: Record<string, string> = {
+ export const PROJECT_STATUS_COLORS_BG: Record<string, string> = {
   Activo: 'bg-green-500',
   Inactivo: 'bg-yellow-400',
   Completado: 'bg-blue-500',

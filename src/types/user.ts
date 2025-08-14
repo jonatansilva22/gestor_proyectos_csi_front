@@ -22,7 +22,9 @@ export interface User {
   email: string;
   first_name: string;
   last_name: string;
-  role: UserRole; // Matches backend field name
+  role?: number; // For backward compatibility  
+  role_id?: number; // Backend sends role ID as number
+  role_name?: string; // Backend now includes role name
   photo?: string; // Matches backend field name
   created_at: string;
   updated_at: string;
@@ -33,11 +35,12 @@ export interface RoleType {
   name: string;
 }
 
-export type UserRole = "user" | "admin";
+export type UserRole = "colaborador" | "admin" | "superadmin";
 
 export const USER_ROLES: { value: UserRole; label: string }[] = [
-  { value: "user", label: "Usuario" },
+  { value: "colaborador", label: "Colaborador" },
   { value: "admin", label: "Administrador" },
+  { value: "superadmin", label: "Superadministrador" },
 ];
 
 // Additional user-related interfaces
@@ -64,6 +67,7 @@ export interface UserFilters {
 export interface UserStats {
   totalUsers: number;
   activeUsers: number;
-  userCount: number;
+  colaboradorCount: number;
   adminCount: number;
+  superadminCount: number;
 }

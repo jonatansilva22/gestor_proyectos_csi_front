@@ -9,10 +9,16 @@ export interface Project {
   image: string | null;
   description: string;
   project_owner: number;
-  group: number;
+  group: Group | number | null;
   status: ProjectStatus;
   start_date: string;
   end_date: string;
+  index?: number;
+  tools?: Tool[];
+  area?: Area;
+  areas?: Area[];
+  repositories?: Repository[];
+  users?: any[];
 }
 
 export interface Area {
@@ -28,6 +34,7 @@ export interface Tool {
 export interface Group {
   id: number;
   name: string;
+  users?: any[];
 }
 
 export interface Repository {

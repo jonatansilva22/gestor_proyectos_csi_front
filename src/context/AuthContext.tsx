@@ -10,6 +10,7 @@ interface AuthContextType {
   isLoading: boolean;
   login: (email: string, password: string, remember: boolean) => Promise<void>;
   logout: () => Promise<void>;
+  updateUser: (user: AuthUser) => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -18,6 +19,7 @@ const AuthContext = createContext<AuthContextType>({
   isLoading: true,
   login: async () => {},
   logout: async () => {},
+  updateUser: () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -28,12 +30,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   
   // Verifica si hay un usuario en storage al cargar la aplicación
   useEffect(() => {
-    const initAuth = async () => {
+    const initAuth = () => {
       const storedUser = storage.getUser();
       const token = storage.getToken();
       
       if (storedUser && token) {
         setUser(storedUser);
+      } else {
+        // Sin usuario autenticado, mantener null para mostrar login
+        setUser(null);
       }
       
       setIsLoading(false);
@@ -62,25 +67,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setIsLoading(true);
       await authService.logout();
-      
-      // Limpiar estado y storage
-      setUser(null);
-      storage.clearAll();
     } catch (error) {
       console.error('Error en logout:', error);
     } finally {
+      // Limpiar estado y storage
+      setUser(null);
+      storage.clearAll();
       setIsLoading(false);
     }
+  };
+
+  // Permite actualizar los datos del usuario en memoria y en storage
+  const updateUser = (newUser: AuthUser) => {
+    setUser(newUser);
+    storage.setUserAuto(newUser);
   };
   
   return (
     <AuthContext.Provider 
       value={{ 
-        user, 
-        isAuthenticated: !!user, 
+        user,
+        isAuthenticated: !!user,
         isLoading,
         login, 
-        logout 
+        logout,
+        updateUser,
       }}
     >
       {children}

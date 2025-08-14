@@ -5,7 +5,6 @@
 export const API_ENDPOINTS = {
   AUTH: '/auth',
   USERS: '/users',
-  PERMISSIONS: '/permissions',
   PROJECTS: '/projects',
 } as const;
 
@@ -16,16 +15,23 @@ export const APP_CONFIG = {
   DESCRIPTION: 'Sistema de Gestión de tareas',
 } as const;
 
-// Roles de usuario
+// Roles de usuario (mapping to backend IDs)
 export const USER_ROLES = {
-  ADMIN: 'admin',
-  USER: 'user',
-  GUEST: 'guest',
+  ADMIN: 1,        // ID 1 = Admin
+  SUPERADMIN: 2,   // ID 2 = SuperAdmin  
+  COLABORADOR: 3,  // ID 3 = Colaborador
 } as const;
 
-// Estados de estudiantes
-export const STUDENT_STATUS = {
-  ACTIVE: 'active',
-  INACTIVE: 'inactive',
-  PENDING: 'pending',
+// Mapeo de nombres de roles
+export const ROLE_NAMES = {
+  1: 'Admin',
+  2: 'SuperAdmin', 
+  3: 'Colaborador'
+} as const;
+
+// Mapeo de roles para formularios (string a number)
+export const ROLE_MAPPING = {
+  "admin": 1,
+  "superadmin": 2, 
+  "colaborador": 3
 } as const;

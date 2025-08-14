@@ -29,7 +29,7 @@ export const FormInput: React.FC<FormInputProps> = ({
         className="font-inter text-base font-normal leading-[140%] text-gray-900 dark:text-white"
       >
         {label}
-        {required && "*"}
+        {required && <span className="text-red-500 ml-1">*</span>}
       </label>
       <input
         id={name}
@@ -41,13 +41,18 @@ export const FormInput: React.FC<FormInputProps> = ({
         required={required}
         className={`
           flex min-w-60 px-4 py-3 items-center self-stretch rounded-lg border
-          bg-white font-inter text-base font-normal leading-[100%]
+          font-inter text-base font-normal leading-[100%]
           transition-colors duration-200 focus:outline-none
-          ${value ? "text-gray-900" : "text-gray-500"}
+          bg-white dark:bg-gray-800 
+          ${value 
+            ? "text-gray-900 dark:text-white" 
+            : "text-gray-500 dark:text-gray-400"
+          }
+          placeholder:text-gray-500 dark:placeholder:text-gray-400
           ${
             error
-              ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200"
-              : "border-gray-300 focus:border-[#6F43D6] focus:ring-2 focus:ring-purple-200"
+              ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200 dark:focus:ring-red-800"
+              : "border-gray-300 dark:border-gray-600 focus:border-[#6F43D6] dark:focus:border-purple-400 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-800"
           }
         `}
       />

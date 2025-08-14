@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { useTheme } from "../../context";
-import { FormSelect, FileUpload } from "../common";
-import { FormInput } from "../common/user/FormInput";
-import { CreateUserRequest, UserRole } from "../../types";
-import { userService } from "../../services";
+import { notifySuccess } from "../common/ToastNotify";
+import { useTheme } from "../../context/ThemeContext";
+import { FormSelect } from "../common/FormSelect";
+import { FileUpload } from "../common/FileUpload";
+import { FormInput } from "../common/FormInput";
+import { CreateUserRequest, UserRole } from "../../types/user";
+import { userService } from "../../services/users/userService";
 import { validateUserForm } from "../../utils/validation";
 import { useValidationErrors } from "../../hooks/useValidationErrors";
+import { ROLE_MAPPING } from "../../const/index";
 
 interface CreateUserFormProps {
   mode?: 'page' | 'modal';
@@ -27,12 +29,6 @@ interface CreateUserFormData {
 }
 
 
-// Mapeo de roles para compatibilidad con backend
-const ROLE_MAPPING = {
-  "user": 2,
-  "admin": 1
-} as const;
-
 export const CreateUserForm: React.FC<CreateUserFormProps> = ({
   mode = 'page',
   onSuccess,
@@ -48,7 +44,7 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
     last_name: "",
     email: "",
     password: "",
-    role: "user", // Rol por defecto: usuario
+    role: "colaborador", // Rol por defecto: colaborador
     photo: undefined,
   });
 
@@ -84,6 +80,12 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
       photo: formData.photo
     });
 
+    // Bloquear creación de superusuarios desde la UI
+    if (formData.role === 'superadmin') {
+      setBackendErrors({ role: 'No está permitido crear usuarios con rol SuperAdmin desde esta pantalla.' });
+      return false;
+    }
+
     if (!validationResult.isValid) {
       setBackendErrors(validationResult.errors);
     }
@@ -111,7 +113,19 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
       // Llamada real al userService
       const createdUser = await userService.createUser(formDataWithIntRole);
       console.log("User created:", createdUser);
-      toast.success("Usuario creado exitosamente");
+      
+      // Mostrar notificación de éxito más específica
+      const userName = `${formData.first_name} ${formData.last_name}`.trim();
+      notifySuccess(
+        `¡Usuario ${userName ? userName : formData.username} creado exitosamente!`, 
+        {
+          position: "top-center",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+        }
+      );
       
       // Llamar callback de éxito con los datos del usuario
       if (onSuccess) {
@@ -126,7 +140,7 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
           last_name: "",
           email: "",
           password: "",
-          role: "user",
+          role: "colaborador",
           photo: undefined,
         });
       }
@@ -217,9 +231,9 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
         onChange={handleRoleChange}
         placeholder="Seleccione el rol del usuario"
         options={[
-          { value: "user", label: "Usuario" },
-          { value: "admin", label: "Administrador" },
-        ]}
+          { value: "colaborador", label: "Colaborador" },
+          { value: "admin", label: "Admin" },
+          ]}
         required
         name="role"
         error={errors.role}
@@ -244,7 +258,7 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
             transition-colors duration-200
             ${mode === 'modal' 
               ? 'px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50'
-              : `${darkMode ? "text-white hover:text-gray-300" : "text-black hover:text-gray-700"} hover:underline`
+              : `${darkMode ? "text-white hover:text-purple-200" : "text-gray-700 hover:text-gray-900"} hover:underline`
             }
           `}
         >
@@ -261,7 +275,7 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
               ? 'px-4 py-2' 
               : 'w-full sm:w-[124px] px-3 py-3'
             }
-            rounded-lg border border-gray-800 bg-[#6F43D6] text-gray-100 
+            rounded-lg border border-gray-800 bg-[#6F43D6] text-white 
             font-inter text-base font-normal leading-[100%] cursor-pointer 
             transition-all duration-200
             ${
@@ -271,7 +285,13 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
             }
           `}
         >
-          {isLoading ? "Creando..." : mode === 'modal' ? "Crear Usuario" : "Crear"}
+          {isLoading && (
+            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          )}
+          {isLoading ? "Creando usuario..." : mode === 'modal' ? "Crear Usuario" : "Crear"}
         </button>
       </div>
     </form>

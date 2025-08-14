@@ -1,4 +1,5 @@
-import React from "react";
+
+import { useTheme } from "../../context/ThemeContext";
 
 interface Option {
   value: string;
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export const FormSelectMultiple = ({ label, options, selectedValues, onChange }: Props) => {
+  const { darkMode } = useTheme();
   const toggleValue = (value: string) => {
     const newSelected = selectedValues.includes(value)
       ? selectedValues.filter(v => v !== value)
@@ -21,15 +23,21 @@ export const FormSelectMultiple = ({ label, options, selectedValues, onChange }:
   };
 
   return (
-    <div className="space-y-1">
-      <label className="block font-semibold mb-1">{label}</label>
-      <div className="flex flex-col gap-2 max-h-60 overflow-y-auto border border-gray-300 rounded p-2 bg-white shadow-sm">
+    <div className="space-y-1 w-full">
+      <label className={`block font-semibold mb-1 ${darkMode ? 'text-white' : 'text-gray-900'}`}>{label}</label>
+      <div className={`flex flex-col gap-2 max-h-60 overflow-y-auto rounded p-2 shadow-sm transition-colors ${
+        darkMode
+          ? 'bg-[#3A2B5A] border border-purple-700/40'
+          : 'bg-white border border-gray-300'
+      }`}>
         {options.map(opt => (
           <div
             key={opt.value}
-            className="flex items-center justify-between px-2 py-1 rounded hover:bg-gray-100 transition"
+            className={`flex items-center justify-between px-2 py-1 rounded transition-colors ${
+              darkMode ? 'hover:bg-purple-700/20' : 'hover:bg-gray-100'
+            }`}
           >
-            <span className="text-sm text-gray-700">{opt.label}</span>
+            <span className={`text-sm ${darkMode ? 'text-white' : 'text-gray-700'}`}>{opt.label}</span>
             <input
               type="checkbox"
               checked={selectedValues.includes(opt.value)}
