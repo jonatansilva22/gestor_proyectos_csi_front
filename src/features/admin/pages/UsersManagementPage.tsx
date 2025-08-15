@@ -322,7 +322,7 @@ const UsersManagementPage: React.FC = () => {
                     <div>
                       <p className="text-white/80 text-sm">SuperAdmins</p>
                       <p className="text-white text-2xl font-bold">
-                        {loading ? '...' : users.filter(u => (u as any).role_id === 1).length}
+                        {loading ? '...' : users.filter(u => (u as any).role_id === 2).length}
                       </p>
                     </div>
                   </div>
@@ -338,7 +338,7 @@ const UsersManagementPage: React.FC = () => {
                     <div>
                       <p className="text-white/80 text-sm">Admins</p>
                       <p className="text-white text-2xl font-bold">
-                        {loading ? '...' : users.filter(u => (u as any).role_id === 2).length}
+                        {loading ? '...' : users.filter(u => (u as any).role_id === 1).length}
                       </p>
                     </div>
                   </div>

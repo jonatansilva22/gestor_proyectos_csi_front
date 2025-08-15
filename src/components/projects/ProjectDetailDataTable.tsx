@@ -11,7 +11,12 @@ import { useAreasOptions } from "../../hooks/projects/useAreasOptions";
 import { useToolsOptions } from "../../hooks/projects/useToolsOptions";
 import { useRepositoriesOptions } from "../../hooks/projects/useRepositoriesOptions";
 import { useStatusOptions } from "../../hooks/projects/useStatusOptions";
-import { PROJECT_STATUS_COLORS_TEXT } from "../../const/projectsStatusColors";
+import { 
+  PROJECT_STATUS_COLORS_TEXT,
+  PROJECT_STATUS_COLORS_BG_LIGHT,
+  PROJECT_STATUS_COLORS_BG_DARK,
+  PROJECT_STATUS_COLORS_TEXT_DARK
+} from "../../const/projectsStatusColors";
 import { getProjectById } from "../../services/projects/projectService";
 import { toMediaUrl } from "../../utils/media";
 import { useTheme } from "../../context/ThemeContext";
@@ -20,11 +25,13 @@ import { ROLE_NAMES } from "../../const/index";
 interface ProjectDataTableProps {
   project: Project;
   onProjectUpdate: (p: Project) => void;
+  canEdit?: boolean;
 }
 
 export const ProjectDataTable = ({
   project,
   onProjectUpdate,
+  canEdit = true,
 }: ProjectDataTableProps) => {
   const { darkMode } = useTheme();
   const groupsOptions = useGroupsOptions();
@@ -75,7 +82,7 @@ export const ProjectDataTable = ({
           label="Grupo"
           value={getGroupValue()}
           icon={PROJECT_ICONS["Grupo"]}
-          editable
+          editable={canEdit}
           inputType="select"
           options={groupsOptions}
           onSave={async (newGroupId) => {
@@ -97,7 +104,7 @@ export const ProjectDataTable = ({
           label="Estado"
           value={project.status?.id?.toString() || ""}
           icon={PROJECT_ICONS["Estado del proyecto"]}
-          editable
+          editable={canEdit}
           inputType="select"
           options={statusOptions}
           onSave={async (newStatusId) => {
@@ -115,27 +122,15 @@ export const ProjectDataTable = ({
             const statusName = project.status?.name;
             if (!statusName) return "Sin estado";
             
-            const textColor = PROJECT_STATUS_COLORS_TEXT[statusName] || 'text-gray-700';
-            const getBgColor = (status: string) => {
-              if (darkMode) {
-                switch(status) {
-                  case 'Activo': return 'bg-green-900/30';
-                  case 'Inactivo': return 'bg-yellow-900/30';
-                  case 'Completado': return 'bg-blue-900/30';
-                  default: return 'bg-gray-700/30';
-                }
-              } else {
-                switch(status) {
-                  case 'Activo': return 'bg-green-100';
-                  case 'Inactivo': return 'bg-yellow-100';
-                  case 'Completado': return 'bg-blue-100';
-                  default: return 'bg-gray-100';
-                }
-              }
-            };
+            const textColor = darkMode 
+              ? PROJECT_STATUS_COLORS_TEXT_DARK[statusName] || 'text-gray-300'
+              : PROJECT_STATUS_COLORS_TEXT[statusName] || 'text-gray-700';
+            const containerClasses = darkMode
+              ? PROJECT_STATUS_COLORS_BG_DARK[statusName] || 'bg-gray-700/30'
+              : PROJECT_STATUS_COLORS_BG_LIGHT[statusName] || 'bg-gray-500/10';
             
             return (
-              <span className={`inline-block px-3 py-1 text-sm font-semibold rounded-full ${textColor} ${getBgColor(statusName)}`}>
+              <span className={`inline-block px-3 py-1 text-sm font-semibold rounded-full ${textColor} ${containerClasses}`}>
                 {statusName}
               </span>
             );
@@ -217,7 +212,7 @@ export const ProjectDataTable = ({
           label="Áreas"
           value={project.areas?.map((a: any) => a.id.toString()) || []}
           icon={PROJECT_ICONS["Área"]}
-          editable
+          editable={canEdit}
           inputType="multiselect"
           options={areasOptions}
           onSave={async (newIds) => {
@@ -248,7 +243,7 @@ export const ProjectDataTable = ({
           label="Fecha de inicio"
           value={getDateInputValue(project.start_date)}
           icon={PROJECT_ICONS["Fecha de inicio"]}
-          editable
+          editable={canEdit}
           inputType="date"
           onSave={async (newDate) => {
             if (
@@ -277,7 +272,7 @@ export const ProjectDataTable = ({
           label="Fecha final estimada"
           value={getDateInputValue(project.end_date)}
           icon={PROJECT_ICONS["Fecha final estimada"]}
-          editable
+          editable={canEdit}
           inputType="date"
           onSave={async (newDate) => {
             if (
@@ -306,7 +301,7 @@ export const ProjectDataTable = ({
           label="Herramientas"
           value={project.tools?.map((t: any) => t.id.toString()) || []}
           icon={PROJECT_ICONS["Herramientas"]}
-          editable
+          editable={canEdit}
           inputType="multiselect"
           options={toolsOptions}
           onSave={async (newIds) => {
@@ -337,7 +332,7 @@ export const ProjectDataTable = ({
           label="Repositorios"
           value={project.repositories?.map((r: any) => r.id.toString()) || []}
           icon={PROJECT_ICONS["Repositorios"]}
-          editable
+          editable={canEdit}
           inputType="multiselect"
           options={repositoriesOptions}
           onSave={async (newIds) => {

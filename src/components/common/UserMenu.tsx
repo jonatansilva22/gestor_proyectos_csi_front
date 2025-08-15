@@ -11,7 +11,7 @@ interface UserMenuProps {
 }
 
 const UserMenu: React.FC<UserMenuProps> = ({ isOpen, onClose, triggerRef }) => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const { darkMode } = useTheme();
   const navigate = useNavigate();
   const menuRef = useRef<HTMLDivElement>(null);

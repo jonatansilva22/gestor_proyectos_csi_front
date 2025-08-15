@@ -2,7 +2,12 @@ import { Project } from "../../types/projects/Project";
 import { ProjectActions } from "./ProjectActions";
 import ResponsiveTable, { ResponsiveTableColumn } from "../common/ResponsiveTable";
 import placeholder from "../../assets/placeholder.png";
-import { PROJECT_STATUS_COLORS_TEXT } from "../../const/projectsStatusColors";
+import { 
+  PROJECT_STATUS_COLORS_TEXT,
+  PROJECT_STATUS_COLORS_BG_LIGHT,
+  PROJECT_STATUS_COLORS_BG_DARK,
+  PROJECT_STATUS_COLORS_TEXT_DARK
+} from "../../const/projectsStatusColors";
 import { useTheme } from "../../context/ThemeContext";
 
 interface ProjectsTableProps {
@@ -68,17 +73,20 @@ export const ProjectsTable = ({ projects, onDeleteClick }: ProjectsTableProps) =
             </p>
             {/* Mobile: Show status below name */}
             <div className="md:hidden mt-1">
-              <span
-                className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${
-                  PROJECT_STATUS_COLORS_TEXT[project.status?.name || ''] || 'text-gray-700'
-                } ${
-                  project.status?.name === 'Activo' ? 'bg-green-100' :
-                  project.status?.name === 'Inactivo' ? 'bg-yellow-100' :
-                  project.status?.name === 'Completado' ? 'bg-blue-100' : 'bg-gray-100'
-                }`}
-              >
-                {project.status?.name || 'Sin estado'}
-              </span>
+              {(() => {
+                const statusName = project.status?.name || '';
+                const textColor = darkMode 
+                  ? PROJECT_STATUS_COLORS_TEXT_DARK[statusName] || 'text-gray-300'
+                  : PROJECT_STATUS_COLORS_TEXT[statusName] || 'text-gray-700';
+                const containerClasses = darkMode
+                  ? PROJECT_STATUS_COLORS_BG_DARK[statusName] || 'bg-gray-700/30'
+                  : PROJECT_STATUS_COLORS_BG_LIGHT[statusName] || 'bg-gray-500/10';
+                return (
+                  <span className={`inline-block px-3 py-1 text-sm font-semibold rounded-full ${textColor} ${containerClasses}`}>
+                    {statusName || 'Sin estado'}
+                  </span>
+                );
+              })()}
             </div>
           </div>
         </div>
@@ -92,30 +100,20 @@ export const ProjectsTable = ({ projects, onDeleteClick }: ProjectsTableProps) =
       header: 'Estado',
       accessor: (project) => {
         const statusName = project.status?.name || '';
-        const getBgColor = (status: string) => {
-          if (darkMode) {
-            switch (status) {
-              case 'Activo': return 'bg-green-900/30';
-              case 'Inactivo': return 'bg-yellow-900/30';
-              case 'Completado': return 'bg-blue-900/30';
-              default: return 'bg-gray-700/30';
-            }
-          }
-          switch (status) {
-            case 'Activo': return 'bg-green-100';
-            case 'Inactivo': return 'bg-yellow-100';
-            case 'Completado': return 'bg-blue-100';
-            default: return 'bg-gray-100';
-          }
+        const getContainerClasses = (status: string) => {
+          const bgClass = darkMode 
+            ? PROJECT_STATUS_COLORS_BG_DARK[status] || 'bg-gray-700/30'
+            : PROJECT_STATUS_COLORS_BG_LIGHT[status] || 'bg-gray-500/10';
+          return `${bgClass} border border-transparent`;
         };
         const getTextColor = (status: string) => {
-          return PROJECT_STATUS_COLORS_TEXT[status] || (darkMode ? 'text-gray-300' : 'text-gray-700');
+          return darkMode
+            ? PROJECT_STATUS_COLORS_TEXT_DARK[status] || 'text-gray-300'
+            : PROJECT_STATUS_COLORS_TEXT[status] || 'text-gray-700';
         };
 
         return (
-          <span
-            className={`inline-block px-3 py-1 text-sm font-semibold rounded-full ${getTextColor(statusName)} ${getBgColor(statusName)}`}
-          >
+          <span className={`inline-block px-3 py-1 text-sm font-semibold rounded-full ${getTextColor(statusName)} ${getContainerClasses(statusName)}`}>
             {statusName || 'Sin estado'}
           </span>
         );

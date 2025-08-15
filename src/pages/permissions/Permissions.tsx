@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import { Student, StudentPermissions } from "../../types/permissions";
 import { permissionsService } from "../../services/permissions";
 import { useTheme } from "../../context/ThemeContext";
-import { PermissionsHeader } from "../../components/permissions/PermissionsHeader";
 import { StudentRow } from "../../components/permissions/StudentRow";
 import { PermissionsModal } from "../../components/permissions/PermissionsModal";
 import { TableHeader } from "../../components/permissions/TableHeader";

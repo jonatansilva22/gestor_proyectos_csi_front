@@ -86,8 +86,8 @@ const UserFilters: React.FC<UserFiltersProps> = ({
               } ${roleFilter ? 'border-purple-500' : ''}`}
             >
               <option value="">🌟 Todos los roles</option>
-              <option value="1">👑 SuperAdmin</option>
-              <option value="2">🛠️ Admin</option>
+              <option value="1">🛠️ Admin</option>
+              <option value="2">👑 SuperAdmin</option>
               <option value="3">👤 Colaborador</option>
             </select>
             <svg
@@ -159,7 +159,7 @@ const UserFilters: React.FC<UserFiltersProps> = ({
                   ? 'bg-purple-900/50 text-purple-300 border border-purple-600'
                   : 'bg-purple-100 text-purple-700 border border-purple-200'
               }`}>
-                Rol: {roleFilter === '1' ? 'SuperAdmin' : roleFilter === '2' ? 'Admin' : 'Colaborador'}
+                Rol: {roleFilter === '1' ? 'Admin' : roleFilter === '2' ? 'SuperAdmin' : 'Colaborador'}
               </span>
             )}
           </div>

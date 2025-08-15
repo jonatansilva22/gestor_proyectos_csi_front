@@ -8,6 +8,7 @@ import HeaderSidebarLayout from "../../components/common/HeaderSidebarLayout";
 import MobileNavigationShortcuts from "../../components/navigation/MobileNavigationShortcuts";
 import volver from "../../assets/volver.png";
 import { useProjectDetail } from "../../hooks/projects/useProjectDetail";
+import { useAuth } from "../../context/AuthContext";
 
 export const ProjectDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -15,6 +16,9 @@ export const ProjectDetailPage = () => {
   const { darkMode } = useTheme();
   const { isMobile } = useMobileNavigation();
   const { project, setProject } = useProjectDetail(id);
+  const { user } = useAuth();
+  const userRole = user?.role ?? user?.role_id;
+  const canEdit = userRole !== 3; // Colaborador (3) solo lectura
   
   // Enhanced touch interactions for back button
   const backButtonTouch = useTouchButton(
@@ -61,6 +65,7 @@ export const ProjectDetailPage = () => {
             <ProjectImageAndDescription
               project={project}
               onProjectUpdate={setProject}
+              canEdit={canEdit}
             />
           </div>
         </div>
@@ -69,7 +74,7 @@ export const ProjectDetailPage = () => {
           darkMode ? 'bg-[#3A2B5A] border-purple-700/30 shadow-purple-900/20' : 'bg-white border-gray-200'
         }`}>
           <div className="p-4 sm:p-6">
-            <ProjectDataTable project={project} onProjectUpdate={setProject} />
+            <ProjectDataTable project={project} onProjectUpdate={setProject} canEdit={canEdit} />
           </div>
         </div>
       </div>

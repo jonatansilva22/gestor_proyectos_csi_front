@@ -30,7 +30,7 @@ export const useThemePreference = () => {
   const resetTheme = () => {
     try {
       localStorage.removeItem(THEME_STORAGE_KEY);
-      setTheme('auto');
+      setTheme('light');
     } catch (error) {
       console.warn('Error resetting theme preference:', error);
     }

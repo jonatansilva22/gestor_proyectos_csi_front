@@ -9,11 +9,13 @@ import { FormImageUpload } from '../common/FormImageUpload';
 interface ProjectImageAndDescriptionProps {
   project: Project;
   onProjectUpdate: (p: Project) => void;
+  canEdit?: boolean;
 }
 
 export const ProjectImageAndDescription = ({
   project,
   onProjectUpdate,
+  canEdit = true,
 }: ProjectImageAndDescriptionProps) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
@@ -48,44 +50,54 @@ export const ProjectImageAndDescription = ({
           )}
         </div>
 
-        <div className="mt-2">
-          <FormImageUpload
-            image={selectedImage}
-            onChange={handleImageChange}
-          />
-        </div>
+        {canEdit && (
+          <div className="mt-2">
+            <FormImageUpload
+              image={selectedImage}
+              onChange={handleImageChange}
+            />
+          </div>
+        )}
       </div>
 
       <div className="flex-1">
-        <InlineEdit
-          value={project.name}
-          onSave={async (newName) => {
-            try {
-              const updated = await updateProject(project.id, { name: newName });
-              onProjectUpdate(updated);
-              notifySuccess("Nombre actualizado");
-            } catch (e: any) {
-              notifyError(getBackendErrorMsg(e));
-            }
-          }}
-          className="font-bold text-lg mb-2"
-        />
-        <div>
-          <span className="font-semibold">Descripción:</span>
+        {canEdit ? (
           <InlineEdit
-            value={project.description || ""}
-            onSave={async (newDesc) => {
+            value={project.name}
+            onSave={async (newName) => {
               try {
-                const updated = await updateProject(project.id, { description: newDesc });
+                const updated = await updateProject(project.id, { name: newName });
                 onProjectUpdate(updated);
-                notifySuccess("Descripción actualizada");
+                notifySuccess("Nombre actualizado");
               } catch (e: any) {
                 notifyError(getBackendErrorMsg(e));
               }
             }}
-            inputType="textarea"
-            className="whitespace-pre-line text-sm"
+            className="font-bold text-lg mb-2"
           />
+        ) : (
+          <div className="font-bold text-lg mb-2">{project.name}</div>
+        )}
+        <div>
+          <span className="font-semibold">Descripción:</span>
+          {canEdit ? (
+            <InlineEdit
+              value={project.description || ""}
+              onSave={async (newDesc) => {
+                try {
+                  const updated = await updateProject(project.id, { description: newDesc });
+                  onProjectUpdate(updated);
+                  notifySuccess("Descripción actualizada");
+                } catch (e: any) {
+                  notifyError(getBackendErrorMsg(e));
+                }
+              }}
+              inputType="textarea"
+              className="whitespace-pre-line text-sm"
+            />
+          ) : (
+            <div className="whitespace-pre-line text-sm">{project.description || ""}</div>
+          )}
         </div>
       </div>
     </div>

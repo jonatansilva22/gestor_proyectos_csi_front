@@ -54,7 +54,7 @@ export const GroupsTable = ({
       {users.map((user) => (
         <div key={user.id} className="flex items-center space-x-2">
           <div className="flex-shrink-0 h-6 w-6">
-            {user.photo ? (
+            {(user as any).photo ? (
               <img
                 className="h-6 w-6 rounded-full object-cover"
                 src={toMediaUrl((user as any).photo) || undefined}
