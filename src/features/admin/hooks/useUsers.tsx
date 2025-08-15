@@ -5,6 +5,7 @@ import { notifySuccess, notifyError } from '../../../components/common/ToastNoti
 
 interface UseUsersReturn {
   users: User[];
+  allUsers: User[];
   loading: boolean;
   error: string | null;
   pagination: {
@@ -108,6 +109,7 @@ export const useUsers = (): UseUsersReturn => {
 
   return {
     users: paginatedUsers,
+    allUsers: users,
     loading,
     error,
     pagination: {

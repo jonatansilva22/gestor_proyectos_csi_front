@@ -18,6 +18,7 @@ const UsersManagementPage: React.FC = () => {
   
   const {
     users,
+    allUsers,
     loading,
     error,
     pagination,
@@ -322,7 +323,7 @@ const UsersManagementPage: React.FC = () => {
                     <div>
                       <p className="text-white/80 text-sm">SuperAdmins</p>
                       <p className="text-white text-2xl font-bold">
-                        {loading ? '...' : users.filter(u => (u as any).role_id === 2).length}
+                        {loading ? '...' : allUsers.filter(u => (u as any).role_id === 2 || u.role === 2 || (u as any).role?.id === 2).length}
                       </p>
                     </div>
                   </div>
@@ -338,7 +339,7 @@ const UsersManagementPage: React.FC = () => {
                     <div>
                       <p className="text-white/80 text-sm">Admins</p>
                       <p className="text-white text-2xl font-bold">
-                        {loading ? '...' : users.filter(u => (u as any).role_id === 1).length}
+                        {loading ? '...' : allUsers.filter(u => (u as any).role_id === 1 || u.role === 1 || (u as any).role?.id === 1).length}
                       </p>
                     </div>
                   </div>
@@ -354,7 +355,7 @@ const UsersManagementPage: React.FC = () => {
                     <div>
                       <p className="text-white/80 text-sm">Colaboradores</p>
                       <p className="text-white text-2xl font-bold">
-                        {loading ? '...' : users.filter(u => (u as any).role_id === 3 || u.role === 3 || (u as any).role?.id === 3).length}
+                        {loading ? '...' : allUsers.filter(u => (u as any).role_id === 3 || u.role === 3 || (u as any).role?.id === 3).length}
                       </p>
                     </div>
                   </div>
