@@ -7,7 +7,7 @@ import { ProtectedRoute } from "./components/auth";
 import Login from "./pages/auth/Login";
 import LogoutPage from "./pages/auth/LogoutPage";
 import CreateUser from "./pages/users/CreateUser";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/dashboard/DashboardPage";
 import { ProjectsPage } from "./pages/projects/ProjectsPage";
 import { ProjectDetailPage } from "./pages/projects/ProjectDetailPage";
 import { ProjectsTablePage } from "./pages/projects/ProjectsTablePage";
@@ -40,7 +40,6 @@ const AppContent = () => {
             <Route path="/logout" element={<LogoutPage />} />
 
             {/* Rutas protegidas con autenticación */}
-            <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/create-user" element={<ProtectedRoute><CreateUser /></ProtectedRoute>} />
             <Route path="/admin/users" element={<ProtectedRoute><UsersManagementPage /></ProtectedRoute>} />
