@@ -29,6 +29,7 @@ export interface Area {
 export interface Tool {
   id: number;
   name: string;
+  image: string | null;
 }
 
 export interface Group {

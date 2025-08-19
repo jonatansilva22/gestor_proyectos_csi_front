@@ -108,21 +108,7 @@ export const RepositoriesTable = ({
       priority: 'medium',
       mobileLabel: 'URL'
     },
-    {
-      key: 'project',
-      header: 'Proyecto',
-      accessor: (repo) => (
-        <div className={`text-sm font-medium ${
-          darkMode ? 'text-white' : 'text-gray-900'
-        }`}>
-          {repo.project}
-        </div>
-      ),
-      className: 'text-left',
-      priority: 'medium',
-      hideOnMobile: true, // Shown with name on mobile
-      mobileLabel: 'Proyecto'
-    },
+    
     {
       key: 'created_at',
       header: 'Fecha de Creación',

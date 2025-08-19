@@ -79,26 +79,28 @@ export const ProjectImageAndDescription = ({
           <div className="font-bold text-lg mb-2">{project.name}</div>
         )}
         <div>
-          <span className="font-semibold">Descripción:</span>
-          {canEdit ? (
-            <InlineEdit
-              value={project.description || ""}
-              onSave={async (newDesc) => {
-                try {
-                  const updated = await updateProject(project.id, { description: newDesc });
-                  onProjectUpdate(updated);
-                  notifySuccess("Descripción actualizada");
-                } catch (e: any) {
-                  notifyError(getBackendErrorMsg(e));
-                }
-              }}
-              inputType="textarea"
-              className="whitespace-pre-line text-sm"
-            />
-          ) : (
-            <div className="whitespace-pre-line text-sm">{project.description || ""}</div>
-          )}
-        </div>
+  <span className="font-semibold">Descripción:</span>
+  {canEdit ? (
+    <InlineEdit
+      value={project.description || ""}
+      onSave={async (newDesc) => {
+        try {
+          const updated = await updateProject(project.id, { description: newDesc });
+          onProjectUpdate(updated);
+          notifySuccess("Descripción actualizada");
+        } catch (e: any) {
+          notifyError(getBackendErrorMsg(e));
+        }
+      }}
+      inputType="textarea"
+      className="whitespace-pre-line break-words text-sm"
+    />
+  ) : (
+    <div className="whitespace-pre-line break-words text-sm">
+      {project.description || ""}
+    </div>
+  )}
+</div>
       </div>
     </div>
   );

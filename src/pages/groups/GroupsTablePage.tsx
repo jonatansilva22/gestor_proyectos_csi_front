@@ -18,6 +18,7 @@ import { getBackendErrorMsg } from "../../utils/projects/getBackendErrorMsg";
 import { User } from "../../types/user";
 
 import volver from "../../assets/volver.png";
+import  Filters  from "../../features/admin/components/Filters"; 
 
 export const GroupsTablePage = () => {
   const navigate = useNavigate();
@@ -34,6 +35,9 @@ export const GroupsTablePage = () => {
 
   const [groupToEdit, setGroupToEdit] = useState<Group | null>(null);
   const [groupToDelete, setGroupToDelete] = useState<Group | null>(null);
+
+  // 🔹 Estado para búsqueda
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Cargar grupos
   const loadGroups = async () => {
@@ -63,6 +67,11 @@ export const GroupsTablePage = () => {
     loadGroups();
     loadUsers();
   }, []);
+
+  // 🔹 Filtrar grupos por nombre
+  const filteredGroups = groups.filter((group) =>
+    group.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   // Crear grupo
   const handleCreateSubmit = async (data: { name: string; user_ids: number[] }) => {
@@ -106,31 +115,47 @@ export const GroupsTablePage = () => {
 
   return (
     <HeaderSidebarLayout headerTitle="CSI PRO - Grupos">
-      <div className={`p-4 w-full h-full min-h-screen flex justify-center ${
-        darkMode ? 'bg-[#1A0F30]' : 'bg-white'
-      }`}>
+      <div
+        className={`p-4 w-full h-full min-h-screen flex justify-center ${
+          darkMode ? "bg-[#1A0F30]" : "bg-white"
+        }`}
+      >
         <div className="w-full max-w-7xl">
           <button
             onClick={() => navigate(-1)}
             className={`mb-4 rounded-full p-1 cursor-pointer transition ${
-              darkMode 
-                ? 'hover:bg-purple-700/20' 
-                : 'hover:bg-gray-200'
+              darkMode ? "hover:bg-purple-700/20" : "hover:bg-gray-200"
             }`}
           >
             <img src={volver} alt="Volver" className="w-6 h-6" />
           </button>
 
-          <h2 className={`text-2xl font-bold text-center mb-6 ${
-            darkMode ? 'text-purple-300' : 'text-purple-600'
-          }`}>Grupos</h2>
+          <h2
+            className={`text-2xl font-bold text-center mb-6 ${
+              darkMode ? "text-purple-300" : "text-purple-600"
+            }`}
+          >
+            Grupos
+          </h2>
+
+          {/* 🔹 Barra de búsqueda sin filtro */}
+          <Filters
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            filterValue=""
+            onFilterChange={() => {}}
+            filterOptions={[]} // ⬅️ vacío, no se muestra select
+            filterLabel=""
+            totalCount={filteredGroups.length}
+            itemName="grupo"
+          />
 
           <div className="overflow-y-auto max-h-[750px]">
             {loading ? (
               <p>Cargando grupos...</p>
             ) : (
               <GroupsTable
-                groups={groups}
+                groups={filteredGroups}
                 onEditClick={(group) => {
                   setGroupToEdit(group);
                   setShowEditModal(true);
@@ -144,13 +169,20 @@ export const GroupsTablePage = () => {
           </div>
 
           <div className="mt-6">
-            <NewItemButton label="Nuevo Grupo" onClick={() => setShowCreateModal(true)} />
+            <NewItemButton
+              label="Nuevo Grupo"
+              onClick={() => setShowCreateModal(true)}
+            />
           </div>
         </div>
       </div>
 
       {/* Modal Crear */}
-      <Modal open={showCreateModal} onClose={() => setShowCreateModal(false)} title="Nuevo Grupo">
+      <Modal
+        open={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        title="Nuevo Grupo"
+      >
         <GroupForm
           onSubmit={handleCreateSubmit}
           onCancel={() => setShowCreateModal(false)}
@@ -159,7 +191,11 @@ export const GroupsTablePage = () => {
       </Modal>
 
       {/* Modal Editar */}
-      <Modal open={showEditModal} onClose={() => setShowEditModal(false)} title="Editar Grupo">
+      <Modal
+        open={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        title="Editar Grupo"
+      >
         {groupToEdit && (
           <GroupForm
             initialData={groupToEdit}

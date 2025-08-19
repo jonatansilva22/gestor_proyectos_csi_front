@@ -11,14 +11,12 @@ interface RepositoryFormProps {
 export const RepositoryForm = ({ onSubmit, onCancel, initialData }: RepositoryFormProps) => {
   const [name, setName] = useState(initialData?.name || "");
   const [repositoryUrl, setRepositoryUrl] = useState(initialData?.repository_url || "");
-  const [projectId, setProjectId] = useState(initialData?.project || 0);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({
       name,
       repository_url: repositoryUrl,
-      project: projectId,
     });
   };
 
@@ -38,14 +36,7 @@ export const RepositoryForm = ({ onSubmit, onCancel, initialData }: RepositoryFo
         required
         placeholder="https://abc/123.com"
       />
-      <FormInput
-        label="ID del Proyecto"
-        type="number"
-        value={String(projectId)}
-        onChange={(e) => setProjectId(Number(e.target.value))}
-        required
-        placeholder="Ej: 9"
-      />
+  
       <div className="flex gap-2 justify-end">
         <button
           type="button"

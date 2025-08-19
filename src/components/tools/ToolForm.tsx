@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FormInput } from "../../components/common/FormInput";
 import { FormImageUpload } from "../../components/common/FormImageUpload";
 import { Tool } from "../../types/tools/Tool";
+import { notifyError } from "../common/ToastNotify";
 
 interface ToolFormProps {
   onSubmit: (data: { name: string; image: File | null }) => void;
@@ -15,13 +16,19 @@ export const ToolForm = ({ onSubmit, onCancel, initialData }: ToolFormProps) => 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Validar que se haya seleccionado una imagen (solo para creación)
-    if (!initialData?.id && !image) {
-      alert('Por favor selecciona una imagen para la herramienta');
+
+    // Validación de nombre
+    if (!name.trim()) {
+      notifyError("Por favor ingresa el nombre de la herramienta");
       return;
     }
-    
+
+    // Validación de imagen (solo para creación)
+    if (!initialData?.id && !image) {
+      notifyError("Por favor selecciona una imagen para la herramienta");
+      return;
+    }
+
     onSubmit({ name, image });
   };
 
@@ -34,17 +41,24 @@ export const ToolForm = ({ onSubmit, onCancel, initialData }: ToolFormProps) => 
         required
         placeholder="Nombre de la herramienta"
       />
-      <FormImageUpload 
-        image={image} 
-        onChange={setImage} 
+      <FormImageUpload
+        image={image}
+        onChange={setImage}
         required={!initialData?.id}
         label={!initialData?.id ? "Imagen (obligatoria)" : "Imagen"}
       />
       <div className="flex gap-2 justify-end">
-        <button type="button" onClick={onCancel} className="text-gray-600 hover:underline cursor-pointer">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="text-gray-600 hover:underline cursor-pointer"
+        >
           Cancelar
         </button>
-        <button type="submit" className="px-6 py-2 rounded bg-purple-600 text-white hover:bg-purple-700 cursor-pointer">
+        <button
+          type="submit"
+          className="px-6 py-2 rounded bg-purple-600 text-white hover:bg-purple-700 cursor-pointer"
+        >
           Guardar
         </button>
       </div>

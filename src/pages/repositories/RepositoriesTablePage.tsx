@@ -13,6 +13,8 @@ import { notifySuccess, notifyError } from "../../components/common/ToastNotify"
 import { getBackendErrorMsg } from "../../utils/projects/getBackendErrorMsg";
 import volver from "../../assets/volver.png";
 import { Repository } from "../../types/repositories/Repository";
+import Filters from "../../features/admin/components/Filters";
+import {useState} from "react";
 
 export const RepositoriesTablePage = () => {
   const navigate = useNavigate();
@@ -32,6 +34,14 @@ export const RepositoriesTablePage = () => {
     closeDeleteModal,
     entityToDelete: repositoryToDelete,
   } = useEntityModals<Repository>();
+
+  // 🔹 Estado para búsqueda
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // 🔹 Filtrar repositorios según búsqueda
+  const filteredRepositories = repositories.filter((repo) =>
+    repo.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleCreateSubmit = async (data: Omit<Repository, "id" | "created_at" | "updated_at">) => {
     try {
@@ -71,32 +81,48 @@ export const RepositoriesTablePage = () => {
 
   return (
     <HeaderSidebarLayout headerTitle="CSI PRO - Repositorios">
-      <div className={`p-4 w-full h-full min-h-screen flex justify-center ${
-        darkMode ? 'bg-[#1A0F30]' : 'bg-white'
-      }`}>
+      <div
+        className={`p-4 w-full h-full min-h-screen flex justify-center ${
+          darkMode ? "bg-[#1A0F30]" : "bg-white"
+        }`}
+      >
         <div className="w-full max-w-7xl">
           <button
             onClick={() => navigate(-1)}
             className={`mb-4 rounded-full p-1 cursor-pointer transition ${
-              darkMode 
-                ? 'hover:bg-purple-700/20' 
-                : 'hover:bg-gray-200'
+              darkMode ? "hover:bg-purple-700/20" : "hover:bg-gray-200"
             }`}
           >
             <img src={volver} alt="Volver" className="w-7 h-7" />
           </button>
-          <h2 className={`text-2xl font-bold text-center mb-6 ${
-            darkMode ? 'text-purple-300' : 'text-purple-600'
-          }`}>
+          <h2
+            className={`text-2xl font-bold text-center mb-6 ${
+              darkMode ? "text-purple-300" : "text-purple-600"
+            }`}
+          >
             Repositorios
           </h2>
+
+          {/* 🔹 Barra de búsqueda */}
+          <Filters
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            filterValue=""
+            onFilterChange={() => {}}
+            filterOptions={[]} // ⬅️ vacío, no se muestra select
+            filterLabel=""
+            totalCount={filteredRepositories.length}
+            itemName="repositorios"
+          />
+
           <div className="overflow-y-auto max-h-[750px]">
             <RepositoriesTable
-              repositories={repositories}
+              repositories={filteredRepositories}
               onDeleteClick={openDeleteModal}
               onEditClick={openEditModal}
             />
           </div>
+
           <div className="mt-6">
             <NewItemButton label="Nuevo Repositorio" onClick={openCreateModal} />
           </div>

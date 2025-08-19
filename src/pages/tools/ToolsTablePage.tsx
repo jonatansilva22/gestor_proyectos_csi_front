@@ -13,6 +13,8 @@ import { notifySuccess, notifyError } from "../../components/common/ToastNotify"
 import { getBackendErrorMsg } from "../../utils/projects/getBackendErrorMsg";
 import volver from "../../assets/volver.png";
 import { Tool } from "../../types/tools/Tool";
+import Filters from "../../features/admin/components/Filters";
+import { useState } from "react";
 
 export const ToolsTablePage = () => {
   const navigate = useNavigate();
@@ -32,6 +34,14 @@ export const ToolsTablePage = () => {
     closeDeleteModal,
     entityToDelete: toolToDelete,
   } = useEntityModals<Tool>();
+
+  // 🔹 Estado para búsqueda
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // 🔹 Filtrar herramientas según búsqueda
+  const filteredTools = tools.filter((tool) =>
+    tool.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   interface ToolFormData {
     name: string;
@@ -76,28 +86,43 @@ export const ToolsTablePage = () => {
 
   return (
     <HeaderSidebarLayout headerTitle="CSI PRO - Herramientas">
-      <div className={`p-4 w-full h-full min-h-screen flex justify-center ${
-        darkMode ? 'bg-[#1A0F30]' : 'bg-white'
-      }`}>
+      <div
+        className={`p-4 w-full h-full min-h-screen flex justify-center ${
+          darkMode ? "bg-[#1A0F30]" : "bg-white"
+        }`}
+      >
         <div className="w-full max-w-7xl">
           <button
             onClick={() => navigate(-1)}
             className={`mb-4 rounded-full p-1 cursor-pointer transition ${
-              darkMode 
-                ? 'hover:bg-purple-700/20' 
-                : 'hover:bg-gray-200'
+              darkMode ? "hover:bg-purple-700/20" : "hover:bg-gray-200"
             }`}
           >
             <img src={volver} alt="Volver" className="w-7 h-7" />
           </button>
-          <h2 className={`text-2xl font-bold text-center mb-6 ${
-            darkMode ? 'text-purple-300' : 'text-purple-600'
-          }`}>
+          <h2
+            className={`text-2xl font-bold text-center mb-6 ${
+              darkMode ? "text-purple-300" : "text-purple-600"
+            }`}
+          >
             Herramientas
           </h2>
+
+          {/* 🔹 Barra de búsqueda */}
+          <Filters
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            filterValue=""
+            onFilterChange={() => {}}
+            filterOptions={[]} // ⬅️ vacío, no se muestra select
+            filterLabel=""
+            totalCount={filteredTools.length}
+            itemName="herramienta"
+          />
+
           <div className="overflow-y-auto max-h-[750px]">
             <ToolsTable
-              tools={tools}
+              tools={filteredTools}
               onDeleteClick={openDeleteModal}
               onEditClick={openEditModal}
             />

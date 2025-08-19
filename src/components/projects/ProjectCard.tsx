@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Project } from "../../types/projects/Project";
+import { toMediaUrl } from "../../utils/media";
 import { 
   PROJECT_STATUS_COLORS_BG, 
   PROJECT_STATUS_COLORS_BG_LIGHT,
@@ -39,23 +40,23 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
         bg-surface-secondary
         flex-shrink-0
       ">
-        {project.image ? (
-          <img
-            src={project.image}
-            alt={project.name}
-            className="max-h-20 max-w-full object-contain 
-                       transition-transform duration-300 group-hover:scale-110"
-            onError={(e) => {
-              e.currentTarget.src = placeholder;
-            }}
-          />
-        ) : (
-          <img
-            src={placeholder}
-            alt="Imagen del proyecto"
-            className="h-16 w-16 opacity-50"
-          />
-        )}
+{project.image ? (
+  <img
+    src={project.image}
+    alt={project.name}
+    className="h-28 w-auto object-contain 
+               transition-transform duration-300 group-hover:scale-110"
+    onError={(e) => {
+      e.currentTarget.src = placeholder;
+    }}
+  />
+) : (
+  <img
+    src={placeholder}
+    alt="Imagen del proyecto"
+    className="h-28 w-auto opacity-50"
+  />
+)}
       </div>
 
       {/* Content */}
@@ -106,19 +107,28 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
           </div>
 
           {/* Additional Info - Tools, Area, etc. */}
-          <div className="flex flex-wrap gap-2 text-sm">
-            {project.tools && project.tools.length > 0 && (
-              <span className="px-2 py-0.5 rounded-full border border-primary text-primary-600 bg-primary-50 truncate">
-                🔧 {project.tools[0].name}
-                {project.tools.length > 1 && ` +${project.tools.length - 1}`}
-              </span>
-            )}
-            {project.area && (
-              <span className="px-2 py-0.5 rounded-full border bg-surface-secondary border-secondary text-text-primary truncate">
-                🏢 {project.area.name}
-              </span>
-            )}
-          </div>
+<div className="flex flex-wrap gap-2 text-sm">
+  {project.tools && project.tools.length > 0 && (
+    <div className="flex items-center gap-2">
+{project.tools.map((tool) => (
+  <div key={tool.id} className="flex items-center gap-1">
+    <img
+      src={tool.image ? toMediaUrl(tool.image) || placeholder : placeholder}
+      alt={tool.name}
+      className="h-6 w-6 object-cover rounded-full border border-gray-300"
+      onError={(e) => (e.currentTarget.src = placeholder)}
+    />
+    <span className="truncate max-w-[80px] text-xs">{tool.name}</span>
+  </div>
+))}
+    </div>
+  )}
+  {project.area && (
+    <span className="px-2 py-0.5 rounded-full border bg-surface-secondary border-secondary text-text-primary truncate">
+      🏢 {project.area.name}
+    </span>
+  )}
+</div>
         </div>
 
         {/* Action Button */}

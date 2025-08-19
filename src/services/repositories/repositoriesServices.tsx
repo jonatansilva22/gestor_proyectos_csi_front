@@ -14,7 +14,6 @@ export const getRepositoryById = async (id: number): Promise<Repository> => {
 export const createRepository = async (repository: {
   name: string;
   repository_url: string;
-  project: number;
 }) => {
   const { data } = await api.post('/repositories/', repository, {
     headers: { 'Content-Type': 'application/json' },

@@ -13,6 +13,9 @@ import { notifySuccess, notifyError } from "../../components/common/ToastNotify"
 import { getBackendErrorMsg } from "../../utils/projects/getBackendErrorMsg";
 import volver from "../../assets/volver.png";
 import { Area } from "../../types/areas/Area";
+import  Filters  from "../../features/admin/components/Filters";
+import { useState } from "react";
+
 
 export const AreasTablePage = () => {
   const navigate = useNavigate();
@@ -32,6 +35,14 @@ export const AreasTablePage = () => {
     closeDeleteModal,
     entityToDelete: areaToDelete,
   } = useEntityModals<Area>();
+
+  // 🔹 Estado para búsqueda
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // 🔹 Filtrar áreas por nombre
+  const filteredAreas = areas.filter((area) =>
+    area.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleCreateSubmit = async (data: { name: string }) => {
     try {
@@ -71,32 +82,49 @@ export const AreasTablePage = () => {
 
   return (
     <HeaderSidebarLayout headerTitle="CSI PRO - Áreas">
-      <div className={`p-4 w-full h-full min-h-screen flex justify-center ${
-        darkMode ? 'bg-[#1A0F30]' : 'bg-white'
-      }`}>
+      <div
+        className={`p-4 w-full h-full min-h-screen flex justify-center ${
+          darkMode ? "bg-[#1A0F30]" : "bg-white"
+        }`}
+      >
         <div className="w-full max-w-7xl">
           <button
             onClick={() => navigate(-1)}
             className={`mb-4 rounded-full p-1 cursor-pointer transition ${
-              darkMode 
-                ? 'hover:bg-purple-700/20' 
-                : 'hover:bg-gray-200'
+              darkMode ? "hover:bg-purple-700/20" : "hover:bg-gray-200"
             }`}
           >
             <img src={volver} alt="Volver" className="w-7 h-7" />
           </button>
-          <h2 className={`text-2xl font-bold text-center mb-6 ${
-            darkMode ? 'text-purple-300' : 'text-purple-600'
-          }`}>
+
+          <h2
+            className={`text-2xl font-bold text-center mb-6 ${
+              darkMode ? "text-purple-300" : "text-purple-600"
+            }`}
+          >
             Áreas
           </h2>
+
+          {/* 🔹 Barra de búsqueda (sin filtro) */}
+          <Filters
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            filterValue=""
+            onFilterChange={() => {}}
+            filterOptions={[]} // ⬅️ vacío, no muestra select
+            filterLabel=""
+            totalCount={filteredAreas.length}
+            itemName="área"
+          />
+
           <div className="overflow-y-auto max-h-[750px]">
             <AreasTable
-              areas={areas}
+              areas={filteredAreas}
               onDeleteClick={openDeleteModal}
               onEditClick={openEditModal}
             />
           </div>
+
           <div className="mt-6">
             <NewItemButton label="Nueva Área" onClick={openCreateModal} />
           </div>
