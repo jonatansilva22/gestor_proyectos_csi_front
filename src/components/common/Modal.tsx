@@ -93,7 +93,7 @@ export const Modal = ({ open, onClose, children, title, size = 'lg' }: ModalProp
           
           {/* Close button - Touch optimized */}
           <button
-            className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-95 ${
+            className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-95 cursor-pointer ${
               darkMode 
                 ? 'text-purple-300 hover:bg-purple-700/20 hover:text-purple-200 focus:ring-purple-400 focus:ring-offset-gray-800'
                 : 'text-purple-700 hover:bg-gray-100 hover:text-purple-800 focus:ring-purple-500 focus:ring-offset-white'

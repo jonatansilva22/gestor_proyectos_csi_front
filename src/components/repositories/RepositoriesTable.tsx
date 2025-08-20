@@ -15,6 +15,7 @@ export const RepositoriesTable = ({
   onEditClick,
 }: RepositoriesTableProps) => {
   const { darkMode } = useTheme();
+
   // Validar que repositories sea un array
   if (!repositories || !Array.isArray(repositories)) {
     return (
@@ -23,6 +24,7 @@ export const RepositoriesTable = ({
       </div>
     );
   }
+
   const formatDate = (dateString: string) => {
     if (!dateString) return "dd/mm/yyyy";
     const date = new Date(dateString);
@@ -108,7 +110,6 @@ export const RepositoriesTable = ({
       priority: 'medium',
       mobileLabel: 'URL'
     },
-    
     {
       key: 'created_at',
       header: 'Fecha de Creación',
@@ -145,11 +146,13 @@ export const RepositoriesTable = ({
   ];
 
   return (
-    <ResponsiveTable
-      data={repositories.map((repo, index) => ({ ...repo, index }))}
-      columns={columns}
-      keyExtractor={(repo) => repo.id.toString()}
-      emptyMessage="No hay repositorios disponibles"
-    />
+    <div className="max-h-[600px] overflow-y-auto">
+      <ResponsiveTable
+        data={repositories.map((repo, index) => ({ ...repo, index }))}
+        columns={columns}
+        keyExtractor={(repo) => repo.id.toString()}
+        emptyMessage="No hay repositorios disponibles"
+      />
+    </div>
   );
 };

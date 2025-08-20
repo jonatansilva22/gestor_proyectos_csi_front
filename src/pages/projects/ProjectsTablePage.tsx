@@ -12,11 +12,15 @@ import { getBackendErrorMsg } from "../../utils/projects/getBackendErrorMsg";
 import { Project } from "../../types/projects/Project";
 import HeaderSidebarLayout from "../../components/common/HeaderSidebarLayout";
 import Filters from "../../features/admin/components/Filters";
-import { useState} from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import volver from "../../assets/volver.png";
 
 export const ProjectsTablePage = () => {
   const { darkMode } = useTheme();
   const { projects, refreshProjects } = useProjects();
+  const navigate = useNavigate();
+
   const {
     showModal,
     openCreateModal,
@@ -51,9 +55,30 @@ export const ProjectsTablePage = () => {
     }
   };
 
+  // 🔹 Función segura para volver
+  const handleBack = () => {
+    if (window.history.state && window.history.state.idx > 0) {
+      navigate(-1);
+    } else {
+      navigate("/"); // fallback a inicio si no hay historial
+    }
+  };
+
   return (
     <HeaderSidebarLayout headerTitle="CSI PRO - Proyectos">
       <div className="max-w-7xl mx-auto">
+        {/* 🔹 Botón volver */}
+        <button
+          onClick={handleBack}
+          className={`mb-4 flex items-center space-x-2 rounded-full px-3 py-1 cursor-pointer transition ${
+            darkMode ? "hover:bg-purple-700/20" : "hover:bg-gray-200"
+          }`}
+        >
+          <img src={volver} alt="Volver" className="w-6 h-6" />
+          <span className={darkMode ? "text-purple-300" : "text-gray-700"}>
+          </span>
+        </button>
+
         <h2
           className={`text-2xl font-bold mb-6 text-center ${
             darkMode ? "text-purple-300" : "text-purple-600"

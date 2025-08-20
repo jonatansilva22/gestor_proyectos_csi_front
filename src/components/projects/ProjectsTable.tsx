@@ -17,6 +17,7 @@ interface ProjectsTableProps {
 
 export const ProjectsTable = ({ projects, onDeleteClick }: ProjectsTableProps) => {
   const { darkMode } = useTheme();
+
   // Validar que projects sea un array
   if (!projects || !Array.isArray(projects)) {
     return (
@@ -25,6 +26,7 @@ export const ProjectsTable = ({ projects, onDeleteClick }: ProjectsTableProps) =
       </div>
     );
   }
+
   const columns: ResponsiveTableColumn<Project>[] = [
     {
       key: 'index',
@@ -199,11 +201,13 @@ export const ProjectsTable = ({ projects, onDeleteClick }: ProjectsTableProps) =
   ];
 
   return (
-    <ResponsiveTable
-      data={projects.map((project, index) => ({ ...project, index }))}
-      columns={columns}
-      keyExtractor={(project) => project.id.toString()}
-      emptyMessage="No hay proyectos disponibles"
-    />
+    <div className="max-h-[600px] overflow-y-auto">
+      <ResponsiveTable
+        data={projects.map((project, index) => ({ ...project, index }))}
+        columns={columns}
+        keyExtractor={(project) => project.id.toString()}
+        emptyMessage="No hay proyectos disponibles"
+      />
+    </div>
   );
 };

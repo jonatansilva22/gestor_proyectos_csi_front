@@ -11,6 +11,7 @@ interface AreasTableProps {
 
 export const AreasTable = ({ areas, onDeleteClick, onEditClick }: AreasTableProps) => {
   const { darkMode } = useTheme();
+
   // Validar que areas sea un array
   if (!areas || !Array.isArray(areas)) {
     return (
@@ -19,6 +20,7 @@ export const AreasTable = ({ areas, onDeleteClick, onEditClick }: AreasTableProp
       </div>
     );
   }
+
   const formatDate = (dateString: string) => {
     if (!dateString) return "dd/mm/yyyy";
     const date = new Date(dateString);
@@ -106,11 +108,13 @@ export const AreasTable = ({ areas, onDeleteClick, onEditClick }: AreasTableProp
   ];
 
   return (
-    <ResponsiveTable
-      data={areas.map((area, index) => ({ ...area, index }))}
-      columns={columns}
-      keyExtractor={(area) => area.id.toString()}
-      emptyMessage="No hay áreas disponibles"
-    />
+    <div className="max-h-[600px] overflow-y-auto">
+      <ResponsiveTable
+        data={areas.map((area, index) => ({ ...area, index }))}
+        columns={columns}
+        keyExtractor={(area) => area.id.toString()}
+        emptyMessage="No hay áreas disponibles"
+      />
+    </div>
   );
 };

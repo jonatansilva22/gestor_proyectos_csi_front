@@ -16,6 +16,7 @@ export const GroupsTable = ({
   onEditClick,
 }: GroupsTableProps) => {
   const { darkMode } = useTheme();
+
   // Validar que groups sea un array
   if (!groups || !Array.isArray(groups)) {
     return (
@@ -24,6 +25,7 @@ export const GroupsTable = ({
       </div>
     );
   }
+
   const formatDate = (dateString: string) => {
     if (!dateString) return "dd/mm/yyyy";
     const date = new Date(dateString);
@@ -174,11 +176,13 @@ export const GroupsTable = ({
   ];
 
   return (
-    <ResponsiveTable
-      data={groups.map((group, index) => ({ ...group, index }))}
-      columns={columns}
-      keyExtractor={(group) => group.id.toString()}
-      emptyMessage="No hay grupos disponibles"
-    />
+    <div className="max-h-[600px] overflow-y-auto">
+      <ResponsiveTable
+        data={groups.map((group, index) => ({ ...group, index }))}
+        columns={columns}
+        keyExtractor={(group) => group.id.toString()}
+        emptyMessage="No hay grupos disponibles"
+      />
+    </div>
   );
 };

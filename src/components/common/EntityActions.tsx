@@ -21,7 +21,7 @@ export const EntityActions = ({
   return (
     <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-center justify-center w-full sm:w-auto">
       <button
-        className="w-full sm:w-auto min-w-[120px] px-4 py-3 sm:px-6 sm:py-2 text-base sm:text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 active:scale-95 min-h-[44px] bg-purple-600 text-white hover:bg-purple-700 
+        className="w-full sm:w-auto min-w-[120px] px-4 py-3 sm:px-6 sm:py-2 text-base sm:text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 active:scale-95 min-h-[44px] cursor-pointer bg-purple-600 text-white hover:bg-purple-700 
                    focus:ring-purple-500 focus:ring-offset-white dark:focus:ring-purple-400 
                    dark:focus:ring-offset-gray-800 font-semibold"
         onClick={onDetails ? onDetails : () => detailsPath && navigate(detailsPath)}
