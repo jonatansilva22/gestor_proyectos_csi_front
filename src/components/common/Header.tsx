@@ -5,7 +5,7 @@ import { useMobileNavigation } from "../../hooks/useMobileNavigation";
 import logo from "../../assets/logo-csi.png";
 import menu from "../../assets/menu.png";
 import UserMenu from "../../components/common/UserMenu";
-import { toMediaUrl } from "../../utils/media";
+import UserAvatar from "./UserAvatar";
 
 interface HeaderProps {
   title: string;
@@ -57,14 +57,6 @@ const Header = ({
     setIsUserMenuOpen(false);
   };
 
-  // Generar iniciales del usuario
-  const getUserInitials = (username: string) => {
-    const names = username.split(' ');
-    if (names.length >= 2) {
-      return `${names[0][0]}${names[1][0]}`.toUpperCase();
-    }
-    return username.substring(0, 2).toUpperCase();
-  };
 
   return (
     <header className="w-full flex items-center h-14 sm:h-16 px-3 sm:px-6 shadow-lg z-20 bg-primary-600 shadow-primary-900/30">
@@ -150,26 +142,30 @@ const Header = ({
           aria-label="Menú de usuario"
         >
           {/* Avatar */}
-          {user?.photo ? (
-            <img
-              src={toMediaUrl(user.photo) || undefined}
-              alt={user.username}
-              className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover border-2 ${
-                darkMode ? 'border-white/30' : 'border-white/20'
-              }`}
+          {user && (
+            <UserAvatar
+              user={{
+                first_name: user.first_name || '',
+                last_name: user.last_name || '',
+                photo: user.photo
+              }}
+              size="small"
+              className={`border-2 ${darkMode ? 'border-white/30' : 'border-white/20'}`}
             />
-          ) : (
-            <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full gradient-primary flex items-center justify-center text-white font-semibold text-xs sm:text-sm border-2 ${
-              darkMode ? 'border-white/30' : 'border-white/20'
-            }`}>
-              {getUserInitials(user?.username || 'Usuario')}
-            </div>
           )}
           
           {/* Username - Hidden on mobile to save space */}
-          <span className="text-white text-sm font-medium hidden sm:block max-w-24 lg:max-w-none truncate">
-            {user?.username || 'Usuario'}
-          </span>
+          <div className="hidden sm:block max-w-24 lg:max-w-none">
+            <div className="text-white text-sm font-medium truncate">
+              {user?.first_name && user?.last_name 
+                ? `${user.first_name} ${user.last_name}` 
+                : (user?.username || 'Usuario')
+              }
+            </div>
+            <div className="text-white/70 text-xs truncate">
+              @{user?.username || 'user'}
+            </div>
+          </div>
           
           {/* Dropdown Arrow - Smaller on mobile */}
           <svg 

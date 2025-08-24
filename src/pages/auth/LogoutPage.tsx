@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import UserAvatar from '../../components/common/UserAvatar';
 
 export default function LogoutPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -14,7 +15,7 @@ export default function LogoutPage() {
     try {
       await logout();
       // Redirigir manualmente después del logout
-      navigate('/');
+      navigate('/login');
     } catch (error) {
       console.error('Error:', error);
       setIsLoading(false);
@@ -69,16 +70,34 @@ export default function LogoutPage() {
                 ? 'bg-[#2A1B4A] border border-purple-600/50' 
                 : 'bg-slate-50 border border-slate-300'
             }`}>
-              <div className="text-center">
-                <div className={`font-medium ${
-                  darkMode ? 'text-white' : 'text-gray-900'
-                }`}>
-                  {user.username}
-                </div>
-                <div className={`text-sm ${
-                  darkMode ? 'text-purple-300' : 'text-gray-500'
-                }`}>
-                  {user.email}
+              <div className="flex items-center space-x-4">
+                <UserAvatar 
+                  user={{
+                    first_name: user.first_name || '',
+                    last_name: user.last_name || '',
+                    photo: user.photo
+                  }} 
+                  size="large"
+                />
+                <div className="flex-1">
+                  <div className={`font-medium ${
+                    darkMode ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    {user.first_name && user.last_name 
+                      ? `${user.first_name} ${user.last_name}`
+                      : user.username
+                    }
+                  </div>
+                  <div className={`text-sm ${
+                    darkMode ? 'text-purple-300' : 'text-gray-500'
+                  }`}>
+                    @{user.username}
+                  </div>
+                  <div className={`text-sm ${
+                    darkMode ? 'text-purple-200' : 'text-gray-600'
+                  }`}>
+                    {user.email}
+                  </div>
                 </div>
               </div>
             </div>

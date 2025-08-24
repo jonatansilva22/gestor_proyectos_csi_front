@@ -4,10 +4,11 @@ import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { validateLoginForm } from '../../utils/validation';
 import { useValidationErrors } from '../../hooks/useValidationErrors';
+import { storage } from '../../utils/storage';
 
 const LoginForm: React.FC = () => {
   const { darkMode } = useTheme();
-  const [email, setEmail] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const { errors, clearErrors, clearFieldError, handleApiError, setBackendErrors } = useValidationErrors();
@@ -19,7 +20,7 @@ const LoginForm: React.FC = () => {
     clearErrors();
 
     // Validación del frontend usando reglas del backend
-    const validationResult = validateLoginForm({ email, password });
+    const validationResult = validateLoginForm({ identifier, password });
     
     if (!validationResult.isValid) {
       // Usar el manejador de errores de validación para validación del frontend
@@ -28,8 +29,18 @@ const LoginForm: React.FC = () => {
     }
 
     try {
-      await login(email, password, false);
-      navigate('/dashboard');
+      await login(identifier, password, false);
+      // Obtener el usuario desde storage (ya actualizado en login)
+      const u = storage.getUser();
+      const roleId = (u?.role ?? u?.role_id) as number | undefined;
+
+      if (roleId === 3) {
+        // Colaborador => SPA a Projects
+        navigate('/projects');
+      } else {
+        // Otros roles => Dashboard
+        navigate('/dashboard');
+      }
     } catch (error: any) {
       // Manejo mejorado de errores con soporte para validación del backend
       handleApiError(error);
@@ -50,25 +61,25 @@ const LoginForm: React.FC = () => {
         Iniciar Sesión
       </h2>
 
-      {(errors.general || errors.email || errors.password) && (
+      {(errors.general || errors.identifier || errors.password) && (
         <div className="mb-4 p-3 bg-red-50 text-red-700 border border-red-200 rounded-lg text-sm">
           {errors.general || 'Por favor corrige los errores en el formulario'}
         </div>
       )}
 
       <form onSubmit={handleSubmit}>
-        {/* --- Campo Email --- */}
+        {/* --- Campo Identifier (Email o Username) --- */}
         <div className="mb-4">
           <label
             className={`block text-sm font-medium mb-2 ${
               darkMode ? 'text-purple-200' : 'text-gray-600'
             }`}
           >
-            Correo
+            Email o Usuario
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-              {/* Icono email */}
+              {/* Icono user/email */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5 text-purple-500"
@@ -80,30 +91,30 @@ const LoginForm: React.FC = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                 />
               </svg>
             </div>
             <input
-              type="email"
-              value={email}
+              type="text"
+              value={identifier}
               onChange={(e) => {
-                setEmail(e.target.value);
-                clearFieldError('email');
+                setIdentifier(e.target.value);
+                clearFieldError('identifier');
               }}
-              placeholder="usuario@correo.com"
+              placeholder="usuario@correo.com o nombre_usuario"
               required
               className={`w-full py-3 pl-10 pr-3 border rounded-lg focus:outline-none transition-colors ${
                 darkMode 
                   ? 'bg-[#3A2B5A] border-purple-600/50 text-white placeholder-gray-400 focus:border-purple-500'
                   : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500'
               }
-                ${errors.email ? 'border-red-400' : ''}`}
+                ${errors.identifier ? 'border-red-400' : ''}`}
               disabled={isLoading}
             />
           </div>
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+          {errors.identifier && (
+            <p className="mt-1 text-sm text-red-500">{errors.identifier}</p>
           )}
         </div>
 

@@ -4,7 +4,7 @@ import { User } from '../../../types/user';
 import UserActions from './UserActions';
 import ResponsiveTable, { ResponsiveTableColumn } from '../../../components/common/ResponsiveTable';
 import { ROLE_NAMES } from '../../../const/index';
-import { toMediaUrl } from '../../../utils/media';
+import UserAvatar from '../../../components/common/UserAvatar';
 
 interface UsersTableProps {
   users: User[];
@@ -53,15 +53,6 @@ const UsersTable: React.FC<UsersTableProps> = ({
     });
   };
 
-  const getUserInitials = (firstName?: string, lastName?: string, username?: string) => {
-    if (firstName && lastName) {
-      return `${firstName[0]}${lastName[0]}`.toUpperCase();
-    }
-    if (username) {
-      return username.substring(0, 2).toUpperCase();
-    }
-    return 'U';
-  };
 
   const columns: ResponsiveTableColumn<User>[] = [
     {
@@ -69,18 +60,16 @@ const UsersTable: React.FC<UsersTableProps> = ({
       header: 'Usuario',
       accessor: (user) => (
         <div className="flex items-center space-x-3">
-          <div className="flex-shrink-0 h-10 w-10">
-            {user.photo ? (
-              <img 
-                className="h-10 w-10 rounded-full object-cover" 
-                src={toMediaUrl(user.photo) || undefined} 
-                alt={user.username} 
-              />
-            ) : (
-              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm shadow-lg ring-2 ring-purple-400/30">
-                {getUserInitials(user.first_name, user.last_name, user.username)}
-              </div>
-            )}
+          <div className="flex-shrink-0">
+            <UserAvatar
+              user={{
+                first_name: user.first_name || '',
+                last_name: user.last_name || '',
+                photo: user.photo
+              }}
+              size="medium"
+              className="shadow-lg ring-2 ring-purple-400/30"
+            />
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center space-x-2">

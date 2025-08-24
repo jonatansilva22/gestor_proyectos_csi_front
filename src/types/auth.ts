@@ -13,7 +13,7 @@ export interface AuthUser {
 }
 
 export interface LoginCredentials {
-  email: string;
+  identifier: string; // Email o username
   password: string;
 }
 

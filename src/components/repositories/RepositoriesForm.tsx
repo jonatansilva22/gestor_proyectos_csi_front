@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FormInput } from "../../components/common/FormInput";
 import { Repository } from "../../types/repositories/Repository";
+import { useTheme } from "../../context/ThemeContext";
 
 interface RepositoryFormProps {
   onSubmit: (data: Omit<Repository, "id" | "created_at" | "updated_at">) => void;
@@ -9,6 +10,7 @@ interface RepositoryFormProps {
 }
 
 export const RepositoryForm = ({ onSubmit, onCancel, initialData }: RepositoryFormProps) => {
+  const { darkMode } = useTheme();
   const [name, setName] = useState(initialData?.name || "");
   const [repositoryUrl, setRepositoryUrl] = useState(initialData?.repository_url || "");
 
@@ -41,7 +43,7 @@ export const RepositoryForm = ({ onSubmit, onCancel, initialData }: RepositoryFo
         <button
           type="button"
           onClick={onCancel}
-          className="text-gray-600 hover:underline cursor-pointer"
+          className={`${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-800'} hover:underline cursor-pointer`}
         >
           Cancelar
         </button>

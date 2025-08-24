@@ -93,15 +93,15 @@ export const authService = {
       
       const userInfo = {
         id: userData.id ?? userId,
-        // Derivar username del JWT o del correo ingresado si no viene del backend
+        // Derivar username del JWT o del identifier ingresado si no viene del backend
         username: userData.username 
           ?? payload.username 
           ?? payload.user 
-          ?? (credentials.email ? credentials.email.split('@')[0] : ''),
+          ?? (credentials.identifier.includes('@') ? credentials.identifier.split('@')[0] : credentials.identifier),
         first_name: userData.first_name,
         last_name: userData.last_name,
-        // Asegurar email: usa backend, luego JWT y por último el ingresado en el form
-        email: userData.email ?? payload.email ?? credentials.email ?? '',
+        // Asegurar email: usa backend, luego JWT y por último el identifier si es email
+        email: userData.email ?? payload.email ?? (credentials.identifier.includes('@') ? credentials.identifier : ''),
         role: userData.role ?? 3, // ID del rol desde la base de datos o default Colaborador
         role_id: userData.role ?? 3,
         role_name: getRoleName(userData.role ?? 3),

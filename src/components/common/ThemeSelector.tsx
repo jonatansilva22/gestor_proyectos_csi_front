@@ -57,14 +57,14 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ onBack }) => {
         {/* Title */}
         <div className="text-center mb-8">
           <h2 className={`text-2xl lg:text-4xl font-bold ${
-            darkMode ? 'text-purple-300' : 'text-black'
+            darkMode ? 'text-white' : 'text-black'
           }`}>Tema de Interfaz</h2>
         </div>
 
         {/* Theme Options */}
         <div className="w-full max-w-3xl">
           <label className={`block text-sm font-normal mb-4 ${
-            darkMode ? 'text-purple-200' : 'text-black'
+            darkMode ? 'text-white' : 'text-black'
           }`}>
             Tema de Interfaz
           </label>
@@ -99,7 +99,7 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ onBack }) => {
         {/* Theme Preview Section */}
         <div className="mt-10 w-full max-w-3xl">
           <h3 className={`text-lg font-medium mb-4 ${
-            darkMode ? 'text-purple-300' : 'text-black'
+            darkMode ? 'text-white' : 'text-black'
           }`}>Vista previa</h3>
           <div className={`border rounded-lg p-6 ${
             darkMode 
@@ -108,7 +108,7 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ onBack }) => {
           }`}>
             <div className="flex items-center justify-between mb-4">
               <h4 className={`font-semibold ${
-                darkMode ? 'text-purple-200' : 'text-gray-900'
+                darkMode ? 'text-white' : 'text-gray-900'
               }`}>Ejemplo de interfaz</h4>
               <div className="flex gap-2">
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
@@ -133,7 +133,7 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ onBack }) => {
         {/* Save Button */}
         <div className="mt-8">
           <p className={`text-sm mb-2 ${
-            darkMode ? 'text-purple-200' : 'text-gray-600'
+            darkMode ? 'text-gray-300' : 'text-gray-600'
           }`}>
             Los cambios se guardan automáticamente
           </p>

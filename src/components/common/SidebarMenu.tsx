@@ -32,8 +32,8 @@ const SidebarMenu = ({
   const menuItems = [
     { label: "Dashboard", path: "/dashboard", icon: "📊" },
     { label: "Proyectos", path: "/projects-table", icon: "📁" },
-    { label: "Crear Usuario", path: "/create-user", icon: "👤" },
     ...(isAdminOrSuperAdmin ? [
+      { label: "Crear Usuario", path: "/create-user", icon: "👤" },
       { label: "Gestión de Usuarios", path: "/admin/users", icon: "⚙️" }
     ] : []),
     { label: "Áreas", path: "/areas-table", icon: "🏢" },

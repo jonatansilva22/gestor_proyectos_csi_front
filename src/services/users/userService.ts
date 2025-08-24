@@ -24,14 +24,9 @@ const transformBackendErrors = (backendErrors: any) => {
 
 export const userService = {
   createUser: async (userData: CreateUserRequest): Promise<User> => {
-    console.log('=== INICIO CREATE USER FRONTEND ===');
-    console.log('userData recibido:', userData);
-    console.log('role type:', typeof userData.role, 'value:', userData.role);
-    
     try {
       // Usar FormData si hay archivo, de lo contrario JSON
       if (userData.photo) {
-        console.log('--- FLUJO CON FOTO (FormData) ---');
         const formData = new FormData();
         formData.append('username', userData.username);
         formData.append('first_name', userData.first_name);
@@ -40,23 +35,10 @@ export const userService = {
         formData.append('password', userData.password);
         formData.append('role', String(userData.role));
         formData.append('photo', userData.photo);
-        
-        console.log('FormData creado:');
-        for (const [key, value] of formData.entries()) {
-          console.log(`  ${key}:`, value instanceof File ? `File(${value.name})` : value);
-        }
-        
-        const response = await usersApi.post('/create-user/', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-        
-        console.log('Respuesta exitosa con foto:', response.status, response.data);
-        
+        // No establecer Content-Type manualmente para FormData - el navegador lo hace automáticamente
+        const response = await usersApi.post('/create-user/', formData);
         return response.data;
       } else {
-        console.log('--- FLUJO SIN FOTO (JSON) ---');
         // Payload JSON para usuarios sin fotos
         const payload = {
           username: userData.username,
@@ -66,19 +48,11 @@ export const userService = {
           password: userData.password,
           role: userData.role,
         };
-        
-        console.log('Payload JSON creado:', payload);
-        console.log('role en payload - type:', typeof payload.role, 'value:', payload.role);
-        
+        // El interceptor se encarga automáticamente del Content-Type
         const response = await usersApi.post('/create-user/', payload);
-        console.log('Respuesta exitosa sin foto:', response.status, response.data);
         return response.data;
       }
     } catch (error: any) {
-      console.error('Error creando usuario:', error);
-      console.error('Detalles del error:', error.response?.data);
-      console.error('Estado del error:', error.response?.status);
-      
       // Transformar errores de validación del backend al formato frontend
       if (error.response?.status === 400 && error.response?.data) {
         const backendErrors = error.response.data;
@@ -229,11 +203,11 @@ export const userService = {
   },
 
   updateProfile: async (id: number, data: { 
-    username: string;
-    first_name: string;
-    last_name: string;
-    email: string;
-    role: number;
+    username?: string;
+    first_name?: string;
+    last_name?: string;
+    email?: string;
+    role?: number;
     photo?: File;
     current_password?: string;
     new_password?: string;
@@ -248,12 +222,12 @@ export const userService = {
         console.log('--- FLUJO CON FOTO (FormData) ---');
         const formData = new FormData();
         
-        // Agregar todos los campos obligatorios
-        formData.append('username', data.username);
-        formData.append('first_name', data.first_name);
-        formData.append('last_name', data.last_name);
-        formData.append('email', data.email);
-        formData.append('role', data.role.toString());
+        // Agregar solo campos presentes
+        if (data.username !== undefined) formData.append('username', data.username);
+        if (data.first_name !== undefined) formData.append('first_name', data.first_name);
+        if (data.last_name !== undefined) formData.append('last_name', data.last_name);
+        if (data.email !== undefined) formData.append('email', data.email);
+        if (data.role !== undefined) formData.append('role', data.role.toString());
         
         if (data.photo) {
           formData.append('photo', data.photo);
@@ -279,26 +253,21 @@ export const userService = {
         }
         
         // Usar el endpoint correcto para actualizar usuarios
-        const response = await usersApi.patch(`/create-user/${id}/`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+        // No establecer Content-Type manualmente para FormData - el navegador lo hace automáticamente
+        const response = await usersApi.patch(`/create-user/${id}/`, formData);
         
         console.log('Respuesta exitosa con foto:', response.status, response.data);
         return response.data;
       } else {
         console.log('--- FLUJO SIN FOTO (JSON) ---');
         console.log('Campos a actualizar sin foto:', Object.keys(data));
-        // Payload JSON para actualizaciones sin fotos
+        // Payload JSON para actualizaciones sin fotos: solo campos presentes
         const payload: any = {};
-        
-        // Agregar todos los campos obligatorios
-        payload.username = data.username;
-        payload.first_name = data.first_name;
-        payload.last_name = data.last_name;
-        payload.email = data.email;
-        payload.role = data.role;
+        if (data.username !== undefined) payload.username = data.username;
+        if (data.first_name !== undefined) payload.first_name = data.first_name;
+        if (data.last_name !== undefined) payload.last_name = data.last_name;
+        if (data.email !== undefined) payload.email = data.email;
+        if (data.role !== undefined) payload.role = data.role;
         
         console.log('Campos agregados al payload:');
         console.log('- username:', data.username);
@@ -318,6 +287,7 @@ export const userService = {
         console.log('Número de campos a actualizar:', Object.keys(payload).length);
         
         // Usar el endpoint correcto para actualizar usuarios
+        // El interceptor se encarga automáticamente del Content-Type
         const response = await usersApi.patch(`/create-user/${id}/`, payload);
         console.log('Respuesta exitosa sin foto:', response.status, response.data);
         return response.data;
@@ -326,6 +296,11 @@ export const userService = {
       console.error('Error actualizando perfil:', error);
       console.error('Detalles del error:', error.response?.data);
       console.error('Estado del error:', error.response?.status);
+      
+      // Manejar error de permisos (colaboradores intentando editar perfiles ajenos)
+      if (error.response?.status === 403) {
+        throw new Error('No tienes permisos para modificar este perfil');
+      }
       
       if (error.response?.status === 400 && error.response?.data) {
         const backendErrors = error.response.data;
@@ -361,6 +336,53 @@ export const userService = {
       return response.data;
     } catch (error) {
       console.error('Error eliminando foto de usuario:', error);
+      throw error;
+    }
+  },
+
+  // Obtener perfil del usuario actual (para colaboradores)
+  getUserProfile: async (id: number): Promise<User> => {
+    try {
+      console.log('=== OBTENIENDO PERFIL DE USUARIO ===');
+      console.log('ID del usuario:', id);
+      
+      const response = await usersApi.get(`/create-user/${id}/`);
+      console.log('Perfil obtenido exitosamente:', response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error('Error obteniendo perfil de usuario:', error);
+      
+      if (error.response?.status === 403) {
+        throw new Error('No tienes permisos para acceder a este perfil');
+      } else if (error.response?.status === 404) {
+        throw new Error('Usuario no encontrado');
+      }
+      
+      throw error;
+    }
+  },
+
+  // Cambiar solo la contraseña del usuario autenticado
+  changePassword: async (
+    userId: number,
+    data: { current_password: string; new_password: string }
+  ): Promise<{ message: string }> => {
+    try {
+      const payload = {
+        current_password: data.current_password,
+        new_password: data.new_password,
+      };
+      const response = await usersApi.patch(`/create-user/${userId}/`, payload);
+      return { message: 'Contraseña actualizada correctamente' };
+    } catch (error: any) {
+      if (error.response?.status === 400 && error.response?.data) {
+        const backendErrors = error.response.data;
+        const transformedError = {
+          ...error,
+          validationErrors: transformBackendErrors(backendErrors)
+        };
+        throw transformedError;
+      }
       throw error;
     }
   },

@@ -1,5 +1,6 @@
 // src/components/common/ValidationErrorDisplay.tsx
 import React from 'react';
+import { useTheme } from '../../context/ThemeContext';
 
 interface ValidationErrorDisplayProps {
   errors: { [key: string]: string };
@@ -14,6 +15,7 @@ export const ValidationErrorDisplay: React.FC<ValidationErrorDisplayProps> = ({
   errors,
   className = ""
 }) => {
+  const { darkMode } = useTheme();
   const errorKeys = Object.keys(errors);
 
   if (errorKeys.length === 0) {
@@ -21,11 +23,17 @@ export const ValidationErrorDisplay: React.FC<ValidationErrorDisplayProps> = ({
   }
 
   return (
-    <div className={`bg-red-50 border border-red-200 rounded-md p-4 ${className}`}>
+    <div className={`rounded-md p-4 ${className} ${
+      darkMode 
+        ? 'bg-red-900/20 border border-red-700'
+        : 'bg-red-50 border border-red-200'
+    }`}>
       <div className="flex">
         <div className="flex-shrink-0">
           <svg
-            className="h-5 w-5 text-red-400"
+            className={`h-5 w-5 ${
+              darkMode ? 'text-red-400' : 'text-red-400'
+            }`}
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
@@ -38,10 +46,14 @@ export const ValidationErrorDisplay: React.FC<ValidationErrorDisplayProps> = ({
           </svg>
         </div>
         <div className="ml-3">
-          <h3 className="text-sm font-medium text-red-800">
+          <h3 className={`text-sm font-medium ${
+            darkMode ? 'text-red-300' : 'text-red-800'
+          }`}>
             {errorKeys.length === 1 ? 'Error de validación' : 'Errores de validación'}
           </h3>
-          <div className="mt-2 text-sm text-red-700">
+          <div className={`mt-2 text-sm ${
+            darkMode ? 'text-red-200' : 'text-red-700'
+          }`}>
             <ul className="list-disc space-y-1 pl-5">
               {errorKeys.map((field) => (
                 <li key={field}>

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { ROLE_NAMES } from '../../const/index';
+import UserAvatar from './UserAvatar';
 
 interface UserMenuProps {
   isOpen: boolean;
@@ -104,16 +105,27 @@ const UserMenu: React.FC<UserMenuProps> = ({ isOpen, onClose, triggerRef }) => {
         }`}>
           <div className="flex items-center gap-4">
             <div className="relative">
-              <div className="w-14 h-14 rounded-2xl gradient-primary flex items-center justify-center text-white font-bold text-lg shadow-system-lg">
-                {user?.username ? user.username.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'U'}
-              </div>
+              {user && (
+                <UserAvatar
+                  user={{
+                    first_name: user.first_name || '',
+                    last_name: user.last_name || '',
+                    photo: user.photo
+                  }}
+                  size="large"
+                  className="shadow-system-lg"
+                />
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <h4 className={`font-bold text-base truncate ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                {user?.username || 'Usuario'}
+                {user?.first_name && user?.last_name 
+                  ? `${user.first_name} ${user.last_name}` 
+                  : (user?.username || 'Usuario')
+                }
               </h4>
               <p className={`text-sm truncate font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                {user?.email || 'usuario@correo.com'}
+                @{user?.username || 'user'}
               </p>
               <div className="flex items-center gap-2 mt-1">
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold text-white ${getRoleBadge().roleColor}`}>

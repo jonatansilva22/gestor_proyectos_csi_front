@@ -2,7 +2,7 @@ import { Group } from "../../types/groups/Group";
 import { EntityActions } from "../common/EntityActions";
 import ResponsiveTable, { ResponsiveTableColumn } from "../common/ResponsiveTable";
 import { useTheme } from "../../context/ThemeContext";
-import { toMediaUrl } from "../../utils/media";
+import UserAvatar from "../common/UserAvatar";
 
 interface GroupsTableProps {
   groups: Group[];
@@ -55,21 +55,12 @@ export const GroupsTable = ({
     <div className="space-y-2">
       {users.map((user) => (
         <div key={user.id} className="flex items-center space-x-2">
-          <div className="flex-shrink-0 h-6 w-6">
-            {(user as any).photo ? (
-              <img
-                className="h-6 w-6 rounded-full object-cover"
-                src={toMediaUrl((user as any).photo) || undefined}
-                alt={user.username}
-              />
-            ) : (
-              <div className="h-6 w-6 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-semibold text-xs">
-                {user.first_name && user.last_name 
-                  ? `${user.first_name[0]}${user.last_name[0]}`.toUpperCase()
-                  : user.username.substring(0, 2).toUpperCase()
-                }
-              </div>
-            )}
+          <div className="flex-shrink-0">
+            <UserAvatar 
+              user={user} 
+              size="small"
+              className="!w-6 !h-6"
+            />
           </div>
           <div className="min-w-0 flex-1">
             <div className={`text-sm font-medium truncate ${

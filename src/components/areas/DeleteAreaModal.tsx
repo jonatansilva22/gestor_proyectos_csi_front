@@ -1,5 +1,6 @@
 import { Modal } from "../../components/common/Modal";
 import { Area } from "../../types/areas/Area";
+import { useTheme } from "../../context/ThemeContext";
 
 interface DeleteAreaModalProps {
   open: boolean;
@@ -13,16 +14,21 @@ export const DeleteAreaModal = ({
   area,
   onCancel,
   onConfirm,
-}: DeleteAreaModalProps) => (
+}: DeleteAreaModalProps) => {
+  const { darkMode } = useTheme();
+  
+  return (
   <Modal open={open} onClose={onCancel} title="Eliminar Área">
     <div className="p-4">
-      <p>
+      <p className={`mb-8 text-center ${
+        darkMode ? 'text-white' : 'text-gray-900'
+      }`}>
         ¿Estás seguro que deseas eliminar el área{" "}
         <span className="font-bold">{area?.name}</span>?
       </p>
       <div className="flex justify-end gap-2 mt-6">
         <button
-          className="text-gray-600 hover:underline cursor-pointer"
+          className={`${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-800'} hover:underline cursor-pointer`}
           onClick={onCancel}
         >
           Cancelar
@@ -36,4 +42,5 @@ export const DeleteAreaModal = ({
       </div>
     </div>
   </Modal>
-);
+  );
+};

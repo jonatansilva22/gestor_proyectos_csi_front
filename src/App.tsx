@@ -1,9 +1,10 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider, useTheme } from "./context/ThemeContext";
 import { MobileNavigationProvider } from "./context/MobileNavigationContext";
 import { ProtectedRoute } from "./components/auth";
+import { RoleProtectedRoute } from "./components/auth/RoleProtectedRoute";
 import Login from "./pages/auth/Login";
 import LogoutPage from "./pages/auth/LogoutPage";
 import CreateUser from "./pages/users/CreateUser";
@@ -35,16 +36,33 @@ const AppContent = () => {
       <Router>
         <MobileNavigationProvider>
           <Routes>
+            {/* Ruta raíz redirige al login */}
+            <Route path="/" element={<Navigate to="/login" replace />} />
+            
             {/* Rutas públicas */}
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<LogoutPage />} />
 
             {/* Rutas protegidas con autenticación */}
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/create-user" element={<ProtectedRoute><CreateUser /></ProtectedRoute>} />
-            <Route path="/admin/users" element={<ProtectedRoute><UsersManagementPage /></ProtectedRoute>} />
+            
+            {/* Rutas solo para Admin y SuperAdmin */}
+            <Route path="/create-user" element={
+              <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={[1, 2]} redirectTo="/dashboard">
+                  <CreateUser />
+                </RoleProtectedRoute>
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/users" element={
+              <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={[1, 2]} redirectTo="/dashboard">
+                  <UsersManagementPage />
+                </RoleProtectedRoute>
+              </ProtectedRoute>
+            } />
 
-            {/* Módulo de proyectos - Todos los usuarios autenticados */}
+            {/* Módulo de proyectos - Disponible para todos los usuarios (Admin, SuperAdmin, Colaborador) */}
             <Route path="/projects" element={<ProtectedRoute><ProjectsPage /></ProtectedRoute>} />
             <Route path="/projects/:id" element={<ProtectedRoute><ProjectDetailPage /></ProtectedRoute>} />
             <Route path="/projects-table" element={<ProtectedRoute><ProjectsTablePage /></ProtectedRoute>} />
@@ -53,7 +71,8 @@ const AppContent = () => {
             <Route path="/tools-table" element={<ProtectedRoute><ToolsTablePage /></ProtectedRoute>} />
             <Route path="/groups-table" element={<ProtectedRoute><GroupsTablePage /></ProtectedRoute>} />
 
-            {/* Rutas de configuración de usuario - Todos los usuarios autenticados */}
+            {/* Configuración de perfil - Disponible para todos los usuarios */}
+            {/* Los colaboradores pueden ver/editar solo su propio perfil gracias a las validaciones del backend */}
             <Route path="/settings/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
             <Route path="/settings/password" element={<ProtectedRoute><PasswordPage /></ProtectedRoute>} />
             <Route path="/settings/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />

@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import DeleteButton from '../DeleteButton';
+import { useTheme } from '../../../context/ThemeContext';
 
 interface EntityActionsProps {
   id?: string | number;
@@ -22,6 +23,7 @@ export const EntityActions = ({
   showEdit = true,
   showDelete = true,
 }: EntityActionsProps) => {
+  const { darkMode } = useTheme();
   const navigate = useNavigate();
 
   const handleDetailsClick = () => {
@@ -35,7 +37,9 @@ export const EntityActions = ({
       {showDetails && (
         <button
           onClick={handleDetailsClick}
-          className="w-full sm:w-auto px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-1 active:scale-95"
+          className={`w-full sm:w-auto px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 active:scale-95 ${
+            darkMode ? 'focus:ring-offset-gray-800' : 'focus:ring-offset-white'
+          }`}
         >
           {detailsLabel}
         </button>
@@ -44,7 +48,9 @@ export const EntityActions = ({
       {showEdit && onEdit && (
         <button
           onClick={onEdit}
-          className="w-full sm:w-auto px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-1 active:scale-95"
+          className={`w-full sm:w-auto px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 active:scale-95 ${
+            darkMode ? 'focus:ring-offset-gray-800' : 'focus:ring-offset-white'
+          }`}
         >
           Editar
         </button>

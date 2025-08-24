@@ -6,6 +6,7 @@ import {
   getGroups,
   getRepositories,
 } from "../../services/projects/projectService";
+import { useTheme } from "../../context/ThemeContext";
 
 import {
   FormInput,
@@ -27,6 +28,7 @@ interface ProjectFormProps {
 }
 
 export const ProjectForm = ({ project, onSubmit, onCancel }: ProjectFormProps) => {
+  const { darkMode } = useTheme();
   const [loadingOptions, setLoadingOptions] = useState(true);
   const [optionsError, setOptionsError] = useState<string | null>(null);
 
@@ -171,8 +173,23 @@ export const ProjectForm = ({ project, onSubmit, onCancel }: ProjectFormProps) =
     await onSubmit(formData);
   };
 
-  if (loadingOptions) return <div>Cargando opciones...</div>;
-  if (optionsError) return <div className="text-red-600">{optionsError}</div>;
+  if (loadingOptions) return (
+    <div className={`p-4 text-center ${
+      darkMode ? 'text-white' : 'text-gray-900'
+    }`}>
+      Cargando opciones...
+    </div>
+  );
+  
+  if (optionsError) return (
+    <div className={`p-4 text-center border rounded-md ${
+      darkMode 
+        ? 'bg-red-900/20 border-red-700 text-red-300' 
+        : 'bg-red-50 border-red-200 text-red-600'
+    }`}>
+      {optionsError}
+    </div>
+  );
 
   // Mapea opciones para selects (value:string, label:string)
   const mapOptions = (arr: { id: number; name: string }[]) =>

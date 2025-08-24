@@ -133,7 +133,9 @@ export const InlineEdit = ({
     </div>
   ) : (
     <div className={className}>
-      <span>{renderDisplay ? renderDisplay(value) : String(value)}</span>
+      <span className={darkMode ? 'text-white' : 'text-gray-900'}>
+        {renderDisplay ? renderDisplay(value) : String(value)}
+      </span>
       <button
         className={`ml-2 text-xs underline ${
           darkMode 

@@ -9,7 +9,6 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 const api = axios.create({
   baseURL: API_URL,
   headers: {
-    'Content-Type': 'application/json',
     'Accept': 'application/json',
   },
   timeout: 30000, // 30 segundos timeout para operaciones que incluyen email
@@ -29,6 +28,17 @@ const usersApi = api;
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
+      
+      // Establecer Content-Type correcto según el tipo de datos
+      if (config.data instanceof FormData) {
+        // Para FormData, dejar que el navegador establezca el Content-Type automáticamente
+        // (incluye el boundary para multipart/form-data)
+        delete config.headers['Content-Type'];
+      } else if (!config.headers['Content-Type']) {
+        // Para otros tipos de datos, establecer JSON por defecto
+        config.headers['Content-Type'] = 'application/json';
+      }
+      
       return config;
     },
     (error) => {

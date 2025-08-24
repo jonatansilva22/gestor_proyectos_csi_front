@@ -5,6 +5,7 @@ import { updateProject } from '../../services/projects/projectService';
 import { notifySuccess, notifyError } from '../common/ToastNotify';
 import { getBackendErrorMsg } from '../../utils/projects/getBackendErrorMsg';
 import { FormImageUpload } from '../common/FormImageUpload';
+import { useTheme } from '../../context/ThemeContext';
 
 interface ProjectImageAndDescriptionProps {
   project: Project;
@@ -17,6 +18,7 @@ export const ProjectImageAndDescription = ({
   onProjectUpdate,
   canEdit = true,
 }: ProjectImageAndDescriptionProps) => {
+  const { darkMode } = useTheme();
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   const handleImageChange = async (file: File | null) => {
@@ -38,7 +40,9 @@ export const ProjectImageAndDescription = ({
   return (
     <div className="flex gap-8 mb-8 items-start">
       <div>
-        <div className="border rounded w-[400px] h-[250px] flex items-center justify-center bg-gray-100 p-4">
+        <div className={`border rounded w-[400px] h-[250px] flex items-center justify-center p-4 ${
+          darkMode ? 'bg-gray-800 border-gray-600' : 'bg-gray-100 border-gray-300'
+        }`}>
           {project.image ? (
             <img
               src={project.image}
@@ -46,7 +50,7 @@ export const ProjectImageAndDescription = ({
               className="max-h-full max-w-full object-contain"
             />
           ) : (
-            <span className="text-gray-400">Sin imagen</span>
+            <span className={darkMode ? 'text-gray-400' : 'text-gray-500'}>Sin imagen</span>
           )}
         </div>
 
@@ -76,10 +80,14 @@ export const ProjectImageAndDescription = ({
             className="font-bold text-lg mb-2"
           />
         ) : (
-          <div className="font-bold text-lg mb-2">{project.name}</div>
+          <div className={`font-bold text-lg mb-2 ${
+            darkMode ? 'text-white' : 'text-gray-900'
+          }`}>{project.name}</div>
         )}
         <div>
-  <span className="font-semibold">Descripción:</span>
+  <span className={`font-semibold ${
+    darkMode ? 'text-white' : 'text-gray-900'
+  }`}>Descripción:</span>
   {canEdit ? (
     <InlineEdit
       value={project.description || ""}
@@ -96,7 +104,9 @@ export const ProjectImageAndDescription = ({
       className="whitespace-pre-line break-words text-sm"
     />
   ) : (
-    <div className="whitespace-pre-line break-words text-sm">
+    <div className={`whitespace-pre-line break-words text-sm ${
+      darkMode ? 'text-gray-200' : 'text-gray-700'
+    }`}>
       {project.description || ""}
     </div>
   )}

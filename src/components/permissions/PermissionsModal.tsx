@@ -112,19 +112,31 @@ export const PermissionsModal: React.FC<PermissionsModalProps> = ({
             <div className="flex space-x-2">
               <button
                 onClick={() => applyTemplate("readonly")}
-                className="px-3 py-1 text-xs bg-blue-100 text-blue-800 rounded hover:bg-blue-200 transition-colors"
+                className={`px-3 py-1 text-xs rounded transition-colors ${
+                  darkMode
+                    ? "bg-blue-900/30 text-blue-300 hover:bg-blue-900/50"
+                    : "bg-blue-100 text-blue-800 hover:bg-blue-200"
+                }`}
               >
                 Solo lectura
               </button>
               <button
                 onClick={() => applyTemplate("editor")}
-                className="px-3 py-1 text-xs bg-green-100 text-green-800 rounded hover:bg-green-200 transition-colors"
+                className={`px-3 py-1 text-xs rounded transition-colors ${
+                  darkMode
+                    ? "bg-green-900/30 text-green-300 hover:bg-green-900/50"
+                    : "bg-green-100 text-green-800 hover:bg-green-200"
+                }`}
               >
                 Editor
               </button>
               <button
                 onClick={() => applyTemplate("admin")}
-                className="px-3 py-1 text-xs bg-purple-100 text-purple-800 rounded hover:bg-purple-200 transition-colors"
+                className={`px-3 py-1 text-xs rounded transition-colors ${
+                  darkMode
+                    ? "bg-purple-900/30 text-purple-300 hover:bg-purple-900/50"
+                    : "bg-purple-100 text-purple-800 hover:bg-purple-200"
+                }`}
               >
                 Administrador
               </button>

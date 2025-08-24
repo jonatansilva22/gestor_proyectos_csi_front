@@ -18,9 +18,9 @@ import {
   PROJECT_STATUS_COLORS_TEXT_DARK
 } from "../../const/projectsStatusColors";
 import { getProjectById } from "../../services/projects/projectService";
-import { toMediaUrl } from "../../utils/media";
 import { useTheme } from "../../context/ThemeContext";
 import { ROLE_NAMES } from "../../const/index";
+import UserAvatar from "../common/UserAvatar";
 
 interface ProjectDataTableProps {
   project: Project;
@@ -69,7 +69,7 @@ export const ProjectDataTable = ({
   return (
     <div>
       <div className={`font-semibold text-center mb-2 pb-3 ${
-        darkMode ? 'text-purple-300' : 'text-gray-900'
+        darkMode ? 'text-white' : 'text-gray-900'
       }`}>
         Datos del proyecto
       </div>
@@ -150,22 +150,14 @@ export const ProjectDataTable = ({
               <div className="flex flex-col gap-2">
                 {collaborators.map((user: any) => (
                   <div key={user.id} className="flex items-center gap-3">
-                    {user.photo ? (
-                      <img
-                        src={toMediaUrl(user.photo) || undefined}
-                        alt={user.username}
-                        className="h-8 w-8 rounded-full object-cover"
-                      />
-                    ) : (
-                      <div className={`h-8 w-8 rounded-full flex items-center justify-center text-white font-semibold text-sm ${ 
-                        darkMode ? 'bg-gradient-to-br from-purple-500 to-purple-700' : 'bg-gradient-to-br from-purple-400 to-purple-600'
-                      }`}>
-                        {user.first_name && user.last_name 
-                          ? `${user.first_name[0]}${user.last_name[0]}`.toUpperCase()
-                          : user.username.substring(0, 2).toUpperCase()
-                        }
-                      </div>
-                    )}
+                    <UserAvatar
+                      user={{
+                        first_name: user.first_name || '',
+                        last_name: user.last_name || '',
+                        photo: user.photo
+                      }}
+                      size="small"
+                    />
                     <div className="flex flex-col flex-1">
                       <div className="flex items-center justify-between">
                         <div className={`text-sm font-medium ${
@@ -201,7 +193,7 @@ export const ProjectDataTable = ({
                 ))}
               </div>
             ) : (
-              <span className={darkMode ? 'text-purple-300' : 'text-gray-500'}>
+              <span className={darkMode ? 'text-gray-300' : 'text-gray-500'}>
                 Sin colaboradores
               </span>
             );
@@ -230,11 +222,13 @@ export const ProjectDataTable = ({
             project.areas?.length ? (
               <div className="flex flex-col gap-1">
                 {project.areas.map((a: any) => (
-                  <div key={a.id}>{a.name}</div>
+                  <div key={a.id} className={darkMode ? 'text-white' : 'text-gray-900'}>{a.name}</div>
                 ))}
               </div>
             ) : (
-              "Sin áreas"
+              <span className={darkMode ? 'text-gray-300' : 'text-gray-500'}>
+                Sin áreas
+              </span>
             )
           }
         />
@@ -319,11 +313,13 @@ export const ProjectDataTable = ({
             project.tools?.length ? (
               <div className="flex flex-col gap-1">
                 {project.tools.map((t: any) => (
-                  <div key={t.id}>{t.name}</div>
+                  <div key={t.id} className={darkMode ? 'text-white' : 'text-gray-900'}>{t.name}</div>
                 ))}
               </div>
             ) : (
-              "Sin herramientas"
+              <span className={darkMode ? 'text-gray-300' : 'text-gray-500'}>
+                Sin herramientas
+              </span>
             )
           }
         />
@@ -365,7 +361,9 @@ export const ProjectDataTable = ({
                 ))}
               </div>
             ) : (
-              "Sin repositorios"
+              <span className={darkMode ? 'text-gray-300' : 'text-gray-500'}>
+                Sin repositorios
+              </span>
             )
           }
         />

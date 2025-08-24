@@ -63,7 +63,9 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
       <div className="p-6 flex flex-col gap-3 flex-1 min-h-0">
         {/* Title and Status */}
         <div className="flex justify-between items-start gap-2">
-          <h3 className="font-bold text-lg leading-tight truncate flex-1 text-text-primary">
+          <h3 className={`font-bold text-lg leading-tight truncate flex-1 ${
+            darkMode ? 'text-white' : 'text-gray-900'
+          }`}>
             {project.name}
           </h3>
           <div className="flex items-center gap-1 flex-shrink-0">
@@ -85,7 +87,9 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
 
         {/* Description */}
         {project.description && (
-          <div className="text-base leading-relaxed line-clamp-3 text-text-secondary overflow-hidden">
+          <div className={`text-base leading-relaxed line-clamp-3 overflow-hidden ${
+            darkMode ? 'text-gray-200' : 'text-gray-700'
+          }`}>
             {project.description}
           </div>
         )}
@@ -93,7 +97,9 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
         {/* Project Details */}
         <div className="space-y-2 mt-auto">
           {/* Dates */}
-          <div className="flex items-center gap-2 text-sm text-text-secondary">
+          <div className={`flex items-center gap-2 text-sm ${
+            darkMode ? 'text-gray-300' : 'text-gray-600'
+          }`}>
             <span className="text-base">📅</span>
             <div className="flex items-center gap-1 truncate">
               <span className="font-medium truncate">
@@ -118,13 +124,19 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
       className="h-6 w-6 object-cover rounded-full border border-gray-300"
       onError={(e) => (e.currentTarget.src = placeholder)}
     />
-    <span className="truncate max-w-[80px] text-xs">{tool.name}</span>
+    <span className={`truncate max-w-[80px] text-xs ${
+      darkMode ? 'text-gray-300' : 'text-gray-700'
+    }`}>{tool.name}</span>
   </div>
 ))}
     </div>
   )}
   {project.area && (
-    <span className="px-2 py-0.5 rounded-full border bg-surface-secondary border-secondary text-text-primary truncate">
+    <span className={`px-2 py-0.5 rounded-full border truncate ${
+      darkMode 
+        ? 'bg-gray-700 border-gray-600 text-gray-200' 
+        : 'bg-gray-100 border-gray-300 text-gray-800'
+    }`}>
       🏢 {project.area.name}
     </span>
   )}

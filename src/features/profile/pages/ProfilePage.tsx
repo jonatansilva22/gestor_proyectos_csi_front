@@ -4,6 +4,9 @@ import { useTheme } from '../../../context/ThemeContext';
 import HeaderSidebarLayout from '../../../components/common/HeaderSidebarLayout';
 import { userService } from '../../../services/users/userService';
 import { notifySuccess, notifyError, notifyInfo } from '../../../components/common/ToastNotify';
+import { ConfirmModal } from '../../../components/common/ConfirmModal';
+import { SuccessModal } from '../../../components/common/SuccessModal';
+import UserAvatar from '../../../components/common/UserAvatar';
 import { toMediaUrl } from '../../../utils/media';
 
 const ProfilePage: React.FC = () => {
@@ -15,6 +18,7 @@ const ProfilePage: React.FC = () => {
   console.log('ID del usuario:', user?.id);
   
   const [formData, setFormData] = useState({
+    username: user?.username || '',
     firstName: user?.first_name || '',
     lastName: user?.last_name || '',
     email: user?.email || '',
@@ -35,6 +39,17 @@ const ProfilePage: React.FC = () => {
       setCurrentPhoto(null);
     }
   }, [user?.photo]);
+
+  // Actualizar formData cuando el usuario cambie
+  useEffect(() => {
+    setFormData(prev => ({
+      ...prev,
+      username: user?.username || '',
+      firstName: user?.first_name || '',
+      lastName: user?.last_name || '',
+      email: user?.email || ''
+    }));
+  }, [user?.username, user?.first_name, user?.last_name, user?.email]);
   const [showPasswords, setShowPasswords] = useState({
     current: false,
     new: false,
@@ -45,6 +60,17 @@ const ProfilePage: React.FC = () => {
     newPassword: '',
     confirmPassword: ''
   });
+  const [profileErrors, setProfileErrors] = useState({
+    username: '',
+    firstName: '',
+    lastName: ''
+  });
+
+  // Modals state
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [confirmDescription, setConfirmDescription] = useState<React.ReactNode>(null);
+  const [pendingUpdate, setPendingUpdate] = useState<{ updateData: any, hasPasswordChange: boolean } | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -53,6 +79,21 @@ const ProfilePage: React.FC = () => {
     // Clear password errors when user starts typing
     if (name in passwordErrors && passwordErrors[name as keyof typeof passwordErrors]) {
       setPasswordErrors(prev => ({ ...prev, [name]: '' }));
+    }
+    
+    // Real-time validation for username
+    if (name === 'username') {
+      const usernameRegex = /^[a-zA-Z0-9._-]{3,50}$/;
+      if (value.length > 0 && !usernameRegex.test(value)) {
+        setProfileErrors(prev => ({ 
+          ...prev, 
+          username: 'Formato inválido: 3-50 caracteres, solo letras, números, puntos, guiones y guiones bajos' 
+        }));
+      } else {
+        setProfileErrors(prev => ({ ...prev, username: '' }));
+      }
+    } else if (name in profileErrors && profileErrors[name as keyof typeof profileErrors]) {
+      setProfileErrors(prev => ({ ...prev, [name]: '' } as any));
     }
   };
 
@@ -103,6 +144,14 @@ const ProfilePage: React.FC = () => {
         newErrors.newPassword = 'La nueva contraseña es requerida';
       } else if (formData.newPassword.length < 8) {
         newErrors.newPassword = 'La contraseña debe tener al menos 8 caracteres';
+      } else if (!/[A-Z]/.test(formData.newPassword)) {
+        newErrors.newPassword = 'Debe contener al menos una letra mayúscula';
+      } else if (!/[a-z]/.test(formData.newPassword)) {
+        newErrors.newPassword = 'Debe contener al menos una letra minúscula';
+      } else if (!/[0-9]/.test(formData.newPassword)) {
+        newErrors.newPassword = 'Debe contener al menos un número';
+      } else if (!/[^A-Za-z0-9]/.test(formData.newPassword)) {
+        newErrors.newPassword = 'Debe contener al menos un carácter especial';
       }
 
       if (formData.newPassword !== formData.confirmPassword) {
@@ -121,8 +170,7 @@ const ProfilePage: React.FC = () => {
       return;
     }
     
-    setIsSubmitting(true);
-    
+    // Construir payload condicional
     try {
       console.log('=== INICIO SUBMIT ===');
       console.log('Usuario completo:', user);
@@ -135,43 +183,35 @@ const ProfilePage: React.FC = () => {
         return;
       }
       
-      // El backend requiere todos los campos obligatorios, no solo los que cambian
-      const updateData: {
-        username: string;
-        first_name: string;
-        last_name: string;
-        email: string;
-        role: number;
-        photo?: File;
-        current_password?: string;
-        new_password?: string;
-      } = {
-        // Campos obligatorios: mantener valores actuales
-        username: user.username,
-        first_name: formData.firstName.trim(),
-        last_name: formData.lastName.trim(),
-        email: user.email,
-        role: user.role || 3, // Default a colaborador si no tiene rol
-      };
+      // Enviar solo campos modificados para evitar validaciones innecesarias
+      const updateData: any = {};
       
       // Verificar si hay cambios en los datos del perfil
+      const originalUsername = user.username || '';
       const originalFirstName = user.first_name || '';
       const originalLastName = user.last_name || '';
       
       const hasProfileChanges = 
+        formData.username.trim() !== originalUsername ||
         formData.firstName.trim() !== originalFirstName ||
         formData.lastName.trim() !== originalLastName ||
         formData.photo !== undefined;
       
-      const hasPasswordChange = formData.newPassword && formData.currentPassword;
+      const hasPasswordChange = !!(formData.newPassword && formData.currentPassword);
       
       if (hasProfileChanges) {
         console.log(`Cambios en perfil detectados:`);
+        if (formData.username.trim() !== originalUsername) {
+          console.log(`- Username: "${originalUsername}" -> "${formData.username.trim()}"`);
+          updateData.username = formData.username.trim();
+        }
         if (formData.firstName.trim() !== originalFirstName) {
-          console.log(`- Nombre: "${originalFirstName}" → "${formData.firstName.trim()}"`);
+          console.log(`- Nombre: "${originalFirstName}" -> "${formData.firstName.trim()}"`);
+          updateData.first_name = formData.firstName.trim();
         }
         if (formData.lastName.trim() !== originalLastName) {
-          console.log(`- Apellido: "${originalLastName}" → "${formData.lastName.trim()}"`);
+          console.log(`- Apellido: "${originalLastName}" -> "${formData.lastName.trim()}"`);
+          updateData.last_name = formData.lastName.trim();
         }
         if (formData.photo) {
           console.log(`- Nueva foto: ${formData.photo.name}`);
@@ -190,7 +230,37 @@ const ProfilePage: React.FC = () => {
         notifyInfo('No hay cambios que guardar');
         return;
       }
-      
+
+      // Armar descripción para confirmación
+      const lines: React.ReactNode[] = [];
+      if (updateData.username) lines.push(<li key="un">Nombre de Usuario: {originalUsername} &rarr; {updateData.username}</li>);
+      if (updateData.first_name) lines.push(<li key="fn">Nombre: {originalFirstName} &rarr; {updateData.first_name}</li>);
+      if (updateData.last_name) lines.push(<li key="ln">Apellido: {originalLastName} &rarr; {updateData.last_name}</li>);
+      if (updateData.photo) lines.push(<li key="ph">Se actualizará la foto de perfil</li>);
+      if (hasPasswordChange) lines.push(<li key="pw">Se cambiará la contraseña</li>);
+      setConfirmDescription(
+        <div>
+          <p className="mb-2">Confirma los cambios a aplicar:</p>
+          <ul className="list-disc pl-5 space-y-1">{lines}</ul>
+        </div>
+      );
+      // Guardar payload pendiente en estado para confirmar
+      setPendingUpdate({ updateData, hasPasswordChange });
+      setConfirmOpen(true);
+    } catch (error: any) {
+      console.error('Error en handleSubmit:', error);
+      notifyError('Error al procesar los datos del formulario');
+    }
+  };
+
+  const executeUpdate = async () => {
+    const stored = pendingUpdate;
+    const updateData = stored?.updateData || {};
+    const hasPasswordChange = stored?.hasPasswordChange || false;
+    setConfirmOpen(false);
+    setIsSubmitting(true);
+
+    try {
       console.log('Datos finales a enviar:', {
         ...updateData,
         photo: updateData.photo ? `File: ${updateData.photo.name}` : 'No photo',
@@ -199,27 +269,37 @@ const ProfilePage: React.FC = () => {
       });
       
       console.log('Enviando al userService.updateProfile...');
-      console.log('- User ID:', user.id);
+      console.log('- User ID:', user?.id);
       console.log('- Update Data:', updateData);
       
-      const updatedUser = await userService.updateProfile(user.id, updateData);
+      const updatedUser = await userService.updateProfile(user!.id, updateData);
       
       console.log('=== RESPUESTA EXITOSA ===');
       console.log('Usuario actualizado:', updatedUser);
       
       // Actualizar AuthContext y storage con los nuevos datos del usuario
       if (updatedUser) {
-        // Mapear respuesta del backend al tipo AuthUser
-        const nextUser = {
+        // Mapear respuesta del backend al tipo AuthUser, preservando información del rol
+        const nextUser: any = {
+          ...user, // Mantener todos los campos existentes como base
+          // Solo actualizar campos que se devolvieron del backend
           id: updatedUser.id,
           username: updatedUser.username,
           first_name: updatedUser.first_name,
           last_name: updatedUser.last_name,
           email: updatedUser.email,
-          role: updatedUser.role,
-          role_id: updatedUser.role_id ?? updatedUser.role,
-          role_name: updatedUser.role_name,
-        } as any;
+          photo: updatedUser.photo,
+          // Información del rol - usar datos del backend si están disponibles, sino preservar
+          role: updatedUser.role || user?.role,
+          role_id: updatedUser.role || user?.role_id || user?.role,
+          role_name: updatedUser.role_name || user?.role_name,
+        };
+        
+        console.log('=== ACTUALIZACIÓN DE USUARIO ===');
+        console.log('Usuario anterior:', user);
+        console.log('Datos del backend:', updatedUser);
+        console.log('Usuario final:', nextUser);
+        
         updateUser(nextUser);
       }
       
@@ -230,15 +310,17 @@ const ProfilePage: React.FC = () => {
       }
       
       // Clear password fields if they were used
-      if (formData.newPassword) {
+      if (hasPasswordChange) {
         setFormData(prev => ({
           ...prev,
           currentPassword: '',
           newPassword: '',
           confirmPassword: ''
         }));
+        setSuccessOpen(true);
         notifySuccess('Perfil y contraseña actualizados correctamente');
       } else {
+        setSuccessOpen(true);
         notifySuccess('Perfil actualizado correctamente');
       }
     } catch (error: any) {
@@ -255,9 +337,26 @@ const ProfilePage: React.FC = () => {
               ...prev,
               [field === 'current_password' ? 'currentPassword' : field]: error.validationErrors[field]
             }));
+            const msg = Array.isArray(error.validationErrors[field]) ? error.validationErrors[field][0] : error.validationErrors[field];
+            if (msg) notifyError(String(msg));
+          } else if (field === 'username') {
+            setProfileErrors(prev => ({ ...prev, username: error.validationErrors[field] }));
+            const msg = Array.isArray(error.validationErrors[field]) ? error.validationErrors[field][0] : error.validationErrors[field];
+            if (msg) notifyError(String(msg));
+          } else if (field === 'first_name') {
+            setProfileErrors(prev => ({ ...prev, firstName: error.validationErrors[field] }));
+            const msg = Array.isArray(error.validationErrors[field]) ? error.validationErrors[field][0] : error.validationErrors[field];
+            if (msg) notifyError(String(msg));
+          } else if (field === 'last_name') {
+            setProfileErrors(prev => ({ ...prev, lastName: error.validationErrors[field] }));
+            const msg = Array.isArray(error.validationErrors[field]) ? error.validationErrors[field][0] : error.validationErrors[field];
+            if (msg) notifyError(String(msg));
           }
         });
-        notifyError('Por favor corrige los errores en el formulario');
+        // ya se mostraron mensajes específicos
+      } else if (error.message && error.message.includes('permisos')) {
+        // Error de permisos (403)
+        notifyError(error.message);
       } else if (error.response?.status === 400) {
         const errorData = error.response.data;
         console.log('Datos del error 400:', errorData);
@@ -270,6 +369,8 @@ const ProfilePage: React.FC = () => {
               ? errorData.current_password[0] 
               : errorData.current_password
           }));
+          const msg = Array.isArray(errorData.current_password) ? errorData.current_password[0] : errorData.current_password;
+          if (msg) notifyError(String(msg));
         }
         if (errorData.new_password) {
           setPasswordErrors(prev => ({
@@ -278,9 +379,40 @@ const ProfilePage: React.FC = () => {
               ? errorData.new_password[0] 
               : errorData.new_password
           }));
+          const msg = Array.isArray(errorData.new_password) ? errorData.new_password[0] : errorData.new_password;
+          if (msg) notifyError(String(msg));
         }
-        
-        notifyError('Por favor corrige los errores en el formulario');
+        if (errorData.username) {
+          setProfileErrors(prev => ({
+            ...prev,
+            username: Array.isArray(errorData.username)
+              ? errorData.username[0]
+              : errorData.username
+          }));
+          const msg = Array.isArray(errorData.username) ? errorData.username[0] : errorData.username;
+          if (msg) notifyError(String(msg));
+        }
+        if (errorData.first_name) {
+          setProfileErrors(prev => ({
+            ...prev,
+            firstName: Array.isArray(errorData.first_name)
+              ? errorData.first_name[0]
+              : errorData.first_name
+          }));
+          const msg = Array.isArray(errorData.first_name) ? errorData.first_name[0] : errorData.first_name;
+          if (msg) notifyError(String(msg));
+        }
+        if (errorData.last_name) {
+          setProfileErrors(prev => ({
+            ...prev,
+            lastName: Array.isArray(errorData.last_name)
+              ? errorData.last_name[0]
+              : errorData.last_name
+          }));
+          const msg = Array.isArray(errorData.last_name) ? errorData.last_name[0] : errorData.last_name;
+          if (msg) notifyError(String(msg));
+        }
+        // mensajes específicos mostrados arriba
       } else {
         notifyError(`Error al actualizar el perfil: ${error.message || 'Error desconocido'}`);
       }
@@ -289,18 +421,24 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  const getUserInitials = () => {
-    if (user?.first_name && user?.last_name) {
-      return `${user.first_name[0]}${user.last_name[0]}`.toUpperCase();
-    }
-    if (user?.username) {
-      return user.username.substring(0, 2).toUpperCase();
-    }
-    return 'U';
-  };
 
   return (
     <HeaderSidebarLayout headerTitle="Perfil de Usuario">
+      {/* Confirm and Success Modals */}
+      <ConfirmModal
+        open={confirmOpen}
+        onCancel={() => setConfirmOpen(false)}
+        onConfirm={executeUpdate}
+        title="Confirmar actualización de perfil"
+        description={confirmDescription}
+        confirmLabel="Aplicar cambios"
+      />
+      <SuccessModal
+        open={successOpen}
+        onClose={() => setSuccessOpen(false)}
+        title="Cambios guardados"
+        message={<div>Se guardaron correctamente los cambios de tu perfil.</div>}
+      />
       <div className={`max-w-4xl mx-auto p-6 min-h-screen transition-colors ${
         darkMode ? 'bg-[#1A0F30]' : 'bg-slate-100'
       }`}>
@@ -308,18 +446,24 @@ const ProfilePage: React.FC = () => {
         <div className="bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 rounded-3xl p-8 mb-8 relative overflow-hidden">
           <div className="absolute inset-0 bg-white/5 backdrop-blur-sm" />
           <div className="relative z-10 flex items-center gap-6">
-            <div className="relative w-20 h-20 rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center border border-white/20 group">
-              {currentPhoto || formData.photo ? (
+            <div className="relative group">
+              {formData.photo ? (
                 <img 
-                  src={formData.photo ? URL.createObjectURL(formData.photo) : currentPhoto || ''} 
+                  src={URL.createObjectURL(formData.photo)} 
                   alt="Profile" 
-                  className="w-16 h-16 rounded-xl object-cover"
+                  className="w-20 h-20 rounded-2xl object-cover border border-white/20 bg-white/15 backdrop-blur-sm"
                 />
-              ) : (
-                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl">
-                  {getUserInitials()}
-                </div>
-              )}
+              ) : user ? (
+                <UserAvatar
+                  user={{
+                    first_name: user.first_name || '',
+                    last_name: user.last_name || '',
+                    photo: user.photo
+                  }}
+                  size="large"
+                  className="border border-white/20 bg-white/15 backdrop-blur-sm"
+                />
+              ) : null}
               
               {/* Photo action buttons */}
               <div className="absolute -bottom-2 -right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -377,6 +521,36 @@ const ProfilePage: React.FC = () => {
         }`}>
           <div className="p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Username Field */}
+              <div className="flex-1">
+                <label className={`block font-semibold mb-1 ${
+                  darkMode ? 'text-purple-200' : 'text-gray-700'
+                }`}>
+                  Nombre de Usuario <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="username"
+                  className={`w-full border rounded px-3 py-2 transition-colors ${
+                    darkMode 
+                      ? 'bg-[#3A2B5A] border-purple-600/50 text-white placeholder-gray-400 focus:border-purple-500'
+                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500'
+                  }`}
+                  value={formData.username}
+                  onChange={handleInputChange}
+                  placeholder="Ingresa tu nombre de usuario"
+                  pattern="^[a-zA-Z0-9._-]{3,50}$"
+                  title="3-50 caracteres: letras, números, puntos, guiones y guiones bajos"
+                  required
+                />
+                {profileErrors.username && (
+                  <p className="text-red-500 text-sm mt-1">{profileErrors.username}</p>
+                )}
+                <p className={`text-xs mt-1 ${
+                  darkMode ? 'text-purple-300' : 'text-gray-500'
+                }`}>Cambiar tu nombre de usuario puede afectar tu forma de iniciar sesión</p>
+              </div>
+              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex-1">
                   <label className={`block font-semibold mb-1 ${
@@ -397,6 +571,9 @@ const ProfilePage: React.FC = () => {
                     placeholder="Ingresa tu nombre"
                     required
                   />
+                  {profileErrors.firstName && (
+                    <p className="text-red-500 text-sm mt-1">{profileErrors.firstName}</p>
+                  )}
                 </div>
                 
                 <div className="flex-1">
@@ -418,6 +595,9 @@ const ProfilePage: React.FC = () => {
                     placeholder="Ingresa tu apellido"
                     required
                   />
+                  {profileErrors.lastName && (
+                    <p className="text-red-500 text-sm mt-1">{profileErrors.lastName}</p>
+                  )}
                 </div>
               </div>
 

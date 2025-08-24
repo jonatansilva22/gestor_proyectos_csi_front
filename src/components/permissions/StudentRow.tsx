@@ -94,9 +94,15 @@ export const StudentRow: React.FC<StudentRowProps> = ({
         <div className="flex-1 flex justify-center">
           <button
             onClick={() => onPermissionsClick(student)}
-            className="w-46 h-9 bg-gray-200 hover:bg-gray-300 transition-colors duration-200 rounded flex items-center justify-center"
+            className={`w-46 h-9 transition-colors duration-200 rounded flex items-center justify-center ${
+              darkMode 
+                ? 'bg-gray-700 hover:bg-gray-600' 
+                : 'bg-gray-200 hover:bg-gray-300'
+            }`}
           >
-            <span className="font-inter text-2xl font-normal text-black">
+            <span className={`font-inter text-2xl font-normal ${
+              darkMode ? 'text-white' : 'text-black'
+            }`}>
               [Permisos]
             </span>
           </button>

@@ -49,6 +49,16 @@ const Login: React.FC = () => {
             Verificando sesión...
           </p>
         </div>
+
+        {/* Footer */}
+        <footer className="absolute bottom-4 right-4">
+          <div className={`text-xs text-right ${
+            darkMode ? 'text-purple-200/80' : 'text-gray-600'
+          }`}>
+            <p className="font-medium">© 2025 CSI PRO | Universidad de Sonora</p>
+            <p>Todos los derechos reservados.</p>
+          </div>
+        </footer>
       </div>
     );
   }
@@ -117,6 +127,16 @@ const Login: React.FC = () => {
             <LoginForm />
           </div>
         </div>
+
+        {/* Footer */}
+        <footer className="absolute bottom-4 right-4">
+          <div className={`text-xs text-right ${
+            darkMode ? 'text-purple-200/80' : 'text-gray-600'
+          }`}>
+            <p className="font-medium">© 2025 CSI PRO | Universidad de Sonora</p>
+            <p>Todos los derechos reservados.</p>
+          </div>
+        </footer>
       </div>
     </div>
   );

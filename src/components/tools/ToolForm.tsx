@@ -3,6 +3,7 @@ import { FormInput } from "../../components/common/FormInput";
 import { FormImageUpload } from "../../components/common/FormImageUpload";
 import { Tool } from "../../types/tools/Tool";
 import { notifyError } from "../common/ToastNotify";
+import { useTheme } from "../../context/ThemeContext";
 
 interface ToolFormProps {
   onSubmit: (data: { name: string; image: File | null }) => void;
@@ -11,6 +12,7 @@ interface ToolFormProps {
 }
 
 export const ToolForm = ({ onSubmit, onCancel, initialData }: ToolFormProps) => {
+  const { darkMode } = useTheme();
   const [name, setName] = useState(initialData?.name || "");
   const [image, setImage] = useState<File | null>(null);
 
@@ -51,7 +53,9 @@ export const ToolForm = ({ onSubmit, onCancel, initialData }: ToolFormProps) => 
         <button
           type="button"
           onClick={onCancel}
-          className="text-gray-600 hover:underline cursor-pointer"
+          className={`hover:underline cursor-pointer ${
+            darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-800'
+          }`}
         >
           Cancelar
         </button>

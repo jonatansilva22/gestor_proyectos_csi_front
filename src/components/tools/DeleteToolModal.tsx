@@ -1,6 +1,7 @@
 // src/components/tools/DeleteToolModal.tsx
 import { Modal } from "../../components/common/Modal";
 import { Tool } from "../../types/tools/Tool";
+import { useTheme } from "../../context/ThemeContext";
 
 interface DeleteToolModalProps {
   open: boolean;
@@ -9,16 +10,23 @@ interface DeleteToolModalProps {
   onConfirm: () => void;
 }
 
-export const DeleteToolModal = ({ open, tool, onCancel, onConfirm }: DeleteToolModalProps) => (
+export const DeleteToolModal = ({ open, tool, onCancel, onConfirm }: DeleteToolModalProps) => {
+  const { darkMode } = useTheme();
+  
+  return (
   <Modal open={open} onClose={onCancel} title="Eliminar Herramienta">
     <div className="p-4">
-      <p>
+      <p className={`mb-8 text-center ${
+        darkMode ? 'text-white' : 'text-gray-900'
+      }`}>
         ¿Estás seguro que deseas eliminar la herramienta{" "}
         <span className="font-bold">{tool?.name}</span>?
       </p>
       <div className="flex justify-end gap-2 mt-6">
         <button
-          className="text-gray-600 hover:underline cursor-pointer"
+          className={`hover:underline cursor-pointer ${
+            darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-800'
+          }`}
           onClick={onCancel}
         >
           Cancelar
@@ -32,4 +40,5 @@ export const DeleteToolModal = ({ open, tool, onCancel, onConfirm }: DeleteToolM
       </div>
     </div>
   </Modal>
-);
+  );
+};

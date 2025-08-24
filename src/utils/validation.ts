@@ -308,17 +308,34 @@ export const validateUserForm = (formData: UserFormData): { isValid: boolean; er
 };
 
 /**
- * Login form validation - simpler validation for login
- * Based on LogIn service validation
+ * Identifier validation - flexible validation for email or username
+ * If contains @, validates as email; otherwise validates as username
+ */
+export const validateIdentifier = (identifier: string): ValidationResult => {
+  if (!identifier.trim()) {
+    return { isValid: false, message: 'El email o nombre de usuario es requerido' };
+  }
+
+  // Check if it looks like an email (contains @)
+  if (identifier.includes('@')) {
+    return validateEmail(identifier);
+  } else {
+    return validateUsername(identifier);
+  }
+};
+
+/**
+ * Login form validation - flexible validation for login with identifier
+ * Supports both email and username login
  */
 export interface LoginFormData {
-  email: string;
+  identifier: string; // Email o username
   password: string;
 }
 
 export interface LoginFormErrors {
   [key: string]: string | undefined;
-  email?: string;
+  identifier?: string;
   password?: string;
   general?: string;
 }
@@ -326,16 +343,10 @@ export interface LoginFormErrors {
 export const validateLoginForm = (formData: LoginFormData): { isValid: boolean; errors: LoginFormErrors } => {
   const errors: LoginFormErrors = {};
 
-  // Email validation (simplified for login)
-  if (!formData.email.trim()) {
-    errors.email = 'El correo electrónico es requerido';
-  } else {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      errors.email = 'Por favor, ingrese un correo electrónico válido';
-    } else if (formData.email.length > 50) {
-      errors.email = 'El correo electrónico no debe exceder los 50 caracteres';
-    }
+  // Identifier validation (flexible email or username)
+  const identifierResult = validateIdentifier(formData.identifier);
+  if (!identifierResult.isValid) {
+    errors.identifier = identifierResult.message;
   }
 
   // Password validation (simplified for login)
