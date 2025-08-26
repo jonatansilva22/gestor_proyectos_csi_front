@@ -23,7 +23,9 @@ export const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({
   }
 
   if (user.role && !allowedRoles.includes(user.role)) {
-    return <Navigate to="/dashboard" replace />;
+    // Si es colaborador (role 3), redirigir a projects en lugar de dashboard
+    const redirectPath = user.role === 3 ? "/projects" : "/dashboard";
+    return <Navigate to={redirectPath} replace />;
   }
 
   return <>{children}</>;

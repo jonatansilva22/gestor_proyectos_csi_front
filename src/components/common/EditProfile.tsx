@@ -26,7 +26,6 @@ const EditProfile: React.FC<EditProfileProps> = ({ onBack }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Here you would typically make an API call to update the user information
-    console.log('Updating user information:', formData);
     // Show success message
     alert('Información actualizada correctamente');
   };

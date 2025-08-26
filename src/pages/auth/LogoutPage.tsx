@@ -23,7 +23,8 @@ export default function LogoutPage() {
   };
 
   const handleCancel = () => {
-    navigate('/dashboard');
+    const homePath = user?.role === 3 ? '/projects' : '/dashboard';
+    navigate(homePath);
   };
 
   return (

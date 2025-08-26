@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { notifySuccess } from "../common/ToastNotify";
+import { notifySuccess, notifyWarning, notifyError } from "../common/ToastNotify";
 import { useTheme } from "../../context/ThemeContext";
 import { FormSelect } from "../common/FormSelect";
 import { FileUpload } from "../common/FileUpload";
 import { FormInput } from "../common/FormInput";
-import { CreateUserRequest, UserRole } from "../../types/user";
+import { CreateUserRequest, UserRole, User } from "../../types/user";
 import { userService } from "../../services/users/userService";
 import { validateUserForm } from "../../utils/validation";
 import { useValidationErrors } from "../../hooks/useValidationErrors";
@@ -76,6 +76,13 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
     // Validar que las contraseñas coincidan
     if (formData.password !== formData.confirmPassword) {
       setBackendErrors({ confirmPassword: 'Las contraseñas no coinciden.' });
+      notifyError('Las contraseñas no coinciden', {
+        position: "top-center",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+      });
       return false;
     }
 
@@ -93,11 +100,31 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
     // Bloquear creación de superusuarios desde la UI
     if (formData.role === 'superadmin') {
       setBackendErrors({ role: 'No está permitido crear usuarios con rol SuperAdmin desde esta pantalla.' });
+      notifyError('No está permitido crear usuarios con rol SuperAdmin desde esta pantalla', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+      });
       return false;
     }
 
     if (!validationResult.isValid) {
       setBackendErrors(validationResult.errors);
+      const fieldCount = Object.keys(validationResult.errors).length;
+      notifyError(
+        fieldCount === 1 
+          ? 'Se encontró un error en el formulario. Por favor corrígelo.' 
+          : `Se encontraron ${fieldCount} errores en el formulario. Por favor corrígelos.`,
+        {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+        }
+      );
     }
     return validationResult.isValid;
   };
@@ -122,20 +149,63 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
       
       // Llamada real al userService
       const createdUser = await userService.createUser(formDataWithIntRole);
-      console.log("User created:", createdUser);
       
       // Mostrar notificación de éxito más específica
       const userName = `${formData.first_name} ${formData.last_name}`.trim();
-      notifySuccess(
-        `¡Usuario ${userName ? userName : formData.username} creado exitosamente!`, 
-        {
-          position: "top-center",
-          autoClose: 4000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
+      
+      // Verificar si se incluye información del email en la respuesta
+      if (createdUser.email_info) {
+        if (createdUser.email_info.enviado) {
+          // Email enviado exitosamente
+          notifySuccess(
+            `¡Usuario ${userName ? userName : formData.username} creado exitosamente! Las credenciales fueron enviadas por email.`, 
+            {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+            }
+          );
+        } else {
+          // Usuario creado pero email no enviado
+          if (createdUser.email_info.error === 'configuracion_faltante') {
+            notifyError(
+              `Usuario ${userName ? userName : formData.username} creado exitosamente. ❌ Error: Configuración de correo no encontrada en .env`, 
+              {
+                position: "top-center",
+                autoClose: 8000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+              }
+            );
+          } else {
+            notifyError(
+              `Usuario ${userName ? userName : formData.username} creado exitosamente. ❌ Error al enviar email: ${createdUser.email_info.mensaje}`, 
+              {
+                position: "top-center",
+                autoClose: 8000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+              }
+            );
+          }
         }
-      );
+      } else {
+        // Respuesta sin información de email (caso anterior)
+        notifySuccess(
+          `¡Usuario ${userName ? userName : formData.username} creado exitosamente!`, 
+          {
+            position: "top-center",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+          }
+        );
+      }
       
       // Llamar callback de éxito con los datos del usuario
       if (onSuccess) {

@@ -158,14 +158,6 @@ export const userService = {
         formData.append('photo', userData.photo);
       }
       
-      // Debug: log outgoing payload
-      try {
-        const debugEntries: Record<string, any> = {};
-        formData.forEach((v, k) => {
-          debugEntries[k] = v instanceof File ? `File(${v.name})` : v;
-        });
-        console.log('[userService.updateUser] PATCH payload for id', id, debugEntries);
-      } catch {}
 
       // Endpoint de rama RamaAlanBack del backend para actualizar usuario
       const response = await usersApi.patch(`/create-user/${id}/`, formData, {
@@ -212,14 +204,9 @@ export const userService = {
     current_password?: string;
     new_password?: string;
   }): Promise<User> => {
-    console.log('=== INICIO UPDATE PROFILE ===');
-    console.log('ID del usuario:', id);
-    console.log('Datos a actualizar:', data);
-    
     try {
       // Usar FormData si hay archivo, de lo contrario JSON
       if (data.photo) {
-        console.log('--- FLUJO CON FOTO (FormData) ---');
         const formData = new FormData();
         
         // Agregar solo campos presentes
@@ -233,34 +220,18 @@ export const userService = {
           formData.append('photo', data.photo);
         }
         
-        console.log('Campos agregados al FormData:');
-        console.log('- username:', data.username);
-        console.log('- first_name:', data.first_name);
-        console.log('- last_name:', data.last_name);
-        console.log('- email:', data.email);
-        console.log('- role:', data.role);
-        console.log('- photo:', data.photo ? `File: ${data.photo.name}` : 'No');
-        
         // Add password fields if changing password
         if (data.current_password && data.new_password) {
           formData.append('current_password', data.current_password);
           formData.append('new_password', data.new_password);
         }
         
-        console.log('FormData para actualización creado:');
-        for (const [key, value] of formData.entries()) {
-          console.log(`  ${key}:`, value instanceof File ? `File(${value.name})` : value);
-        }
-        
         // Usar el endpoint correcto para actualizar usuarios
         // No establecer Content-Type manualmente para FormData - el navegador lo hace automáticamente
         const response = await usersApi.patch(`/create-user/${id}/`, formData);
         
-        console.log('Respuesta exitosa con foto:', response.status, response.data);
         return response.data;
       } else {
-        console.log('--- FLUJO SIN FOTO (JSON) ---');
-        console.log('Campos a actualizar sin foto:', Object.keys(data));
         // Payload JSON para actualizaciones sin fotos: solo campos presentes
         const payload: any = {};
         if (data.username !== undefined) payload.username = data.username;
@@ -269,27 +240,15 @@ export const userService = {
         if (data.email !== undefined) payload.email = data.email;
         if (data.role !== undefined) payload.role = data.role;
         
-        console.log('Campos agregados al payload:');
-        console.log('- username:', data.username);
-        console.log('- first_name:', data.first_name);
-        console.log('- last_name:', data.last_name);
-        console.log('- email:', data.email);
-        console.log('- role:', data.role);
-        
         // Add password fields if changing password
         if (data.current_password && data.new_password) {
           payload.current_password = data.current_password;
           payload.new_password = data.new_password;
-          console.log('Agregando campos de contraseña');
         }
-        
-        console.log('Payload JSON final:', payload);
-        console.log('Número de campos a actualizar:', Object.keys(payload).length);
         
         // Usar el endpoint correcto para actualizar usuarios
         // El interceptor se encarga automáticamente del Content-Type
         const response = await usersApi.patch(`/create-user/${id}/`, payload);
-        console.log('Respuesta exitosa sin foto:', response.status, response.data);
         return response.data;
       }
     } catch (error: any) {
@@ -343,11 +302,7 @@ export const userService = {
   // Obtener perfil del usuario actual (para colaboradores)
   getUserProfile: async (id: number): Promise<User> => {
     try {
-      console.log('=== OBTENIENDO PERFIL DE USUARIO ===');
-      console.log('ID del usuario:', id);
-      
       const response = await usersApi.get(`/create-user/${id}/`);
-      console.log('Perfil obtenido exitosamente:', response.data);
       return response.data;
     } catch (error: any) {
       console.error('Error obteniendo perfil de usuario:', error);

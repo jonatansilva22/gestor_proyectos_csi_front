@@ -13,9 +13,6 @@ const ProfilePage: React.FC = () => {
   const { user, updateUser } = useAuth();
   const { darkMode } = useTheme();
   
-  // Debug: Log user data
-  console.log('Usuario actual en ProfilePage:', user);
-  console.log('ID del usuario:', user?.id);
   
   const [formData, setFormData] = useState({
     username: user?.username || '',
@@ -172,11 +169,6 @@ const ProfilePage: React.FC = () => {
     
     // Construir payload condicional
     try {
-      console.log('=== INICIO SUBMIT ===');
-      console.log('Usuario completo:', user);
-      console.log('ID del usuario:', user?.id);
-      console.log('Datos del formulario:', formData);
-      
       if (!user?.id) {
         console.error('No hay ID de usuario disponible');
         notifyError('No se pudo identificar el usuario. ID: ' + user?.id);
@@ -200,21 +192,16 @@ const ProfilePage: React.FC = () => {
       const hasPasswordChange = !!(formData.newPassword && formData.currentPassword);
       
       if (hasProfileChanges) {
-        console.log(`Cambios en perfil detectados:`);
         if (formData.username.trim() !== originalUsername) {
-          console.log(`- Username: "${originalUsername}" -> "${formData.username.trim()}"`);
           updateData.username = formData.username.trim();
         }
         if (formData.firstName.trim() !== originalFirstName) {
-          console.log(`- Nombre: "${originalFirstName}" -> "${formData.firstName.trim()}"`);
           updateData.first_name = formData.firstName.trim();
         }
         if (formData.lastName.trim() !== originalLastName) {
-          console.log(`- Apellido: "${originalLastName}" -> "${formData.lastName.trim()}"`);
           updateData.last_name = formData.lastName.trim();
         }
         if (formData.photo) {
-          console.log(`- Nueva foto: ${formData.photo.name}`);
           updateData.photo = formData.photo;
         }
       }
@@ -222,7 +209,6 @@ const ProfilePage: React.FC = () => {
       if (hasPasswordChange) {
         updateData.current_password = formData.currentPassword;
         updateData.new_password = formData.newPassword;
-        console.log('Cambio de contraseña solicitado');
       }
       
       // Verificar si hay algo que actualizar
@@ -261,21 +247,7 @@ const ProfilePage: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      console.log('Datos finales a enviar:', {
-        ...updateData,
-        photo: updateData.photo ? `File: ${updateData.photo.name}` : 'No photo',
-        current_password: updateData.current_password ? '***' : undefined,
-        new_password: updateData.new_password ? '***' : undefined
-      });
-      
-      console.log('Enviando al userService.updateProfile...');
-      console.log('- User ID:', user?.id);
-      console.log('- Update Data:', updateData);
-      
       const updatedUser = await userService.updateProfile(user!.id, updateData);
-      
-      console.log('=== RESPUESTA EXITOSA ===');
-      console.log('Usuario actualizado:', updatedUser);
       
       // Actualizar AuthContext y storage con los nuevos datos del usuario
       if (updatedUser) {
@@ -294,11 +266,6 @@ const ProfilePage: React.FC = () => {
           role_id: updatedUser.role || user?.role_id || user?.role,
           role_name: updatedUser.role_name || user?.role_name,
         };
-        
-        console.log('=== ACTUALIZACIÓN DE USUARIO ===');
-        console.log('Usuario anterior:', user);
-        console.log('Datos del backend:', updatedUser);
-        console.log('Usuario final:', nextUser);
         
         updateUser(nextUser);
       }
@@ -329,7 +296,6 @@ const ProfilePage: React.FC = () => {
       console.error('Error status:', error.response?.status);
       
       if (error.validationErrors) {
-        console.log('Errores de validación:', error.validationErrors);
         // Handle validation errors from backend
         Object.keys(error.validationErrors).forEach(field => {
           if (field.includes('password') || field === 'current_password' || field === 'currentPassword') {
@@ -359,7 +325,6 @@ const ProfilePage: React.FC = () => {
         notifyError(error.message);
       } else if (error.response?.status === 400) {
         const errorData = error.response.data;
-        console.log('Datos del error 400:', errorData);
         
         // Manejar errores específicos del backend
         if (errorData.current_password) {

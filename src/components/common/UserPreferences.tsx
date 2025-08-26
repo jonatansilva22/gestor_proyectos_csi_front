@@ -3,7 +3,6 @@ import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import EditProfile from './EditProfile';
 import ChangePassword from './ChangePassword';
-import NotificationSettings from './NotificationSettings';
 import ThemeSelector from './ThemeSelector';
 
 interface UserPreferencesProps {
@@ -13,7 +12,7 @@ interface UserPreferencesProps {
   initialSection?: PreferenceSection;
 }
 
-type PreferenceSection = 'profile' | 'password' | 'notifications' | 'theme' | null;
+type PreferenceSection = 'profile' | 'password' | 'theme' | null;
 
 const UserPreferences: React.FC<UserPreferencesProps> = ({ isOpen, onClose, initialSection = null }) => {
   const { user } = useAuth();
@@ -133,12 +132,6 @@ const UserPreferences: React.FC<UserPreferencesProps> = ({ isOpen, onClose, init
                     onClick={() => setActiveSection('password')}
                   />
                   <PreferenceOption
-                    title="Notificaciones"
-                    description="Gestiona alertas, emails y notificaciones push"
-                    icon="notifications"
-                    onClick={() => setActiveSection('notifications')}
-                  />
-                  <PreferenceOption
                     title="Apariencia"
                     description="Personaliza tema, colores y preferencias visuales"
                     icon="theme"
@@ -156,9 +149,6 @@ const UserPreferences: React.FC<UserPreferencesProps> = ({ isOpen, onClose, init
             {activeSection === 'password' && (
               <ChangePassword onBack={handleBackToMenu} />
             )}
-            {activeSection === 'notifications' && (
-              <NotificationSettings onBack={handleBackToMenu} />
-            )}
             {activeSection === 'theme' && (
               <ThemeSelector onBack={handleBackToMenu} />
             )}
@@ -173,7 +163,7 @@ interface PreferenceOptionProps {
   title: string;
   description: string;
   onClick: () => void;
-  icon: 'profile' | 'password' | 'notifications' | 'theme';
+  icon: 'profile' | 'password' | 'theme';
 }
 
 const PreferenceOption: React.FC<PreferenceOptionProps> = ({ title, description, onClick, icon }) => {
@@ -191,12 +181,6 @@ const PreferenceOption: React.FC<PreferenceOptionProps> = ({ title, description,
         return (
           <svg className={`${iconClass} ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-          </svg>
-        );
-      case 'notifications':
-        return (
-          <svg className={`${iconClass} ${darkMode ? 'text-emerald-400' : 'text-emerald-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5z" />
           </svg>
         );
       case 'theme':
@@ -217,8 +201,6 @@ const PreferenceOption: React.FC<PreferenceOptionProps> = ({ title, description,
           return 'hover:bg-purple-900/20 hover:border-purple-700/50 group-hover:from-purple-900/10 group-hover:to-purple-900/20';
         case 'password':
           return 'hover:bg-blue-900/20 hover:border-blue-700/50 group-hover:from-blue-900/10 group-hover:to-blue-900/20';
-        case 'notifications':
-          return 'hover:bg-emerald-900/20 hover:border-emerald-700/50 group-hover:from-emerald-900/10 group-hover:to-emerald-900/20';
         case 'theme':
           return 'hover:bg-amber-900/20 hover:border-amber-700/50 group-hover:from-amber-900/10 group-hover:to-amber-900/20';
         default:
@@ -230,8 +212,6 @@ const PreferenceOption: React.FC<PreferenceOptionProps> = ({ title, description,
           return 'hover:bg-purple-50 hover:border-purple-200 group-hover:from-purple-50 group-hover:to-purple-100';
         case 'password':
           return 'hover:bg-blue-50 hover:border-blue-200 group-hover:from-blue-50 group-hover:to-blue-100';
-        case 'notifications':
-          return 'hover:bg-emerald-50 hover:border-emerald-200 group-hover:from-emerald-50 group-hover:to-emerald-100';
         case 'theme':
           return 'hover:bg-amber-50 hover:border-amber-200 group-hover:from-amber-50 group-hover:to-amber-100';
         default:

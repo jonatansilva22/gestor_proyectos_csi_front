@@ -26,20 +26,28 @@ const SidebarMenu = ({
   const { user } = useAuth();
   const { darkMode } = useTheme();
 
-  // Check if user is admin or superadmin (roles 1 and 2)
+  // Check user roles
   const isAdminOrSuperAdmin = user?.role === 1 || user?.role === 2;
+  const isCollaborator = user?.role === 3;
 
   const menuItems = [
-    { label: "Dashboard", path: "/dashboard", icon: "📊" },
+    // Dashboard solo para Admin y SuperAdmin
+    ...(isAdminOrSuperAdmin ? [
+      { label: "Dashboard", path: "/dashboard", icon: "📊" }
+    ] : []),
+    
+    // Proyectos para todos los usuarios
     { label: "Proyectos", path: "/projects-table", icon: "📁" },
+    
+    // Funciones administrativas solo para Admin y SuperAdmin
     ...(isAdminOrSuperAdmin ? [
       { label: "Crear Usuario", path: "/create-user", icon: "👤" },
-      { label: "Gestión de Usuarios", path: "/admin/users", icon: "⚙️" }
+      { label: "Gestión de Usuarios", path: "/admin/users", icon: "⚙️" },
+      { label: "Áreas", path: "/areas-table", icon: "🏢" },
+      { label: "Repositorios", path: "/repositories-table", icon: "📚" },
+      { label: "Herramientas", path: "/tools-table", icon: "🔧" },
+      { label: "Grupos", path: "/groups-table", icon: "👥" },
     ] : []),
-    { label: "Áreas", path: "/areas-table", icon: "🏢" },
-    { label: "Repositorios", path: "/repositories-table", icon: "📚" },
-    { label: "Herramientas", path: "/tools-table", icon: "🔧" },
-    { label: "Grupos", path: "/groups-table", icon: "👥" },
   ];
 
   const isActive = (path: string) => location.pathname === path;

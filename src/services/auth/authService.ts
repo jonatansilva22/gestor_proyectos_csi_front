@@ -38,24 +38,21 @@ export const authService = {
       const payload = JSON.parse(atob(token.split('.')[1]));
       const userId = payload.user_id;
 
-      // Intentar obtener los datos del usuario de un endpoint accesible para cualquier autenticado
-      // Preferimos endpoints tipo "/auth/me/" o "/users/me/" si el backend los expone
+      // Obtener los datos del usuario usando el endpoint disponible
       let userData: any = null;
       const envMe = import.meta.env.VITE_AUTH_ME_ENDPOINT as string | undefined;
-      const meCandidates = envMe && envMe.trim().length > 0
-        ? [envMe]
-        : ['/auth/me/', '/users/me/'];
-      for (const meEndpoint of meCandidates) {
+      
+      // Si hay un endpoint personalizado en variables de entorno, usarlo
+      if (envMe && envMe.trim().length > 0) {
         try {
-          const resp = await api.get(meEndpoint);
+          const resp = await api.get(envMe);
           userData = resp.data;
-          break;
         } catch (e: any) {
-          // Si 404/405/Not implemented, seguimos probando; si 401/403 no abortamos aún (probamos fallback)
+          // Si falla el endpoint personalizado, usar el fallback
         }
       }
 
-      // Fallback: usar el endpoint actual por id si los de "me" no existen
+      // Usar el endpoint actual por id que sabemos que funciona
       if (!userData) {
         try {
           const userResponse = await api.get(`/create-user/${userId}/`);

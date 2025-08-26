@@ -1,6 +1,7 @@
 // src/components/permissions/PermissionsHeader.tsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 interface PermissionsHeaderProps {
   title?: string;
@@ -11,12 +12,15 @@ export const PermissionsHeader: React.FC<PermissionsHeaderProps> = ({
   onBack,
 }) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleBack = () => {
     if (onBack) {
       onBack();
     } else {
-      navigate("/dashboard");
+      // Redirigir según el rol del usuario
+      const defaultPath = user?.role === 3 ? "/projects" : "/dashboard";
+      navigate(defaultPath);
     }
   };
 

@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useMediaQuery } from './useMediaQuery';
+import { useAuth } from '../context/AuthContext';
 
 interface NavigationItem {
   path: string;
@@ -37,6 +38,7 @@ const routeConfig: Record<string, { title: string; icon?: string; parent?: strin
 export const useMobileNavigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const isMobile = useMediaQuery('(max-width: 768px)');
   const isTablet = useMediaQuery('(min-width: 769px) and (max-width: 1024px)');
 
@@ -98,13 +100,14 @@ export const useMobileNavigation = () => {
       breadcrumbs.unshift(getRouteInfo(path));
     }
 
-    // Always add dashboard as root if not already present and not on dashboard
-    if (currentPath !== '/dashboard' && !breadcrumbs.find(b => b.path === '/dashboard')) {
-      breadcrumbs.unshift(getRouteInfo('/dashboard'));
+    // Add appropriate root based on user role
+    const rootPath = user?.role === 3 ? '/projects' : '/dashboard';
+    if (currentPath !== rootPath && !breadcrumbs.find(b => b.path === rootPath)) {
+      breadcrumbs.unshift(getRouteInfo(rootPath));
     }
 
     return breadcrumbs;
-  }, [getRouteInfo]);
+  }, [getRouteInfo, user]);
 
   // Update navigation state when location changes
   useEffect(() => {
@@ -155,10 +158,11 @@ export const useMobileNavigation = () => {
         pathSegments.pop();
         navigate('/' + pathSegments.join('/'));
       } else {
-        navigate('/dashboard');
+        const homePath = user?.role === 3 ? '/projects' : '/dashboard';
+        navigate(homePath);
       }
     }
-  }, [location.pathname, navigate]);
+  }, [location.pathname, navigate, user]);
 
   const navigateToPath = useCallback((path: string) => {
     navigate(path);
@@ -180,13 +184,14 @@ export const useMobileNavigation = () => {
       shortcuts.push(getRouteInfo('/projects-table'));
     }
 
-    // Always add dashboard as a shortcut (unless we're already there)
-    if (currentPath !== '/dashboard') {
-      shortcuts.push(getRouteInfo('/dashboard'));
+    // Add appropriate home shortcut (unless we're already there)
+    const homePath = user?.role === 3 ? '/projects' : '/dashboard';
+    if (currentPath !== homePath) {
+      shortcuts.push(getRouteInfo(homePath));
     }
 
     return shortcuts;
-  }, [location.pathname, getRouteInfo]);
+  }, [location.pathname, getRouteInfo, user]);
 
   return {
     ...navigationState,

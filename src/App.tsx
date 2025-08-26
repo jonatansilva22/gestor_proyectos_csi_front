@@ -18,7 +18,6 @@ import { ToolsTablePage } from "./pages/tools/ToolsTablePage";
 import { GroupsTablePage } from "./pages/groups/GroupsTablePage";
 import ProfilePage from "./features/profile/pages/ProfilePage";
 import PasswordPage from "./features/profile/pages/PasswordPage";
-import NotificationsPage from "./features/profile/pages/NotificationsPage";
 import ThemePage from "./features/profile/pages/ThemePage";
 import UsersManagementPage from "./features/admin/pages/UsersManagementPage";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -43,21 +42,53 @@ const AppContent = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<LogoutPage />} />
 
-            {/* Rutas protegidas con autenticación */}
-            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            
             {/* Rutas solo para Admin y SuperAdmin */}
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={[1, 2]} redirectTo="/projects">
+                  <Dashboard />
+                </RoleProtectedRoute>
+              </ProtectedRoute>
+            } />
             <Route path="/create-user" element={
               <ProtectedRoute>
-                <RoleProtectedRoute allowedRoles={[1, 2]} redirectTo="/dashboard">
+                <RoleProtectedRoute allowedRoles={[1, 2]} redirectTo="/projects">
                   <CreateUser />
                 </RoleProtectedRoute>
               </ProtectedRoute>
             } />
             <Route path="/admin/users" element={
               <ProtectedRoute>
-                <RoleProtectedRoute allowedRoles={[1, 2]} redirectTo="/dashboard">
+                <RoleProtectedRoute allowedRoles={[1, 2]} redirectTo="/projects">
                   <UsersManagementPage />
+                </RoleProtectedRoute>
+              </ProtectedRoute>
+            } />
+            <Route path="/areas-table" element={
+              <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={[1, 2]} redirectTo="/projects">
+                  <AreasTablePage />
+                </RoleProtectedRoute>
+              </ProtectedRoute>
+            } />
+            <Route path="/repositories-table" element={
+              <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={[1, 2]} redirectTo="/projects">
+                  <RepositoriesTablePage />
+                </RoleProtectedRoute>
+              </ProtectedRoute>
+            } />
+            <Route path="/tools-table" element={
+              <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={[1, 2]} redirectTo="/projects">
+                  <ToolsTablePage />
+                </RoleProtectedRoute>
+              </ProtectedRoute>
+            } />
+            <Route path="/groups-table" element={
+              <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={[1, 2]} redirectTo="/projects">
+                  <GroupsTablePage />
                 </RoleProtectedRoute>
               </ProtectedRoute>
             } />
@@ -66,16 +97,11 @@ const AppContent = () => {
             <Route path="/projects" element={<ProtectedRoute><ProjectsPage /></ProtectedRoute>} />
             <Route path="/projects/:id" element={<ProtectedRoute><ProjectDetailPage /></ProtectedRoute>} />
             <Route path="/projects-table" element={<ProtectedRoute><ProjectsTablePage /></ProtectedRoute>} />
-            <Route path="/areas-table" element={<ProtectedRoute><AreasTablePage /></ProtectedRoute>} />
-            <Route path="/repositories-table" element={<ProtectedRoute><RepositoriesTablePage /></ProtectedRoute>} />
-            <Route path="/tools-table" element={<ProtectedRoute><ToolsTablePage /></ProtectedRoute>} />
-            <Route path="/groups-table" element={<ProtectedRoute><GroupsTablePage /></ProtectedRoute>} />
 
             {/* Configuración de perfil - Disponible para todos los usuarios */}
             {/* Los colaboradores pueden ver/editar solo su propio perfil gracias a las validaciones del backend */}
             <Route path="/settings/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
             <Route path="/settings/password" element={<ProtectedRoute><PasswordPage /></ProtectedRoute>} />
-            <Route path="/settings/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
             <Route path="/settings/theme" element={<ProtectedRoute><ThemePage /></ProtectedRoute>} />
 
             {/* Página de error 404 */}

@@ -66,7 +66,7 @@ export const FormInput = ({
       {error && (
         <p 
           id={`${inputId}-error`}
-          className={`mt-2 text-sm text-feedback-error`}
+          className="mt-2 text-sm text-red-600 dark:text-red-400"
           role="alert"
         >
           {error}

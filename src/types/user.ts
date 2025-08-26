@@ -11,9 +11,16 @@ export interface CreateUserRequest {
   photo?: File;   // Matches backend field name
 }
 
+export interface EmailInfo {
+  enviado: boolean;
+  mensaje: string;
+  error?: string;
+}
+
 export interface CreateUserResponse {
   user: User;
   message: string;
+  email_info?: EmailInfo;
 }
 
 export interface User {
@@ -28,6 +35,7 @@ export interface User {
   photo?: string; // Matches backend field name
   created_at: string;
   updated_at: string;
+  email_info?: EmailInfo; // Información del envío de email
 }
 
 export interface RoleType {
