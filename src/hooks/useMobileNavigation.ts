@@ -22,7 +22,7 @@ interface MobileNavigationState {
 const routeConfig: Record<string, { title: string; icon?: string; parent?: string }> = {
   '/dashboard': { title: 'Dashboard', icon: '📊' },
   '/projects-table': { title: 'Proyectos', icon: '📁' },
-  '/projects': { title: 'Proyecto', icon: '📁', parent: '/projects-table' },
+  '/projects': { title: 'Proyectos', icon: '📁' },
   '/create-user': { title: 'Crear Usuario', icon: '👤' },
   '/areas-table': { title: 'Áreas', icon: '🏢' },
   '/repositories-table': { title: 'Repositorios', icon: '📚' },
@@ -181,7 +181,10 @@ export const useMobileNavigation = () => {
 
     // Add common shortcuts based on current page
     if (currentPath.startsWith('/projects')) {
-      shortcuts.push(getRouteInfo('/projects-table'));
+      // Only add projects-table shortcut for admins and superadmins
+      if (user?.role === 1 || user?.role === 2) {
+        shortcuts.push(getRouteInfo('/projects-table'));
+      }
     }
 
     // Add appropriate home shortcut (unless we're already there)

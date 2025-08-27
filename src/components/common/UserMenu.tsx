@@ -140,7 +140,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ isOpen, onClose, triggerRef }) => {
         <div className="py-3">
           <button
             onClick={() => handleNavigateToSettings('/settings/profile')}
-            className={`group flex items-center gap-4 w-full px-6 py-3.5 text-left transition-all duration-200 transform hover:scale-[1.02] ${
+            className={`group flex items-center gap-4 w-full px-6 py-3.5 text-left transition-all duration-200 transform hover:scale-[1.02] cursor-pointer ${
               darkMode 
                 ? 'hover:bg-purple-700/20' 
                 : 'hover:bg-gray-50'
@@ -162,7 +162,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ isOpen, onClose, triggerRef }) => {
 
           <button
             onClick={() => handleNavigateToSettings('/settings/theme')}
-            className={`group flex items-center gap-4 w-full px-6 py-3.5 text-left transition-all duration-200 transform hover:scale-[1.02] ${
+            className={`group flex items-center gap-4 w-full px-6 py-3.5 text-left transition-all duration-200 transform hover:scale-[1.02] cursor-pointer ${
               darkMode 
                 ? 'hover:bg-purple-700/20' 
                 : 'hover:bg-gray-50'
@@ -193,7 +193,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ isOpen, onClose, triggerRef }) => {
         }`}>
           <button 
             onClick={handleLogout}
-            className={`group flex items-center gap-3 w-full px-4 py-3.5 text-left rounded-xl transition-all duration-200 transform hover:scale-[1.02] border border-transparent ${ 
+            className={`group flex items-center gap-3 w-full px-4 py-3.5 text-left rounded-xl transition-all duration-200 transform hover:scale-[1.02] border border-transparent cursor-pointer ${ 
               darkMode 
                 ? 'text-white hover:bg-red-900/20 hover:border-red-800' 
                 : 'text-red-600 hover:bg-red-50 hover:border-red-200'

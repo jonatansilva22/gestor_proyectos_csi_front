@@ -2,6 +2,7 @@
  * Frontend validation utilities based on backend Django validation logic
  * Mirrors the validation rules from RamaAlanBack/users/Crear_Usuario/validations.py
  */
+import { toast } from 'react-toastify';
 
 export interface ValidationResult {
   isValid: boolean;
@@ -59,6 +60,45 @@ export const validateUsername = (username: string): ValidationResult => {
 };
 
 /**
+ * Username validation for login - basic format validation without reserved name checks
+ * Used during login to allow existing admin/system users to authenticate
+ */
+export const validateUsernameForLogin = (username: string): ValidationResult => {
+  if (!username.trim()) {
+    return { isValid: false, message: 'El nombre de usuario es requerido' };
+  }
+
+  // Basic length and character validation (same as registration)
+  const usernameRegex = /^[a-zA-Z0-9_.-]{3,30}$/;
+  if (!usernameRegex.test(username)) {
+    return { 
+      isValid: false, 
+      message: 'El nombre de usuario debe tener entre 3 y 30 caracteres y solo puede contener letras, números, guiones, puntos y guiones bajos.' 
+    };
+  }
+
+  // Cannot start or end with special characters (must start/end with alphanumeric)
+  if (!/^[a-zA-Z0-9].*[a-zA-Z0-9]$/.test(username) && username.length > 1) {
+    return {
+      isValid: false,
+      message: 'El nombre de usuario debe comenzar y terminar con una letra o número.'
+    };
+  }
+
+  // Prevent consecutive special characters
+  if (/[_.-]{2,}/.test(username)) {
+    return {
+      isValid: false,
+      message: 'El nombre de usuario no puede contener caracteres especiales consecutivos.'
+    };
+  }
+
+  // NOTE: NO verificamos nombres reservados para permitir login de usuarios existentes como 'admin'
+  
+  return { isValid: true };
+};
+
+/**
  * Email validation - mirrors Django validate_email function
  * Rules:
  * - Valid email format
@@ -73,7 +113,8 @@ export const validateEmail = (email: string): ValidationResult => {
   // Email format validation (more strict)
   const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
   if (!emailRegex.test(email)) {
-    return { isValid: false, message: 'Por favor, ingrese un correo electrónico válido' };
+    toast.error('Por favor, ingresa un correo o usuario válido');
+    return { isValid: false, message: 'Por favor, ingresa un correo o usuario válido' };
   }
 
   // Length validation (backend constraint)
@@ -310,17 +351,31 @@ export const validateUserForm = (formData: UserFormData): { isValid: boolean; er
 /**
  * Identifier validation - flexible validation for email or username
  * If contains @, validates as email; otherwise validates as username
+ * For login purposes, reserved usernames are allowed
  */
 export const validateIdentifier = (identifier: string): ValidationResult => {
   if (!identifier.trim()) {
-    return { isValid: false, message: 'El email o nombre de usuario es requerido' };
+    toast.error('Por favor, ingresa un correo o usuario válido');
+    return { isValid: false, message: 'Por favor, ingresa un correo o usuario válido' };
   }
 
   // Check if it looks like an email (contains @)
   if (identifier.includes('@')) {
-    return validateEmail(identifier);
+    // For email validation in login context, show the specific toast message
+    const emailResult = validateEmail(identifier);
+    if (!emailResult.isValid) {
+      // Don't show toast here since validateEmail already shows it
+      return { isValid: false, message: 'Por favor, ingresa un correo o usuario válido' };
+    }
+    return emailResult;
   } else {
-    return validateUsername(identifier);
+    // For login, we only validate basic format, not reserved names
+    const usernameResult = validateUsernameForLogin(identifier);
+    if (!usernameResult.isValid) {
+      toast.error('Por favor, ingresa un correo o usuario válido');
+      return { isValid: false, message: 'Por favor, ingresa un correo o usuario válido' };
+    }
+    return usernameResult;
   }
 };
 

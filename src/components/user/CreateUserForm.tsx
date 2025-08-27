@@ -112,19 +112,7 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
 
     if (!validationResult.isValid) {
       setBackendErrors(validationResult.errors);
-      const fieldCount = Object.keys(validationResult.errors).length;
-      notifyError(
-        fieldCount === 1 
-          ? 'Se encontró un error en el formulario. Por favor corrígelo.' 
-          : `Se encontraron ${fieldCount} errores en el formulario. Por favor corrígelos.`,
-        {
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-        }
-      );
+      // Don't show generic toast here since specific validation functions already show toast notifications
     }
     return validationResult.isValid;
   };
@@ -308,7 +296,7 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className="absolute right-3 top-[38px] text-gray-500 hover:text-gray-700 focus:outline-none"
+          className="absolute right-3 top-[38px] text-gray-500 hover:text-gray-700 focus:outline-none cursor-pointer"
         >
           {showPassword ? (
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -338,7 +326,7 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
         <button
           type="button"
           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-          className="absolute right-3 top-[38px] text-gray-500 hover:text-gray-700 focus:outline-none"
+          className="absolute right-3 top-[38px] text-gray-500 hover:text-gray-700 focus:outline-none cursor-pointer"
         >
           {showConfirmPassword ? (
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

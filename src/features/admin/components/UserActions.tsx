@@ -33,7 +33,7 @@ const UserActions: React.FC<UserActionsProps> = ({
       {/* Edit Button */}
       <button
         onClick={handleEdit}
-        className="w-full sm:w-auto min-w-[120px] px-4 py-3 sm:px-6 sm:py-2 rounded-lg font-medium text-sm sm:text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-95 bg-purple-600 hover:bg-purple-700 text-white focus:ring-purple-500 focus:ring-offset-white dark:focus:ring-purple-400 dark:focus:ring-offset-gray-800"
+        className="w-full sm:w-auto min-w-[120px] px-4 py-3 sm:px-6 sm:py-2 rounded-lg font-medium text-sm sm:text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-95 bg-purple-600 hover:bg-purple-700 text-white focus:ring-purple-500 focus:ring-offset-white dark:focus:ring-purple-400 dark:focus:ring-offset-gray-800 cursor-pointer"
         aria-label={`Editar usuario ${user.username}`}
         title="Editar usuario"
       >

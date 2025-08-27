@@ -42,11 +42,11 @@ export const ProjectDetailPage = () => {
           ref={backButtonTouch.elementRef as React.Ref<HTMLButtonElement>}
           onClick={() => navigate(-1)}
           className={`
-            mb-4 btn-icon touch-manipulation min-h-[44px] min-w-[44px]
-            flex items-center justify-center rounded-lg transition-all duration-200
+            mb-4 btn-icon touch-manipulation min-h-[44px] min-w-[44px] cursor-pointer
+            flex items-center justify-center rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2
             ${darkMode 
-              ? 'hover:bg-purple-700/20 focus:ring-purple-400 focus:ring-offset-gray-800 active:bg-purple-700/30' 
-              : 'hover:bg-gray-200 focus:ring-gray-400 focus:ring-offset-white active:bg-gray-300'
+              ? 'bg-gray-800 hover:bg-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 focus:ring-purple-400 focus:ring-offset-[#1A0F30] active:bg-gray-600' 
+              : 'bg-white hover:bg-gray-200 focus:ring-gray-400 focus:ring-offset-white active:bg-gray-300 border border-gray-300'
             }
             ${isMobile ? 'p-3' : 'p-2'}
           `}
@@ -54,8 +54,8 @@ export const ProjectDetailPage = () => {
         >
           <img 
             src={volver} 
-            alt="" 
-            className={`${isMobile ? 'w-6 h-6' : 'w-5 h-5 sm:w-6 sm:h-6'}`} 
+            alt="Volver" 
+            className={`${isMobile ? 'w-7 h-7' : 'w-6 h-6 sm:w-7 sm:h-7'}`} 
           />
         </button>
         <div className={`rounded-2xl border shadow-lg mb-6 ${

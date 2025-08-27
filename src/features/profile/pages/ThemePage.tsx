@@ -302,32 +302,6 @@ const ThemePage: React.FC = () => {
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className={`flex items-center justify-end gap-4 pt-6 border-t mt-8 ${
-              darkMode ? 'border-purple-700/30' : 'border-gray-100'
-            }`}>
-              <button
-                type="button"
-                className={`px-6 py-3 font-semibold transition-colors ${
-                  darkMode 
-                    ? 'text-purple-300 hover:text-purple-200'
-                    : 'text-gray-600 hover:text-gray-800'
-                }`}
-                onClick={() => window.history.back()}
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleSaveTheme}
-                className={`px-8 py-3 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg ${
-                  darkMode
-                    ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 shadow-purple-900/30'
-                    : 'bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800'
-                }`}
-              >
-                Aplicar tema
-              </button>
-            </div>
           </div>
         </div>
       </div>

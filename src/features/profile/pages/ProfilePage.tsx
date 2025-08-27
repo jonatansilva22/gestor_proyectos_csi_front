@@ -436,7 +436,7 @@ const ProfilePage: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleDeletePhoto}
-                    className="w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs transition-colors"
+                    className="w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs transition-colors cursor-pointer"
                     title="Eliminar foto"
                   >
                     ×
@@ -459,7 +459,7 @@ const ProfilePage: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleDeletePhoto}
-                    className="px-4 py-2 bg-transparent border border-white/30 text-white text-sm rounded-lg hover:bg-white/10 transition-colors"
+                    className="px-4 py-2 bg-transparent border border-white/30 text-white text-sm rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
                   >
                     Eliminar foto
                   </button>
@@ -625,7 +625,7 @@ const ProfilePage: React.FC = () => {
                     />
                     <button
                       type="button"
-                      className="absolute right-3 top-9 text-gray-400 hover:text-gray-600"
+                      className="absolute right-3 top-9 text-gray-400 hover:text-gray-600 cursor-pointer"
                       onClick={() => setShowPasswords(prev => ({ ...prev, current: !prev.current }))}
                     >
                       {showPasswords.current ? (
@@ -669,7 +669,7 @@ const ProfilePage: React.FC = () => {
                       />
                       <button
                         type="button"
-                        className="absolute right-3 top-9 text-gray-400 hover:text-gray-600"
+                        className="absolute right-3 top-9 text-gray-400 hover:text-gray-600 cursor-pointer"
                         onClick={() => setShowPasswords(prev => ({ ...prev, new: !prev.new }))}
                       >
                         {showPasswords.new ? (
@@ -712,7 +712,7 @@ const ProfilePage: React.FC = () => {
                       />
                       <button
                         type="button"
-                        className="absolute right-3 top-9 text-gray-400 hover:text-gray-600"
+                        className="absolute right-3 top-9 text-gray-400 hover:text-gray-600 cursor-pointer"
                         onClick={() => setShowPasswords(prev => ({ ...prev, confirm: !prev.confirm }))}
                       >
                         {showPasswords.confirm ? (
@@ -765,20 +765,9 @@ const ProfilePage: React.FC = () => {
                 darkMode ? 'border-purple-700/30' : 'border-gray-100'
               }`}>
                 <button
-                  type="button"
-                  className={`px-6 py-3 font-semibold transition-colors ${
-                    darkMode 
-                      ? 'text-purple-300 hover:text-purple-200'
-                      : 'text-gray-600 hover:text-gray-800'
-                  }`}
-                  onClick={() => window.history.back()}
-                >
-                  Cancelar
-                </button>
-                <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`px-8 py-3 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed ${
+                  className={`px-8 py-3 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed ${!isSubmitting ? 'cursor-pointer' : ''} ${
                     darkMode
                       ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 shadow-purple-900/30'
                       : 'bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800'

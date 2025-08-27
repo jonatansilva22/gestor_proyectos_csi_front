@@ -48,8 +48,8 @@ export const useValidationErrors = () => {
       const fieldCount = Object.keys(error.validationErrors).length;
       notifyError(
         fieldCount === 1 
-          ? 'Se encontró un error en el formulario. Por favor corrígelo.' 
-          : `Se encontraron ${fieldCount} errores en el formulario. Por favor corrígelos.`,
+          ? 'Por favor corrige los errores en el formulario' 
+          : 'Por favor corrige los errores en el formulario',
         {
           autoClose: 5000,
           position: "top-center"

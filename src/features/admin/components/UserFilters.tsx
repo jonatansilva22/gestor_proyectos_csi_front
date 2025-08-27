@@ -65,7 +65,7 @@ const UserFilters: React.FC<UserFiltersProps> = ({
                   darkMode 
                     ? 'text-gray-400 hover:text-white hover:bg-gray-600'
                     : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
-                } transition-colors`}
+                } transition-colors cursor-pointer`}
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -108,7 +108,7 @@ const UserFilters: React.FC<UserFiltersProps> = ({
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className={`px-4 py-2 rounded-xl font-medium transition-all duration-200 flex items-center gap-2 ${
+              className={`px-4 py-2 rounded-xl font-medium transition-all duration-200 flex items-center gap-2 cursor-pointer ${
                 darkMode 
                   ? 'bg-gray-700 text-gray-300 hover:bg-gray-600 border border-gray-600'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200 border border-gray-200'

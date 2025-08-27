@@ -96,7 +96,15 @@ const AppContent = () => {
             {/* Módulo de proyectos - Disponible para todos los usuarios (Admin, SuperAdmin, Colaborador) */}
             <Route path="/projects" element={<ProtectedRoute><ProjectsPage /></ProtectedRoute>} />
             <Route path="/projects/:id" element={<ProtectedRoute><ProjectDetailPage /></ProtectedRoute>} />
-            <Route path="/projects-table" element={<ProtectedRoute><ProjectsTablePage /></ProtectedRoute>} />
+            
+            {/* Tabla de proyectos - Solo para Admin y SuperAdmin - Colaboradores verán página 404 */}
+            <Route path="/projects-table" element={
+              <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={[1, 2]} redirectTo="/404">
+                  <ProjectsTablePage />
+                </RoleProtectedRoute>
+              </ProtectedRoute>
+            } />
 
             {/* Configuración de perfil - Disponible para todos los usuarios */}
             {/* Los colaboradores pueden ver/editar solo su propio perfil gracias a las validaciones del backend */}
@@ -105,6 +113,7 @@ const AppContent = () => {
             <Route path="/settings/theme" element={<ProtectedRoute><ThemePage /></ProtectedRoute>} />
 
             {/* Página de error 404 */}
+            <Route path="/404" element={<NotFound />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
 

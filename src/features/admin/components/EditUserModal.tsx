@@ -5,6 +5,7 @@ import { User, CreateUserRequest, UserRole } from '../../../types/user';
 import { useAuth } from '../../../context/AuthContext';
 import { FileUpload } from '../../../components/common/FileUpload';
 import UserAvatar from '../../../components/common/UserAvatar';
+import { toast } from 'react-toastify';
 
 interface EditUserModalProps {
   user: User | null;
@@ -98,7 +99,8 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
     if (!formData.email.trim()) {
       newErrors.email = 'El email es requerido';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email inválido';
+      toast.error('Por favor, ingresa un correo o usuario válido');
+      newErrors.email = 'Por favor, ingresa un correo o usuario válido';
     }
 
     if (!formData.first_name.trim()) {

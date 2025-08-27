@@ -36,8 +36,8 @@ const SidebarMenu = ({
       { label: "Dashboard", path: "/dashboard", icon: "📊" }
     ] : []),
     
-    // Proyectos para todos los usuarios
-    { label: "Proyectos", path: "/projects-table", icon: "📁" },
+    // Proyectos para todos los usuarios - Colaboradores van a vista de cards, Admin/SuperAdmin a tabla
+    { label: "Proyectos", path: isCollaborator ? "/projects" : "/projects-table", icon: "📁" },
     
     // Funciones administrativas solo para Admin y SuperAdmin
     ...(isAdminOrSuperAdmin ? [

@@ -23,6 +23,11 @@ export const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({
   }
 
   if (user.role && !allowedRoles.includes(user.role)) {
+    // If redirectTo is "/404", show not found page for unauthorized access
+    if (redirectTo === "/404") {
+      return <Navigate to="/404" replace />;
+    }
+    
     // Si es colaborador (role 3), redirigir a projects en lugar de dashboard
     const redirectPath = user.role === 3 ? "/projects" : "/dashboard";
     return <Navigate to={redirectPath} replace />;

@@ -123,11 +123,13 @@ export const GroupsTablePage = () => {
         <div className="w-full max-w-7xl">
           <button
             onClick={() => navigate(-1)}
-            className={`mb-4 rounded-full p-1 cursor-pointer transition ${
-              darkMode ? "hover:bg-purple-700/20" : "hover:bg-gray-200"
+            className={`mb-4 rounded-full p-2 cursor-pointer transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+              darkMode 
+                ? "bg-gray-800 hover:bg-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 focus:ring-purple-400 focus:ring-offset-[#1A0F30] active:bg-gray-600" 
+                : "bg-white hover:bg-gray-200 focus:ring-gray-400 focus:ring-offset-white active:bg-gray-300 border border-gray-300"
             }`}
           >
-            <img src={volver} alt="Volver" className="w-6 h-6" />
+            <img src={volver} alt="Volver" className="w-7 h-7" />
           </button>
 
           <h2

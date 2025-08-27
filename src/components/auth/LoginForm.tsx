@@ -5,6 +5,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { validateLoginForm } from '../../utils/validation';
 import { useValidationErrors } from '../../hooks/useValidationErrors';
 import { storage } from '../../utils/storage';
+import { toast } from 'react-toastify';
 
 const LoginForm: React.FC = () => {
   const { darkMode } = useTheme();
@@ -25,6 +26,7 @@ const LoginForm: React.FC = () => {
     if (!validationResult.isValid) {
       // Usar el manejador de errores de validación para validación del frontend
       setBackendErrors(validationResult.errors);
+      // Don't show generic toast here since validateIdentifier already shows specific toast message
       return;
     }
 
@@ -61,11 +63,6 @@ const LoginForm: React.FC = () => {
         Iniciar Sesión
       </h2>
 
-      {(errors.general || errors.identifier || errors.password) && (
-        <div className="mb-4 p-3 bg-red-50 text-red-700 border border-red-200 rounded-lg text-sm">
-          {errors.general || 'Por favor corrige los errores en el formulario'}
-        </div>
-      )}
 
       <form onSubmit={handleSubmit}>
         {/* --- Campo Identifier (Email o Username) --- */}
@@ -164,7 +161,7 @@ const LoginForm: React.FC = () => {
             <button
               type="button"
               onClick={togglePasswordVisibility}
-              className="absolute inset-y-0 right-0 flex items-center pr-3"
+              className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
             >
               {showPassword ? (
                 <svg
@@ -216,7 +213,7 @@ const LoginForm: React.FC = () => {
         <button
           type="submit"
           disabled={isLoading}
-          className={`w-full py-3 px-4 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed ${
+          className={`w-full py-3 px-4 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
             darkMode
               ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 shadow-purple-900/30'
               : 'bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800'

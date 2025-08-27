@@ -134,7 +134,7 @@ const Header = ({
             }
             toggleUserMenu();
           }}
-          className={`flex items-center gap-2 sm:gap-3 p-1.5 sm:p-2 rounded-lg transition-colors focus:outline-none focus:ring-2 touch-manipulation ${
+          className={`flex items-center gap-2 sm:gap-3 p-1.5 sm:p-2 rounded-lg transition-colors focus:outline-none focus:ring-2 touch-manipulation cursor-pointer ${
             darkMode
               ? 'hover:bg-primary-700 focus:ring-primary-400'
               : 'hover:bg-primary-700 focus:ring-primary-300'

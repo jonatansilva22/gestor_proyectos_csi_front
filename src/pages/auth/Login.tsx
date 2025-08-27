@@ -25,7 +25,7 @@ const Login: React.FC = () => {
         {/* Botón de tema en loading también */}
         <button
           onClick={toggleTheme}
-          className={`absolute top-6 right-6 p-3 rounded-full transition-colors ${
+          className={`absolute top-6 right-6 p-3 rounded-full transition-colors cursor-pointer ${
             darkMode ? 'bg-purple-600/20 hover:bg-purple-600/30 text-purple-200' : 'bg-purple-100 hover:bg-purple-200 text-purple-700'
           }`}
           title={darkMode ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'}
@@ -79,7 +79,7 @@ const Login: React.FC = () => {
         {/* Botón de tema en la esquina superior derecha */}
         <button
           onClick={toggleTheme}
-          className={`absolute top-6 right-6 p-3 rounded-full transition-colors z-20 group ${
+          className={`absolute top-6 right-6 p-3 rounded-full transition-colors z-20 group cursor-pointer ${
             darkMode 
               ? 'bg-white/10 hover:bg-white/20 text-white'
               : 'bg-purple-100 hover:bg-purple-200 text-purple-700 shadow-lg'

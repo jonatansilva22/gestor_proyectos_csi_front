@@ -121,7 +121,7 @@ const UsersManagementPage: React.FC = () => {
         key="prev"
         onClick={() => handlePageChange(pagination.currentPage - 1)}
         disabled={pagination.currentPage === 1}
-        className={`${buttonBaseClasses} flex items-center gap-2 ${pagination.currentPage === 1 ? disabledClasses : enabledClasses}`}
+        className={`${buttonBaseClasses} flex items-center gap-2 ${pagination.currentPage === 1 ? disabledClasses : enabledClasses} ${pagination.currentPage === 1 ? '' : 'cursor-pointer'}`}
       >
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -136,7 +136,7 @@ const UsersManagementPage: React.FC = () => {
         <button
           key={1}
           onClick={() => handlePageChange(1)}
-          className={`${buttonBaseClasses} ${enabledClasses}`}
+          className={`${buttonBaseClasses} ${enabledClasses} cursor-pointer`}
         >
           1
         </button>
@@ -156,7 +156,7 @@ const UsersManagementPage: React.FC = () => {
         <button
           key={i}
           onClick={() => handlePageChange(i)}
-          className={`${buttonBaseClasses} min-w-[44px] ${i === pagination.currentPage ? activeClasses : enabledClasses}`}
+          className={`${buttonBaseClasses} min-w-[44px] ${i === pagination.currentPage ? activeClasses : enabledClasses} cursor-pointer`}
         >
           {i}
         </button>
@@ -176,7 +176,7 @@ const UsersManagementPage: React.FC = () => {
         <button
           key={pagination.totalPages}
           onClick={() => handlePageChange(pagination.totalPages)}
-          className={`${buttonBaseClasses} ${enabledClasses}`}
+          className={`${buttonBaseClasses} ${enabledClasses} cursor-pointer`}
         >
           {pagination.totalPages}
         </button>
@@ -189,7 +189,7 @@ const UsersManagementPage: React.FC = () => {
         key="next"
         onClick={() => handlePageChange(pagination.currentPage + 1)}
         disabled={pagination.currentPage === pagination.totalPages}
-        className={`${buttonBaseClasses} flex items-center gap-2 ${pagination.currentPage === pagination.totalPages ? disabledClasses : enabledClasses}`}
+        className={`${buttonBaseClasses} flex items-center gap-2 ${pagination.currentPage === pagination.totalPages ? disabledClasses : enabledClasses} ${pagination.currentPage === pagination.totalPages ? '' : 'cursor-pointer'}`}
       >
         Siguiente
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -244,7 +244,7 @@ const UsersManagementPage: React.FC = () => {
             </p>
             <button
               onClick={refreshUsers}
-              className={`px-4 py-2 text-white rounded-xl transition-colors ${
+              className={`px-4 py-2 text-white rounded-xl transition-colors cursor-pointer ${
                 darkMode 
                   ? 'bg-purple-600 hover:bg-purple-700' 
                   : 'bg-purple-600 hover:bg-purple-700'
@@ -288,7 +288,7 @@ const UsersManagementPage: React.FC = () => {
                 
                 <button
                   onClick={handleCreateUser}
-                  className="px-6 py-3 bg-white/15 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-white/25 transition-all duration-200 border border-white/20 flex items-center gap-2 shadow-lg hover:shadow-xl"
+                  className="px-6 py-3 bg-white/15 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-white/25 transition-all duration-200 border border-white/20 flex items-center gap-2 shadow-lg hover:shadow-xl cursor-pointer"
                 >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
