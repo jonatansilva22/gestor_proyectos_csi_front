@@ -99,6 +99,7 @@ export const ProjectsTablePage = () => {
             { value: "1", label: "✅ Activo" },
             { value: "2", label: "⏸️ Inactivo" },
             { value: "3", label: "🏁 Completado" },
+            { value: "4", label: "🛠️ Mantenimiento" },
           ]}
           filterLabel="estados"
           totalCount={filteredProjects.length}
