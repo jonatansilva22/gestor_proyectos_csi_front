@@ -3,7 +3,11 @@ import axios from 'axios';
 import { storage } from '../utils/storage';
 
 // URL unificada para el backend
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+const API_URL = import.meta.env.VITE_API_URL;
+
+if (!API_URL) {
+  throw new Error('VITE_API_URL no está configurado en las variables de entorno');
+}
 
 // API unificada para todos los servicios
 const api = axios.create({

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import { useAuth } from '../../../context/AuthContext';
 import { useTheme } from '../../../context/ThemeContext';
 import HeaderSidebarLayout from '../../../components/common/HeaderSidebarLayout';
@@ -8,11 +9,27 @@ import { ConfirmModal } from '../../../components/common/ConfirmModal';
 import { SuccessModal } from '../../../components/common/SuccessModal';
 import UserAvatar from '../../../components/common/UserAvatar';
 import { toMediaUrl } from '../../../utils/media';
+import volver from "../../assets/volver.png";
+import { useTouchButton } from "../../../hooks/useTouchInteractions";
+import { useMobileNavigation } from "../../../hooks/useMobileNavigation";
+
+
+
 
 const ProfilePage: React.FC = () => {
   const { user, updateUser } = useAuth();
   const { darkMode } = useTheme();
+  const { isMobile } = useMobileNavigation();
+  const navigate  = useNavigate();
   
+
+  const backButtonTouch = useTouchButton(
+    () => navigate(-1),
+    {
+      hapticFeedback: true,
+      tapHapticPattern: 'medium',
+    }
+  );
   
   const [formData, setFormData] = useState({
     username: user?.username || '',
@@ -389,6 +406,26 @@ const ProfilePage: React.FC = () => {
 
   return (
     <HeaderSidebarLayout headerTitle="Perfil de Usuario">
+    <button
+          ref={backButtonTouch.elementRef as React.Ref<HTMLButtonElement>}
+          onClick={() => navigate(-1)}
+          className={`
+            mb-4 btn-icon touch-manipulation min-h-[44px] min-w-[44px] cursor-pointer
+            flex items-center justify-center rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2
+            ${darkMode 
+              ? 'bg-gray-800 hover:bg-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 focus:ring-purple-400 focus:ring-offset-[#1A0F30] active:bg-gray-600' 
+              : 'bg-white hover:bg-gray-200 focus:ring-gray-400 focus:ring-offset-white active:bg-gray-300 border border-gray-300'
+            }
+            ${isMobile ? 'p-3' : 'p-2'}
+          `}
+          aria-label="Volver a la página anterior"
+        >
+          <img 
+            src={volver} 
+            alt="Volver" 
+            className={`${isMobile ? 'w-7 h-7' : 'w-6 h-6 sm:w-7 sm:h-7'}`} 
+          />
+        </button>
       {/* Confirm and Success Modals */}
       <ConfirmModal
         open={confirmOpen}

@@ -15,8 +15,6 @@ export const CreateUser: React.FC = () => {
     if (isColaborador) {
       // Redirige a proyectos si el nuevo usuario es colaborador
       navigate("/projects");
-      // Si necesitas URL absoluta, sustituye por:
-      // window.location.assign("http://localhost:3000/projects");
     } else {
       // Para roles distintos, ir a gestión de usuarios
       navigate("/admin/users");

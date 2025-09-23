@@ -1,7 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import React, { useState } from 'react';
 import HeaderSidebarLayout from '../../../components/common/HeaderSidebarLayout';
 import { useTheme } from '../../../context/ThemeContext';
 import { notifySuccess, notifyError } from '../../../components/common/ToastNotify';
+import volver from "../../../assets/volver.png";
+import { useTouchButton } from "../../../hooks/useTouchInteractions";
+import { useMobileNavigation } from "../../../hooks/useMobileNavigation";
 
 interface ThemeOption {
   id: 'light' | 'dark' | 'auto';
@@ -19,6 +23,18 @@ interface ThemeOption {
 const ThemePage: React.FC = () => {
   const { theme, setTheme, darkMode } = useTheme();
   const [selectedTheme, setSelectedTheme] = useState<'light' | 'dark' | 'auto'>(theme || 'light');
+    const { isMobile } = useMobileNavigation();
+    const navigate  = useNavigate();
+
+    
+  const backButtonTouch = useTouchButton(
+    () => navigate(-1),
+    {
+      hapticFeedback: true,
+      tapHapticPattern: 'medium',
+    }
+  );
+    
 
   const themes: ThemeOption[] = [
     {
@@ -92,6 +108,26 @@ const ThemePage: React.FC = () => {
 
   return (
     <HeaderSidebarLayout headerTitle="Configuración de Tema">
+          <button
+          ref={backButtonTouch.elementRef as React.Ref<HTMLButtonElement>}
+          onClick={() => navigate(-1)}
+          className={`
+            mb-4 btn-icon touch-manipulation min-h-[44px] min-w-[44px] cursor-pointer
+            flex items-center justify-center rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2
+            ${darkMode 
+              ? 'bg-gray-800 hover:bg-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 focus:ring-purple-400 focus:ring-offset-[#1A0F30] active:bg-gray-600' 
+              : 'bg-white hover:bg-gray-200 focus:ring-gray-400 focus:ring-offset-white active:bg-gray-300 border border-gray-300'
+            }
+            ${isMobile ? 'p-3' : 'p-2'}
+          `}
+          aria-label="Volver a la página anterior"
+        >
+          <img 
+            src={volver} 
+            alt="Volver" 
+            className={`${isMobile ? 'w-7 h-7' : 'w-6 h-6 sm:w-7 sm:h-7'}`} 
+          />
+        </button>
       <div className={`max-w-4xl mx-auto p-6 min-h-screen transition-colors ${
         darkMode ? 'bg-[#1A0F30]' : 'bg-slate-100'
       }`}>

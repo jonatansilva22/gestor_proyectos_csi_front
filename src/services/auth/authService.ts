@@ -40,41 +40,28 @@ export const authService = {
 
       // Obtener los datos del usuario usando el endpoint disponible
       let userData: any = null;
-      const envMe = import.meta.env.VITE_AUTH_ME_ENDPOINT as string | undefined;
-      
-      // Si hay un endpoint personalizado en variables de entorno, usarlo
-      if (envMe && envMe.trim().length > 0) {
-        try {
-          const resp = await api.get(envMe);
-          userData = resp.data;
-        } catch (e: any) {
-          // Si falla el endpoint personalizado, usar el fallback
-        }
-      }
 
       // Usar el endpoint actual por id que sabemos que funciona
-      if (!userData) {
-        try {
-          const userResponse = await api.get(`/create-user/${userId}/`);
-          userData = userResponse.data;
-        } catch (e: any) {
-          // Si no podemos obtener el usuario (p.ej., 403 para colaboradores o endpoint inexistente),
-          // procedemos con datos mínimos desde el JWT para no bloquear el login.
-          const status = e?.response?.status;
-          if (status === 403 || status === 404 || status === 405) {
-            userData = {
-              id: userId,
-              username: payload.username ?? payload.user ?? '',
-              email: payload.email ?? '',
-              role: 3, // Default a Colaborador para no romper la UI
-              first_name: '',
-              last_name: '',
-              photo: null,
-            };
-          } else {
-            // Errores de red u otros casos deben propagarse
-            throw e;
-          }
+      try {
+        const userResponse = await api.get(`/create-user/${userId}/`);
+        userData = userResponse.data;
+      } catch (e: any) {
+        // Si no podemos obtener el usuario (p.ej., 403 para colaboradores o endpoint inexistente),
+        // procedemos con datos mínimos desde el JWT para no bloquear el login.
+        const status = e?.response?.status;
+        if (status === 403 || status === 404 || status === 405) {
+          userData = {
+            id: userId,
+            username: payload.username ?? payload.user ?? '',
+            email: payload.email ?? '',
+            role: 3, // Default a Colaborador para no romper la UI
+            first_name: '',
+            last_name: '',
+            photo: null,
+          };
+        } else {
+          // Errores de red u otros casos deben propagarse
+          throw e;
         }
       }
       
@@ -119,7 +106,7 @@ export const authService = {
           error.message?.includes('No se puede conectar')) {
         throw {
           ...error,
-          message: 'Error de conexión. Verifica que el backend esté ejecutándose en http://localhost:8000',
+          message: 'Error de conexión. Verifica que el backend esté ejecutándose',
           isNetworkError: true
         };
       }

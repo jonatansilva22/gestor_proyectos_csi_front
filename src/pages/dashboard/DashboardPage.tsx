@@ -5,6 +5,7 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 import { getDashboardData } from "../../services/dashboard/DashboardService";
 import HeaderSidebarLayout from "../../components/common/HeaderSidebarLayout";
 import { useTheme } from "../../context/ThemeContext";
+import { PROJECT_STATUS_COLORS_BG } from "../../const/projectsStatusColors";
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement, ChartDataLabels);
 
@@ -38,10 +39,15 @@ export default function Dashboard() {
     ],
   };
 
-  const PROJECT_STATUS_COLORS_BG: Record<string, string> = {
-    Activo: "#22c55e",
-    Inactivo: "#facc15",
-    Completado: "#3b82f6",
+  // Utility function to convert Tailwind classes to hex colors for Chart.js
+  const tailwindToHex = (tailwindClass: string): string => {
+    const colorMap: Record<string, string> = {
+      'bg-green-500': '#22c55e',
+      'bg-red-500': '#ef4444',
+      'bg-blue-500': '#3b82f6',
+      'bg-yellow-400': '#facc15',
+    };
+    return colorMap[tailwindClass] || '#cccccc';
   };
 
   const proyectosData = {
@@ -53,7 +59,7 @@ export default function Dashboard() {
           const key =
             p.nombre.charAt(0).toUpperCase() +
             p.nombre.slice(1).toLowerCase();
-          return PROJECT_STATUS_COLORS_BG[key] || "#cccccc";
+          return tailwindToHex(PROJECT_STATUS_COLORS_BG[key]) || "#cccccc";
         }),
       },
     ],

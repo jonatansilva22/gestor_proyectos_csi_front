@@ -1,13 +1,16 @@
 // src/utils/media.ts
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+const API_URL = import.meta.env.VITE_API_URL;
 
 const getApiOrigin = (): string => {
+  if (!API_URL) {
+    throw new Error('VITE_API_URL no está configurado en las variables de entorno');
+  }
   try {
     // Remove trailing "/api" if present
     const origin = API_URL.replace(/\/?api\/?$/i, '').replace(/\/$/, '');
-    return origin || 'http://localhost:8000';
+    return origin;
   } catch {
-    return 'http://localhost:8000';
+    throw new Error('Error al procesar VITE_API_URL');
   }
 };
 
