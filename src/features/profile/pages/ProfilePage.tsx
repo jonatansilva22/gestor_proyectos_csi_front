@@ -9,7 +9,7 @@ import { ConfirmModal } from '../../../components/common/ConfirmModal';
 import { SuccessModal } from '../../../components/common/SuccessModal';
 import UserAvatar from '../../../components/common/UserAvatar';
 import { toMediaUrl } from '../../../utils/media';
-import volver from "../../assets/volver.png";
+import volver from "../../../assets/volver.png";
 import { useTouchButton } from "../../../hooks/useTouchInteractions";
 import { useMobileNavigation } from "../../../hooks/useMobileNavigation";
 
