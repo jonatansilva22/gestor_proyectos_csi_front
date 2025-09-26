@@ -128,7 +128,7 @@ export const ProjectForm = ({ project, onSubmit, onCancel }: ProjectFormProps) =
     if (image) {
       formData.append("image", image);
     }
-    formData.append("project_owner_id", "1"); // TODO: usar usuario autenticado
+    
     formData.append("status_id", statusId.toString());
     if (groupId) formData.append("group_id", groupId.toString());
     formData.append("start_date", startDate);

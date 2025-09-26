@@ -36,7 +36,7 @@ export const FormLayout = ({
         <button
           type="button"
           onClick={onCancel}
-          className="px-3 py-2 sm:px-4 sm:py-1.5 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 active:scale-95 min-h-[40px] bg-gray-100 text-gray-700 hover:bg-gray-200 
+          className="px-3 py-2 sm:px-4 sm:py-1.5 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 active:scale-95 min-h-[40px] bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer
                      dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 
                      focus:ring-2 focus:ring-gray-400 focus:ring-offset-2
                      dark:focus:ring-gray-500 dark:focus:ring-offset-gray-800
@@ -47,7 +47,7 @@ export const FormLayout = ({
       )}
       <button
         type="submit"
-        className="px-4 py-3 sm:px-6 sm:py-2 text-base sm:text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 active:scale-95 min-h-[44px] bg-purple-600 text-white hover:bg-purple-700 
+        className="px-4 py-3 sm:px-6 sm:py-2 text-base sm:text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 active:scale-95 min-h-[44px] bg-purple-600 text-white hover:bg-purple-700 cursor-pointer
                    focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 
                    focus:ring-offset-white dark:focus:ring-offset-gray-800
                    disabled:opacity-50 disabled:cursor-not-allowed
