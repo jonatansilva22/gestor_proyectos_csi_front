@@ -44,8 +44,6 @@ export const ProjectForm = ({ project, onSubmit, onCancel }: ProjectFormProps) =
     async function fetchOptions() {
       try {
         setLoadingOptions(true);
-        // Si tienes endpoint para dueños, añádelo aquí también
-        // Ejemplo hardcodeado para owner 1 si no hay endpoint:
  
 
         const [
@@ -233,7 +231,6 @@ export const ProjectForm = ({ project, onSubmit, onCancel }: ProjectFormProps) =
     onChange={(val) => setGroupId(parseInt(val))}
     placeholder="Seleccione un grupo de trabajo (opcional)"
     options={mapOptions(groups)}
-    required
     name="group"
   />
 
