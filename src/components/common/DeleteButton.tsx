@@ -27,9 +27,9 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
   };
 
   const iconSizes = {
-    sm: 'w-4 h-4',
-    md: 'w-5 h-5',
-    lg: 'w-6 h-6'
+    sm: 'w-9 h-9',
+    md: 'w-8 h-6',
+    lg: 'w-7 h-7'
   };
 
   const baseClasses = `
