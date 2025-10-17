@@ -15,12 +15,14 @@ export const RepositoryForm = ({ onSubmit, onCancel, initialData }: RepositoryFo
   const [repositoryUrl, setRepositoryUrl] = useState(initialData?.repository_url || "");
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit({
-      name,
-      repository_url: repositoryUrl,
-    });
-  };
+  e.preventDefault();
+  onSubmit({
+    name,
+    repository_url: repositoryUrl,
+    project: initialData?.project || "1", // ⚠️ Pasa string, no objeto
+  });
+};
+
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">

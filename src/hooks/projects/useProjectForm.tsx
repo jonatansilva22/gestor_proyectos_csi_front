@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 export const useProjectForm = (
-  initialGroup?: number,
   initialStatus = 1,
   initialData?: Partial<{
     name: string;

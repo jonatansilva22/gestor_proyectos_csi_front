@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { notifySuccess, notifyWarning, notifyError } from "../common/ToastNotify";
+import { notifySuccess, notifyError } from "../common/ToastNotify";
 import { useTheme } from "../../context/ThemeContext";
 import { FormSelect } from "../common/FormSelect";
 import { FileUpload } from "../common/FileUpload";
 import { FormInput } from "../common/FormInput";
-import { CreateUserRequest, UserRole, User } from "../../types/user";
+import { CreateUserRequest, UserRole} from "../../types/user";
 import { userService } from "../../services/users/userService";
 import { validateUserForm } from "../../utils/validation";
 import { useValidationErrors } from "../../hooks/useValidationErrors";

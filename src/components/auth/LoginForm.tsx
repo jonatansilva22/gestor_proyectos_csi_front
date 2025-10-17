@@ -5,7 +5,6 @@ import { useTheme } from '../../context/ThemeContext';
 import { validateLoginForm } from '../../utils/validation';
 import { useValidationErrors } from '../../hooks/useValidationErrors';
 import { storage } from '../../utils/storage';
-import { toast } from 'react-toastify';
 
 const LoginForm: React.FC = () => {
   const { darkMode } = useTheme();

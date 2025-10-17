@@ -327,8 +327,9 @@ export const userService = {
         current_password: data.current_password,
         new_password: data.new_password,
       };
-      const response = await usersApi.patch(`/create-user/${userId}/`, payload);
-      return { message: 'Contraseña actualizada correctamente' };
+      await usersApi.patch(`/create-user/${userId}/`, payload);
+return { message: 'Contraseña actualizada correctamente' };
+
     } catch (error: any) {
       if (error.response?.status === 400 && error.response?.data) {
         const backendErrors = error.response.data;

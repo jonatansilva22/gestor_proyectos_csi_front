@@ -11,7 +11,7 @@ interface ChangePasswordProps {
 }
 
 const ChangePassword: React.FC<ChangePasswordProps> = ({ onBack }) => {
-  const { isDarkMode } = useTheme();
+  const { darkMode } = useTheme();
   const { user } = useAuth();
   const [formData, setFormData] = useState({
     currentPassword: '',
@@ -124,7 +124,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onBack }) => {
 
   return (
     <div className={`relative min-h-full ${
-      isDarkMode 
+      darkMode 
         ? 'bg-gradient-to-br from-gray-900 to-gray-800' 
         : 'bg-gradient-to-br from-blue-50/30 to-white'
     }`}>
@@ -150,7 +150,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onBack }) => {
       />
       {/* Enhanced Header with Navigation */}
       <div className={`sticky top-0 z-10 backdrop-blur-sm border-b px-8 py-4 ${
-        isDarkMode 
+        darkMode 
           ? 'bg-gray-800/95 border-gray-700/50' 
           : 'bg-white/95 border-gray-200/50'
       }`}>
@@ -158,24 +158,24 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onBack }) => {
           <button
             onClick={onBack}
             className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 transform hover:scale-105 ${
-              isDarkMode 
+              darkMode 
                 ? 'bg-gray-700 hover:bg-gray-600' 
                 : 'bg-blue-100 hover:bg-blue-200'
             }`}
             aria-label="Volver"
           >
             <svg className={`w-5 h-5 ${
-              isDarkMode ? 'text-blue-400' : 'text-blue-700'
+              darkMode ? 'text-blue-400' : 'text-blue-700'
             }`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
           <div>
             <h2 className={`text-xl font-bold ${
-              isDarkMode ? 'text-white' : 'text-gray-900'
+              darkMode ? 'text-white' : 'text-gray-900'
             }`}>Seguridad</h2>
             <p className={`text-sm ${
-              isDarkMode ? 'text-gray-300' : 'text-gray-600'
+              darkMode ? 'text-gray-300' : 'text-gray-600'
             }`}>Cambia tu contraseña de acceso</p>
           </div>
         </div>
@@ -185,20 +185,20 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onBack }) => {
 
         {/* Enhanced Security Form */}
         <div className={`rounded-3xl shadow-xl border overflow-hidden ${
-          isDarkMode 
+          darkMode 
             ? 'bg-gray-800 border-gray-700' 
             : 'bg-white border-gray-100'
         }`}>
           <div className={`px-8 py-6 ${
-            isDarkMode 
+            darkMode 
               ? 'bg-gradient-to-r from-gray-700 to-gray-600/50' 
               : 'bg-gradient-to-r from-blue-50 to-blue-100/50'
           }`}>
             <h3 className={`text-lg font-bold mb-2 ${
-              isDarkMode ? 'text-white' : 'text-gray-900'
+              darkMode ? 'text-white' : 'text-gray-900'
             }`}>Cambiar Contraseña</h3>
             <p className={`text-sm ${
-              isDarkMode ? 'text-gray-300' : 'text-gray-600'
+              darkMode ? 'text-gray-300' : 'text-gray-600'
             }`}>Mantén tu cuenta segura actualizando tu contraseña</p>
           </div>
           
@@ -207,7 +207,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onBack }) => {
               {/* Current Password */}
               <div className="space-y-2">
                 <label className={`block text-sm font-semibold ${
-                  isDarkMode ? 'text-white' : 'text-gray-900'
+                  darkMode ? 'text-white' : 'text-gray-900'
                 }`}>
                   Contraseña Actual *
                 </label>
@@ -219,7 +219,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onBack }) => {
                     onChange={handleInputChange}
                     placeholder="Introduce tu contraseña actual"
                     className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 ${
-                      isDarkMode 
+                      darkMode 
                         ? errors.currentPassword
                           ? 'text-white bg-red-900/20 border-red-500/50 focus:ring-red-500 focus:border-red-500'
                           : 'text-white bg-gray-700 border-gray-600 focus:ring-blue-500 focus:border-blue-500'
@@ -231,7 +231,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onBack }) => {
                   />
                   <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                     <svg className={`w-4 h-4 ${
-                      isDarkMode ? 'text-gray-500' : 'text-gray-400'
+                      darkMode ? 'text-gray-500' : 'text-gray-400'
                     }`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
@@ -250,7 +250,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onBack }) => {
               {/* New Password */}
               <div className="space-y-2">
                 <label className={`block text-sm font-semibold ${
-                  isDarkMode ? 'text-white' : 'text-gray-900'
+                  darkMode ? 'text-white' : 'text-gray-900'
                 }`}>
                   Nueva Contraseña *
                 </label>
@@ -262,7 +262,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onBack }) => {
                     onChange={handleInputChange}
                     placeholder="Crea una nueva contraseña segura"
                     className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 ${
-                      isDarkMode 
+                      darkMode 
                         ? errors.newPassword
                           ? 'text-white bg-red-900/20 border-red-500/50 focus:ring-red-500 focus:border-red-500'
                           : 'text-white bg-gray-700 border-gray-600 focus:ring-blue-500 focus:border-blue-500'
@@ -274,7 +274,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onBack }) => {
                   />
                   <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                     <svg className={`w-4 h-4 ${
-                      isDarkMode ? 'text-gray-500' : 'text-gray-400'
+                      darkMode ? 'text-gray-500' : 'text-gray-400'
                     }`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
@@ -289,7 +289,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onBack }) => {
                   </p>
                 )}
                 <div className={`text-xs p-3 rounded-lg ${
-                  isDarkMode 
+                  darkMode 
                     ? 'text-gray-300 bg-gray-700' 
                     : 'text-gray-600 bg-gray-50'
                 }`}>
@@ -297,8 +297,8 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onBack }) => {
                   <ul className="space-y-1">
                     <li className={`flex items-center gap-1 ${
                       formData.newPassword.length >= 8 
-                        ? isDarkMode ? 'text-green-400' : 'text-green-600'
-                        : isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                        ? darkMode ? 'text-green-400' : 'text-green-600'
+                        : darkMode ? 'text-gray-400' : 'text-gray-500'
                     }`}>
                       <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -312,7 +312,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onBack }) => {
               {/* Confirm Password */}
               <div className="space-y-2">
                 <label className={`block text-sm font-semibold ${
-                  isDarkMode ? 'text-white' : 'text-gray-900'
+                  darkMode ? 'text-white' : 'text-gray-900'
                 }`}>
                   Confirmar Nueva Contraseña *
                 </label>
@@ -324,7 +324,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onBack }) => {
                     onChange={handleInputChange}
                     placeholder="Repite la nueva contraseña"
                     className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 ${
-                      isDarkMode 
+                      darkMode 
                         ? errors.confirmPassword
                           ? 'text-white bg-red-900/20 border-red-500/50 focus:ring-red-500 focus:border-red-500'
                           : 'text-white bg-gray-700 border-gray-600 focus:ring-blue-500 focus:border-blue-500'
@@ -336,7 +336,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onBack }) => {
                   />
                   <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                     <svg className={`w-4 h-4 ${
-                      isDarkMode ? 'text-gray-500' : 'text-gray-400'
+                      darkMode ? 'text-gray-500' : 'text-gray-400'
                     }`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4" />
                     </svg>
@@ -355,13 +355,13 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onBack }) => {
 
             {/* Action Buttons */}
             <div className={`flex flex-col sm:flex-row gap-4 pt-8 mt-8 border-t ${
-              isDarkMode ? 'border-gray-700' : 'border-gray-100'
+              darkMode ? 'border-gray-700' : 'border-gray-100'
             }`}>
               <button
                 type="button"
                 onClick={onBack}
                 className={`px-6 py-3 border-2 font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2 ${
-                  isDarkMode 
+                  darkMode 
                     ? 'border-gray-600 text-gray-300 hover:bg-gray-700 hover:border-gray-500' 
                     : 'border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'
                 }`}

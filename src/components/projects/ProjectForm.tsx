@@ -93,30 +93,30 @@ export const ProjectForm = ({ project, onSubmit, onCancel }: ProjectFormProps) =
     : undefined;
 
   // Usa hook form con valores iniciales
-  const {
-    name,
-    setName,
-    description,
-    setDescription,
-    startDate,
-    setStartDate,
-    endDate,
-    setEndDate,
-    image,
-    setImage,
-    groupId,
-    setGroupId,
-    statusId,
-    setStatusId,
-    areaIds,
-    setAreaIds,
-    toolIds,
-    setToolIds,
-    repositoryIds,
-    setRepositoryIds,
-    error,
-    setError,
-  } = useProjectForm(groups[0]?.id || 1, statuses[0]?.id || 1, initialFormData);
+const {
+  name,
+  setName,
+  description,
+  setDescription,
+  startDate,
+  setStartDate,
+  endDate,
+  setEndDate,
+  image,
+  setImage,
+  groupId,
+  setGroupId,
+  statusId,
+  setStatusId,
+  areaIds,
+  setAreaIds,
+  toolIds,
+  setToolIds,
+  repositoryIds,
+  setRepositoryIds,
+  error,
+  setError,
+} = useProjectForm(statuses[0]?.id || 1, initialFormData);
 
   // Convierte arrays y valores a formato FormData para enviar
   const buildFormData = () => {

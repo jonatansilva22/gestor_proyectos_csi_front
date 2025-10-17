@@ -134,29 +134,35 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!user || !validateForm()) {
-      return;
-    }
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    try {
-      // Crear objeto de datos omitiendo la contraseña si está vacía
-      const dataToSend = { ...formData };
-      if (!formData.password || !formData.password.trim()) {
-        delete dataToSend.password;
-      }
-      // Remover confirmPassword ya que no se envía al backend
-      delete dataToSend.confirmPassword;
-      
-      await onSave(user.id, dataToSend);
-      onClose();
-    } catch {
-      // Error is handled by the parent component
-    }
-  };
+  if (!user || !validateForm()) return;
 
+  try {
+    const roleMap: Record<UserRole, number> = {
+      colaborador: 0,
+      admin: 1,
+      superadmin: 2,
+    };
+
+    // Construir objeto parcial solo con los campos necesarios
+    const dataToSend: Partial<CreateUserRequest> = {
+      username: formData.username,
+      email: formData.email,
+      first_name: formData.first_name,
+      last_name: formData.last_name,
+      role: roleMap[formData.role],
+      ...(formData.password?.trim() ? { password: formData.password } : {}),
+      ...(formData.photo ? { photo: formData.photo } : {}),
+    };
+
+    await onSave(user.id, dataToSend);
+    onClose();
+  } catch {
+    // el error se maneja desde el componente padre
+  }
+};
   if (!isOpen || !user) return null;
 
   const isCurrentUser = currentUser && user.id === currentUser.id;

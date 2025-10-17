@@ -69,7 +69,7 @@ export const RepositoriesTable = ({
     );
   };
 
-  const columns: ResponsiveTableColumn<Repository>[] = [
+  const columns: ResponsiveTableColumn<Repository & { index: number }>[] = [
     {
       key: 'index',
       header: '#',

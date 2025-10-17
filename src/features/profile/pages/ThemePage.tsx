@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import React, { useState } from 'react';
 import HeaderSidebarLayout from '../../../components/common/HeaderSidebarLayout';
 import { useTheme } from '../../../context/ThemeContext';
-import { notifySuccess, notifyError } from '../../../components/common/ToastNotify';
 import volver from "../../../assets/volver.png";
 import { useTouchButton } from "../../../hooks/useTouchInteractions";
 import { useMobileNavigation } from "../../../hooks/useMobileNavigation";
@@ -93,6 +92,7 @@ const ThemePage: React.FC = () => {
     setTheme(themeId);
   };
 
+  /*
   const handleSaveTheme = async () => {
     try {
       // El tema ya está aplicado por la previsualización, solo confirmamos
@@ -101,6 +101,7 @@ const ThemePage: React.FC = () => {
       notifyError('Error al cambiar el tema');
     }
   };
+  */
 
   const getCurrentSystemTheme = () => {
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
