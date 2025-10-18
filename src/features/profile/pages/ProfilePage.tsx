@@ -531,7 +531,7 @@ const ProfilePage: React.FC = () => {
                   user={{
                     first_name: user.first_name || "",
                     last_name: user.last_name || "",
-                    photo: user.photo_url || "", 
+                     photo: toMediaUrl(user.photo) || "", 
                   }}
                   size="large"
                   className="border border-white/20 bg-white/15 backdrop-blur-sm"
