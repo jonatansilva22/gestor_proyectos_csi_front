@@ -10,6 +10,7 @@ export interface AuthUser {
   role_id?: number; // Backend sends role ID
   role_name?: string; // Backend sends role name
   photo?: string; // URL absoluta o relativa a la foto
+  photo_url?: string | null;
 }
 
 export interface LoginCredentials {
