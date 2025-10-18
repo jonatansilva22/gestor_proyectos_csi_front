@@ -39,12 +39,10 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
     return colors[index];
   };
 
-    const imageUrl = user.photo || placeholder;
-
-  if (imageUrl) {
+  if (user.photo) {
     return (
       <img
-        src={imageUrl}
+        src={toMediaUrl(user.photo) || placeholder}
         alt={`${user.first_name} ${user.last_name}`}
         className={`${sizeClasses[size]} ${className} rounded-full object-cover border-2 border-gray-200 dark:border-gray-600`}
         onError={(e) => {
